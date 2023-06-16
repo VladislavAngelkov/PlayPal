@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PlayPal.Data;
 
@@ -11,9 +12,10 @@ using PlayPal.Data;
 namespace PlayPal.Data.Migrations
 {
     [DbContext(typeof(PlayPalDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230616133657_initialCreate")]
+    partial class initialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +23,36 @@ namespace PlayPal.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("AwayTeamPlayer", b =>
+                {
+                    b.Property<Guid>("AwayTeamsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PlayersId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("AwayTeamsId", "PlayersId");
+
+                    b.HasIndex("PlayersId");
+
+                    b.ToTable("AwayTeamPlayer");
+                });
+
+            modelBuilder.Entity("HomeTeamPlayer", b =>
+                {
+                    b.Property<Guid>("HomeTeamsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PlayersId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("HomeTeamsId", "PlayersId");
+
+                    b.HasIndex("PlayersId");
+
+                    b.ToTable("HomeTeamPlayer");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -200,8 +232,7 @@ namespace PlayPal.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GameID")
-                        .IsUnique();
+                    b.HasIndex("GameID");
 
                     b.ToTable("AwayTeams");
                 });
@@ -313,6 +344,10 @@ namespace PlayPal.Data.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Game identifier");
 
+                    b.Property<Guid>("AwayTeamId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("The indentifier of the away team");
+
                     b.Property<Guid>("CreatorId")
                         .HasColumnType("uniqueidentifier")
                         .HasComment("The identifier of the player who has created the game");
@@ -325,6 +360,10 @@ namespace PlayPal.Data.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasComment("The identifier of the field, where the game is played");
 
+                    b.Property<Guid>("HomeTeamId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("The indentifier of the home team");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
                         .HasComment("Indicate if this game is considered deleted");
@@ -335,9 +374,13 @@ namespace PlayPal.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AwayTeamId");
+
                     b.HasIndex("CreatorId");
 
                     b.HasIndex("FieldId");
+
+                    b.HasIndex("HomeTeamId");
 
                     b.ToTable("Games");
                 });
@@ -387,8 +430,7 @@ namespace PlayPal.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GameID")
-                        .IsUnique();
+                    b.HasIndex("GameID");
 
                     b.ToTable("HomeTeams");
                 });
@@ -410,21 +452,27 @@ namespace PlayPal.Data.Migrations
                         .HasColumnType("bit")
                         .HasComment("Indicate if this message is considered deleted");
 
-                    b.Property<string>("ReceiverId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("ReceiverId")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("The identifier of the user, that has received the message");
 
-                    b.Property<string>("SenderId")
+                    b.Property<string>("ReceiverId1")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("SenderId")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("The identifier of the user, that has send the message");
+
+                    b.Property<string>("SenderId1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReceiverId");
+                    b.HasIndex("ReceiverId1");
 
-                    b.HasIndex("SenderId");
+                    b.HasIndex("SenderId1");
 
                     b.ToTable("Messages");
                 });
@@ -484,40 +532,6 @@ namespace PlayPal.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Players");
-                });
-
-            modelBuilder.Entity("PlayPal.Data.Models.PlayerAwayTeam", b =>
-                {
-                    b.Property<Guid>("PlayerId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasComment("The identifier of the player from the team");
-
-                    b.Property<Guid>("TeamId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasComment("The indentifier of the team of the player");
-
-                    b.HasKey("PlayerId", "TeamId");
-
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("PlayersAwayTeams");
-                });
-
-            modelBuilder.Entity("PlayPal.Data.Models.PlayerHomeTeam", b =>
-                {
-                    b.Property<Guid>("PlayerId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasComment("The identifier of the player from the team");
-
-                    b.Property<Guid>("TeamId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasComment("The indentifier of the team of the player");
-
-                    b.HasKey("PlayerId", "TeamId");
-
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("PlayersHomeTeams");
                 });
 
             modelBuilder.Entity("PlayPal.Data.Models.PlayPalUser", b =>
@@ -601,6 +615,36 @@ namespace PlayPal.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("AwayTeamPlayer", b =>
+                {
+                    b.HasOne("PlayPal.Data.Models.AwayTeam", null)
+                        .WithMany()
+                        .HasForeignKey("AwayTeamsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PlayPal.Data.Models.Player", null)
+                        .WithMany()
+                        .HasForeignKey("PlayersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HomeTeamPlayer", b =>
+                {
+                    b.HasOne("PlayPal.Data.Models.HomeTeam", null)
+                        .WithMany()
+                        .HasForeignKey("HomeTeamsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PlayPal.Data.Models.Player", null)
+                        .WithMany()
+                        .HasForeignKey("PlayersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -666,8 +710,8 @@ namespace PlayPal.Data.Migrations
             modelBuilder.Entity("PlayPal.Data.Models.AwayTeam", b =>
                 {
                     b.HasOne("PlayPal.Data.Models.Game", "Game")
-                        .WithOne("AwayTeam")
-                        .HasForeignKey("PlayPal.Data.Models.AwayTeam", "GameID")
+                        .WithMany()
+                        .HasForeignKey("GameID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -685,7 +729,7 @@ namespace PlayPal.Data.Migrations
                     b.HasOne("PlayPal.Data.Models.Player", "Player")
                         .WithMany("Bans")
                         .HasForeignKey("PlayerId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Administrator");
@@ -717,10 +761,16 @@ namespace PlayPal.Data.Migrations
 
             modelBuilder.Entity("PlayPal.Data.Models.Game", b =>
                 {
+                    b.HasOne("PlayPal.Data.Models.AwayTeam", "AwayTeam")
+                        .WithMany()
+                        .HasForeignKey("AwayTeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("PlayPal.Data.Models.Player", "Creator")
                         .WithMany("CreatedGames")
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("PlayPal.Data.Models.Field", "Field")
@@ -729,9 +779,19 @@ namespace PlayPal.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("PlayPal.Data.Models.HomeTeam", "HomeTeam")
+                        .WithMany()
+                        .HasForeignKey("HomeTeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AwayTeam");
+
                     b.Navigation("Creator");
 
                     b.Navigation("Field");
+
+                    b.Navigation("HomeTeam");
                 });
 
             modelBuilder.Entity("PlayPal.Data.Models.Goal", b =>
@@ -743,9 +803,9 @@ namespace PlayPal.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("PlayPal.Data.Models.Player", "Player")
-                        .WithMany("Goals")
+                        .WithMany()
                         .HasForeignKey("PlayerId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Game");
@@ -756,8 +816,8 @@ namespace PlayPal.Data.Migrations
             modelBuilder.Entity("PlayPal.Data.Models.HomeTeam", b =>
                 {
                     b.HasOne("PlayPal.Data.Models.Game", "Game")
-                        .WithOne("HomeTeam")
-                        .HasForeignKey("PlayPal.Data.Models.HomeTeam", "GameID")
+                        .WithMany()
+                        .HasForeignKey("GameID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -768,14 +828,14 @@ namespace PlayPal.Data.Migrations
                 {
                     b.HasOne("PlayPal.Data.Models.PlayPalUser", "Receiver")
                         .WithMany("ReceivedMessages")
-                        .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .HasForeignKey("ReceiverId1")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("PlayPal.Data.Models.PlayPalUser", "Sender")
                         .WithMany("SendMessages")
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .HasForeignKey("SenderId1")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Receiver");
@@ -788,13 +848,13 @@ namespace PlayPal.Data.Migrations
                     b.HasOne("PlayPal.Data.Models.Game", "Game")
                         .WithMany("PendingPlayers")
                         .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("PlayPal.Data.Models.Player", "Player")
                         .WithMany("PendingGames")
                         .HasForeignKey("PlayerId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Game");
@@ -813,52 +873,9 @@ namespace PlayPal.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PlayPal.Data.Models.PlayerAwayTeam", b =>
-                {
-                    b.HasOne("PlayPal.Data.Models.Player", "Player")
-                        .WithMany("AwayTeams")
-                        .HasForeignKey("PlayerId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("PlayPal.Data.Models.AwayTeam", "AwayTeam")
-                        .WithMany("Players")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("AwayTeam");
-
-                    b.Navigation("Player");
-                });
-
-            modelBuilder.Entity("PlayPal.Data.Models.PlayerHomeTeam", b =>
-                {
-                    b.HasOne("PlayPal.Data.Models.Player", "Player")
-                        .WithMany("HomeTeams")
-                        .HasForeignKey("PlayerId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("PlayPal.Data.Models.HomeTeam", "HomeTeam")
-                        .WithMany("Players")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("HomeTeam");
-
-                    b.Navigation("Player");
-                });
-
             modelBuilder.Entity("PlayPal.Data.Models.Administrator", b =>
                 {
                     b.Navigation("Bans");
-                });
-
-            modelBuilder.Entity("PlayPal.Data.Models.AwayTeam", b =>
-                {
-                    b.Navigation("Players");
                 });
 
             modelBuilder.Entity("PlayPal.Data.Models.FieldOwner", b =>
@@ -868,33 +885,16 @@ namespace PlayPal.Data.Migrations
 
             modelBuilder.Entity("PlayPal.Data.Models.Game", b =>
                 {
-                    b.Navigation("AwayTeam")
-                        .IsRequired();
-
                     b.Navigation("Goals");
-
-                    b.Navigation("HomeTeam")
-                        .IsRequired();
 
                     b.Navigation("PendingPlayers");
                 });
 
-            modelBuilder.Entity("PlayPal.Data.Models.HomeTeam", b =>
-                {
-                    b.Navigation("Players");
-                });
-
             modelBuilder.Entity("PlayPal.Data.Models.Player", b =>
                 {
-                    b.Navigation("AwayTeams");
-
                     b.Navigation("Bans");
 
                     b.Navigation("CreatedGames");
-
-                    b.Navigation("Goals");
-
-                    b.Navigation("HomeTeams");
 
                     b.Navigation("PendingGames");
                 });

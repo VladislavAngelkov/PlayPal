@@ -6,4 +6,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PlayPal.Common\PlayPal.Common.csproj" />
+    <ProjectReference Include="..\PlayPal.Data\PlayPal.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\InputModels\" />
+    <Folder Include="Repositories\Interfaces\" />
+    <Folder Include="Services\Interfaces\" />
+  </ItemGroup>
+
 </Project>

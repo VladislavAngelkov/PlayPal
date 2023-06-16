@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PlayPal.Data.Models;
 using PlayPal.Models;
 using System.Diagnostics;
 
