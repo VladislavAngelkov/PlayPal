@@ -14,8 +14,7 @@ namespace PlayPal.Data
 
         public DbSet<Player> Players { get; set; } = null!;
         public DbSet<Administrator> Administrators { get; set; } = null!;   
-        public DbSet<AwayTeam> AwayTeams { get; set; } = null!;
-        public DbSet<HomeTeam> HomeTeams { get; set; } = null!;
+        public DbSet<Team> Teams { get; set; } = null!;
         public DbSet<Ban> Bans { get; set; } = null!;
         public DbSet<Field> Fields { get; set; } = null!;
         public DbSet<FieldOwner> FieldOwners { get; set; } = null!;
@@ -23,8 +22,7 @@ namespace PlayPal.Data
         public DbSet<Goal> Goals { get; set; } = null!;
         public DbSet<Message> Messages { get; set; } = null!;
         public DbSet<PendingPlayerGame> PendingPlayersGames { get; set; } = null!;
-        public DbSet<PlayerHomeTeam> PlayersHomeTeams { get; set; } = null!;
-        public DbSet<PlayerAwayTeam> PlayersAwayTeams { get; set; } = null!;
+        public DbSet<PlayerTeam> PlayersTeams { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -38,9 +36,9 @@ namespace PlayPal.Data
 
             builder.ApplyConfiguration<Goal>(new GoalConfiguration());
 
-            builder.ApplyConfiguration<PlayerHomeTeam>(new PlayerHomeTeamConfiguration());
+            builder.ApplyConfiguration<PlayerTeam>(new PlayerTeamConfiguration());
 
-            builder.ApplyConfiguration<PlayerAwayTeam>(new PlayerAwayTeamConfiguration());
+            builder.ApplyConfiguration<Team>(new TeamConfiguration());
 
             base.OnModelCreating(builder);
         }

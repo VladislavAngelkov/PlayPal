@@ -9,8 +9,6 @@ namespace PlayPal.Data.Models
     {
         public Game()
         {
-            HomeTeam = new HomeTeam();
-            AwayTeam = new AwayTeam();
             Goals = new HashSet<Goal>();
             PendingPlayers = new HashSet<PendingPlayerGame>();
         }
@@ -34,16 +32,18 @@ namespace PlayPal.Data.Models
         /// The player who has created the game
         /// </summary>
         public virtual Player Creator { get; set; } = null!;
-        
+
         /// <summary>
         /// The home team
         /// </summary>
-        public virtual HomeTeam HomeTeam { get; set; } = null!;
+        [InverseProperty("HomeGame")]
+        public virtual Team HomeTeam { get; set; } = null!;
 
         /// <summary>
         /// The away team
         /// </summary>
-        public virtual AwayTeam AwayTeam { get; set; } = null!;
+        [InverseProperty("AwayGame")]
+        public virtual Team AwayTeam { get; set; } = null!;
 
         /// <summary>
         /// The identifier of the field, where the game is played

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PlayPal.Data.Models
 {
-    public class PlayerHomeTeam
+    public class PlayerTeam
     {
         /// <summary>
         /// The identifier of the player
@@ -24,12 +24,12 @@ namespace PlayPal.Data.Models
         /// </summary>
         [Comment("The indentifier of the team of the player")]
         [Required]
-        [ForeignKey(nameof(HomeTeam))]
+        [ForeignKey(nameof(Team))]
         public Guid TeamId { get; set; }
 
         /// <summary>
         /// The team of the player
         /// </summary>
-        public virtual HomeTeam HomeTeam { get; set; } = null!;
+        public virtual Team Team { get; set; } = null!;
     }
 }

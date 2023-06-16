@@ -9,6 +9,7 @@ namespace PlayPal.Data.Models
     {
         public Team()
         {
+            Players = new HashSet<PlayerTeam>();
         }
 
         /// <summary>
@@ -19,17 +20,35 @@ namespace PlayPal.Data.Models
         public Guid Id { get; set; }
 
         /// <summary>
-        /// The identifier of the game, in which the team played
+        /// Collection of the players in the team
         /// </summary>
-        [Comment("The identifier of the game, in which the team played")]
-        [Required]
-        [ForeignKey(nameof(Game))]
-        public Guid GameID { get; set; }
+        public ICollection<PlayerTeam> Players { get; set; }
 
         /// <summary>
-        /// The game, in which the team played
+        /// The identifier of the home game, in which the team played
         /// </summary>
-        public virtual Game Game { get; set; } = null!;
+        [Comment("The identifier of the home game, in which the team played")]
+        [ForeignKey(nameof(HomeGame))]
+        public Guid? HomeGameID { get; set; }
+
+        /// <summary>
+        /// The home game, in which the team played
+        /// </summary>
+        [InverseProperty("HomeTeam")]
+        public virtual Game HomeGame { get; set; } = null!;
+
+        /// <summary>
+        /// The identifier of the away game, in which the team played
+        /// </summary>
+        [Comment("The identifier of the away game, in which the team played")]
+        [ForeignKey(nameof(AwayGame))]
+        public Guid? AwayGameID { get; set; }
+
+        /// <summary>
+        /// The away game, in which the team played
+        /// </summary>
+        [InverseProperty("AwayTeam")]
+        public virtual Game AwayGame { get; set; } = null!;
 
         /// <summary>
         /// Indicate if this team is considered deleted

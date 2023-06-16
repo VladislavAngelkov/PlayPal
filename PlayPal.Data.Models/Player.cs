@@ -12,8 +12,7 @@ namespace PlayPal.Data.Models
         public Player()
         {
             PendingGames = new HashSet<PendingPlayerGame>();
-            HomeTeams = new HashSet<PlayerHomeTeam>();
-            AwayTeams = new HashSet<PlayerAwayTeam>();
+            Teams = new HashSet<PlayerTeam>();
             Bans = new HashSet<Ban>();
             CreatedGames = new HashSet<Game>();
             Goals = new HashSet<Goal>();
@@ -77,13 +76,7 @@ namespace PlayPal.Data.Models
         /// Collection of all HomeTeams that the player was part of
         /// For every game the HomeTeam is different
         /// </summary>
-        public virtual ICollection<PlayerHomeTeam> HomeTeams { get; set; }
-
-        /// <summary>
-        /// Collection of all AwayTeams that the player was part of
-        /// For every game the AwayTeam is different
-        /// </summary>
-        public virtual ICollection<PlayerAwayTeam> AwayTeams { get; set; }
+        public virtual ICollection<PlayerTeam> Teams { get; set; }
 
         /// <summary>
         /// Collection of bans for the player profile
