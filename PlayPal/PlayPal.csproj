@@ -15,4 +15,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.15" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PlayPal.Common\PlayPal.Common.csproj" />
+    <ProjectReference Include="..\PlayPal.Core\PlayPal.Core.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -5,6 +5,14 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayPal", "PlayPal\PlayPal.csproj", "{78255DFC-8A9D-4FA8-AB8B-B8397353BCD7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayPal.Common", "PlayPal.Common\PlayPal.Common.csproj", "{60055F33-3B83-4FB8-A98F-2CF423B13A8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayPal.Data", "PlayPal.Data\PlayPal.Data.csproj", "{8ADABAB2-5E9B-4249-BC57-4FD426C534D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayPal.Data.Models", "PlayPal.Data.Models\PlayPal.Data.Models.csproj", "{0CA4881D-4B45-42DD-9BB9-5E657CF7E4DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayPal.Core", "PlayPal.Core\PlayPal.Core.csproj", "{174E77B2-8CAA-4AEE-BF01-D254FBAE5BA6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +23,22 @@ Global
 		{78255DFC-8A9D-4FA8-AB8B-B8397353BCD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78255DFC-8A9D-4FA8-AB8B-B8397353BCD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78255DFC-8A9D-4FA8-AB8B-B8397353BCD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60055F33-3B83-4FB8-A98F-2CF423B13A8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60055F33-3B83-4FB8-A98F-2CF423B13A8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60055F33-3B83-4FB8-A98F-2CF423B13A8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60055F33-3B83-4FB8-A98F-2CF423B13A8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8ADABAB2-5E9B-4249-BC57-4FD426C534D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ADABAB2-5E9B-4249-BC57-4FD426C534D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ADABAB2-5E9B-4249-BC57-4FD426C534D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ADABAB2-5E9B-4249-BC57-4FD426C534D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CA4881D-4B45-42DD-9BB9-5E657CF7E4DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CA4881D-4B45-42DD-9BB9-5E657CF7E4DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CA4881D-4B45-42DD-9BB9-5E657CF7E4DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CA4881D-4B45-42DD-9BB9-5E657CF7E4DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{174E77B2-8CAA-4AEE-BF01-D254FBAE5BA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{174E77B2-8CAA-4AEE-BF01-D254FBAE5BA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{174E77B2-8CAA-4AEE-BF01-D254FBAE5BA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{174E77B2-8CAA-4AEE-BF01-D254FBAE5BA6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
