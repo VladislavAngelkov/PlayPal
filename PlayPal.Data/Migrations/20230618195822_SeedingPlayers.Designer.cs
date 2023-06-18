@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PlayPal.Data;
 
@@ -11,9 +12,10 @@ using PlayPal.Data;
 namespace PlayPal.Data.Migrations
 {
     [DbContext(typeof(PlayPalDbContext))]
-    partial class PlayPalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230618195822_SeedingPlayers")]
+    partial class SeedingPlayers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,14 +169,6 @@ namespace PlayPal.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Administrators");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("bf82c049-3b26-4218-ab72-87d5b5811d72"),
-                            IsDeleted = false,
-                            UserId = new Guid("9a641cdf-8c28-485f-b22a-3603c6df7a3d")
-                        });
                 });
 
             modelBuilder.Entity("PlayPal.Data.Models.Ban", b =>
@@ -274,15 +268,6 @@ namespace PlayPal.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("FieldOwners");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("e1e31ae4-2adc-4ac5-b537-fe9acfc3fa9f"),
-                            ContactAddress = "Sofia, str. Vasil Levski #11",
-                            IsDeleted = false,
-                            UserId = new Guid("84b6df4e-b349-495e-a9e1-8541de1f2e2d")
-                        });
                 });
 
             modelBuilder.Entity("PlayPal.Data.Models.Game", b =>
@@ -441,7 +426,7 @@ namespace PlayPal.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("b386594e-9a44-4304-93f8-67d786509b7e"),
+                            Id = new Guid("e47a87c2-a255-40b5-9c7e-0ce9221a9746"),
                             CurrentCity = "Sofia",
                             IsDeleted = false,
                             Name = "Player",
@@ -498,21 +483,21 @@ namespace PlayPal.Data.Migrations
                         new
                         {
                             Id = new Guid("f5356275-13f4-4d7c-8172-bbf054707e2f"),
-                            ConcurrencyStamp = "5c810caf-8dd4-4331-9acf-21dd3e0b5d89",
+                            ConcurrencyStamp = "2b499a8a-601b-4a6c-868f-084cb5500759",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = new Guid("c3caf211-8a76-4415-a74a-6b7f0a0b9d50"),
-                            ConcurrencyStamp = "b79d3c93-309f-4fc0-8320-c45e99289998",
+                            ConcurrencyStamp = "86021bc6-9330-4cf2-a711-26adfaf13026",
                             Name = "FieldOwner",
                             NormalizedName = "FIELDOWNER"
                         },
                         new
                         {
                             Id = new Guid("b333df2f-222c-4768-a9f5-0368b93aea47"),
-                            ConcurrencyStamp = "15a4397b-ee25-4961-b681-c66798bcfd71",
+                            ConcurrencyStamp = "24a187df-425a-4f07-88cf-a205213240d4",
                             Name = "Player",
                             NormalizedName = "PLAYER"
                         });
@@ -604,17 +589,17 @@ namespace PlayPal.Data.Migrations
                         {
                             Id = new Guid("9a641cdf-8c28-485f-b22a-3603c6df7a3d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a44910a4-bc77-4206-a7ea-1ffcfa663ccd",
+                            ConcurrencyStamp = "09b27cdd-3b87-4e63-b8d2-5b08b542c68c",
                             Email = "Administrator@test.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMINISTRATOR@TEST.COM",
                             NormalizedUserName = "ADMINISTRATOR@TEST.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIQ1tBTdJPBtuflzKVOTOfZiHsn5dQi2Z5gg4pb+bVOR/itmUhjBym6AO3vq5SIn8w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJB13NlmztgSJMGyoQrEpWvJhwbqCnosMhL5TXNQl2NsaAjAoy0+KifiDHUg41tWmQ==",
                             PhoneNumberConfirmed = false,
                             PlayerId = new Guid("00000000-0000-0000-0000-000000000000"),
-                            SecurityStamp = "8ce59901-3be5-49b3-bc9a-2d4bbe88bc23",
+                            SecurityStamp = "57b8cd28-d226-4774-9564-19ad5a11f7a2",
                             TwoFactorEnabled = false,
                             UserName = "Administrator@test.com"
                         },
@@ -622,17 +607,17 @@ namespace PlayPal.Data.Migrations
                         {
                             Id = new Guid("84b6df4e-b349-495e-a9e1-8541de1f2e2d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e21dcb65-c1a2-4a2e-9739-4543b6a514c2",
+                            ConcurrencyStamp = "37cd0941-9377-4934-b87d-97ec8444ad60",
                             Email = "FieldOwner@test.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "FIELDOWNER@TEST.COM",
                             NormalizedUserName = "FIELDOWNER@TEST.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJNZRr4SBkdNdPX3xRG7IKkAfbMgQTXCPDheEZK5KmIpAYV1JK+YxbdMAW2/+ojlDA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDpkSmb/Jp3tJ/79ETeNTTLS63cfVOiiVVFOazyCS8jVE8uWUSq98Zl/xKWBIxa35g==",
                             PhoneNumberConfirmed = false,
                             PlayerId = new Guid("00000000-0000-0000-0000-000000000000"),
-                            SecurityStamp = "5f3237ec-72d7-44b9-a149-5193d97765a2",
+                            SecurityStamp = "c18ec227-a76c-438a-99fb-e3efd7dc7ff8",
                             TwoFactorEnabled = false,
                             UserName = "FieldOwner@test.com"
                         },
@@ -640,17 +625,17 @@ namespace PlayPal.Data.Migrations
                         {
                             Id = new Guid("ec70c161-fc76-4b29-b3dc-03fdd605bf0d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a9261381-e585-4dc5-95f3-f68a765eb9f7",
+                            ConcurrencyStamp = "8def9a76-a154-4858-9788-724006c304a0",
                             Email = "Player@test.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "PLAYER@TEST.COM",
                             NormalizedUserName = "PLAYER@TEST.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJIPRBl28pl9MCScT3IeI0UbNJQDNReKEhrWQ+NACZsNZgivYMhdoJFmmp6e035fDg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEE5NTIbUPmQP71LrPzZAc0YX/V9sDt92yGQV2QihfqLs7zXxdO2wXEINp0VS9ZkpKg==",
                             PhoneNumberConfirmed = false,
                             PlayerId = new Guid("00000000-0000-0000-0000-000000000000"),
-                            SecurityStamp = "847e5f32-8b57-433b-8d19-757cf7eccd84",
+                            SecurityStamp = "893b0342-d5f7-448b-8ccd-bce47a28a50f",
                             TwoFactorEnabled = false,
                             UserName = "Player@test.com"
                         });

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 using PlayPal.Data.Models;
 using PlayPal.Data.Seeding.Interfaces;
 
@@ -113,6 +114,19 @@ namespace PlayPal.Data.Seeding
 
 
             return users;
+        }
+
+        public ICollection<T> GenerateEntity<T>()
+        {
+            var entityName = typeof(T).Name;
+
+            var path = $"../PlayPal.Data/Seeding/SeedingData/{entityName}Data.json";
+
+            var entityText = File.ReadAllText(path);
+
+            var entities = JsonConvert.DeserializeObject<ICollection<T>>(entityText);
+
+            return entities;
         }
     }
 }

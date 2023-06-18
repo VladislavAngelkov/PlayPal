@@ -11,6 +11,6 @@ namespace PlayPal.Data.Seeding.Interfaces
 
         public ICollection<IdentityUserRole<Guid>> GenerateUserRoles();
 
-
+        public ICollection<T> GenerateEntity<T>();
     }
 }

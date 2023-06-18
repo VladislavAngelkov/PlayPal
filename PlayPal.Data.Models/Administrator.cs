@@ -9,6 +9,7 @@ namespace PlayPal.Data.Models
     {
         public Administrator()
         {
+            Id = Guid.NewGuid();
             Bans = new HashSet<Ban>();
         }
 

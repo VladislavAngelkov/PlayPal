@@ -10,6 +10,7 @@ namespace PlayPal.Data.Models
     {
         public FieldOwner()
         {
+            Id = Guid.NewGuid();
             Fields = new HashSet<Field>();
         }
 

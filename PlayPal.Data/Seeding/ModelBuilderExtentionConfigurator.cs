@@ -29,6 +29,12 @@ namespace PlayPal.Data.Seeding
             builder.ApplyConfiguration<PlayerTeam>(new PlayerTeamConfiguration());
 
             builder.ApplyConfiguration<Team>(new TeamConfiguration());
+
+            builder.ApplyConfiguration<Player>(new PlayerConfiguration(generator));
+
+            builder.ApplyConfiguration<Administrator>(new AdministratorConfiguration(generator));
+
+            builder.ApplyConfiguration<FieldOwner>(new FieldOwnerConfiguration(generator));
         }
     }
 }

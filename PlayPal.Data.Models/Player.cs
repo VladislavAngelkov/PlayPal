@@ -11,6 +11,7 @@ namespace PlayPal.Data.Models
     {
         public Player()
         {
+            Id = Guid.NewGuid();
             PendingGames = new HashSet<PendingPlayerGame>();
             Teams = new HashSet<PlayerTeam>();
             Bans = new HashSet<Ban>();
