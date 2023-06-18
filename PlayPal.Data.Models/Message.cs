@@ -19,7 +19,7 @@ namespace PlayPal.Data.Models
         /// </summary>
         [Comment("The identifier of the user, that has send the message")]
         [Required]
-        public string SenderId { get; set; }
+        public Guid SenderId { get; set; }
 
         /// <summary>
         /// The user, that has send the message
@@ -32,7 +32,7 @@ namespace PlayPal.Data.Models
         /// </summary>
         [Comment("The identifier of the user, that has received the message")]
         [Required]
-        public string ReceiverId { get; set; }
+        public Guid ReceiverId { get; set; }
 
         /// <summary>
         /// The user, that has received the message

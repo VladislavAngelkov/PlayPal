@@ -26,7 +26,7 @@ namespace PlayPal.Data.Models
         [Comment("The identifier of the user, owning owner's profile")]
         [Required]
         [ForeignKey(nameof(User))]
-        public string UserId { get; set; } = null!;
+        public Guid UserId { get; set; }
 
         /// <summary>
         /// The user enitity, owning owner's profile

@@ -3,7 +3,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PlayPal.Data;
 
@@ -12,10 +11,9 @@ using PlayPal.Data;
 namespace PlayPal.Data.Migrations
 {
     [DbContext(typeof(PlayPalDbContext))]
-    [Migration("20230616152442_FixingTeams")]
-    partial class FixingTeams
+    partial class PlayPalDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,34 +22,7 @@ namespace PlayPal.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("AspNetRoles", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,9 +36,8 @@ namespace PlayPal.Data.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -76,7 +46,7 @@ namespace PlayPal.Data.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -90,9 +60,8 @@ namespace PlayPal.Data.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -101,7 +70,7 @@ namespace PlayPal.Data.Migrations
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128)
@@ -114,9 +83,8 @@ namespace PlayPal.Data.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -125,25 +93,42 @@ namespace PlayPal.Data.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = new Guid("9a641cdf-8c28-485f-b22a-3603c6df7a3d"),
+                            RoleId = new Guid("f5356275-13f4-4d7c-8172-bbf054707e2f")
+                        },
+                        new
+                        {
+                            UserId = new Guid("84b6df4e-b349-495e-a9e1-8541de1f2e2d"),
+                            RoleId = new Guid("c3caf211-8a76-4415-a74a-6b7f0a0b9d50")
+                        },
+                        new
+                        {
+                            UserId = new Guid("ec70c161-fc76-4b29-b3dc-03fdd605bf0d"),
+                            RoleId = new Guid("b333df2f-222c-4768-a9f5-0368b93aea47")
+                        });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128)
@@ -172,9 +157,8 @@ namespace PlayPal.Data.Migrations
                         .HasColumnType("bit")
                         .HasComment("Indicate if this administrator profile is considered deleted");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("The identifier of the user, owning the administrator profile");
 
                     b.HasKey("Id");
@@ -272,9 +256,8 @@ namespace PlayPal.Data.Migrations
                         .HasColumnType("bit")
                         .HasComment("Indicate if this field owner profile is considered deleted");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("The identifier of the user, owning owner's profile");
 
                     b.HasKey("Id");
@@ -366,14 +349,12 @@ namespace PlayPal.Data.Migrations
                         .HasColumnType("bit")
                         .HasComment("Indicate if this message is considered deleted");
 
-                    b.Property<string>("ReceiverId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("ReceiverId")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("The identifier of the user, that has received the message");
 
-                    b.Property<string>("SenderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("SenderId")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("The identifier of the user, that has send the message");
 
                     b.HasKey("Id");
@@ -429,9 +410,8 @@ namespace PlayPal.Data.Migrations
                         .HasColumnType("int")
                         .HasComment("The preffered position of the player.");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("The identifier of the user, owning player's profile");
 
                     b.HasKey("Id");
@@ -459,10 +439,62 @@ namespace PlayPal.Data.Migrations
                     b.ToTable("PlayersTeams");
                 });
 
+            modelBuilder.Entity("PlayPal.Data.Models.PlayPalRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("f5356275-13f4-4d7c-8172-bbf054707e2f"),
+                            ConcurrencyStamp = "c06f4ced-1a74-4d67-815c-164831843256",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = new Guid("c3caf211-8a76-4415-a74a-6b7f0a0b9d50"),
+                            ConcurrencyStamp = "e7631731-d800-43b5-95ec-7543c33cde3f",
+                            Name = "FieldOwner",
+                            NormalizedName = "FIELDOWNER"
+                        },
+                        new
+                        {
+                            Id = new Guid("b333df2f-222c-4768-a9f5-0368b93aea47"),
+                            ConcurrencyStamp = "7712b37c-2624-4115-ae23-5864bf4020b7",
+                            Name = "Player",
+                            NormalizedName = "PLAYER"
+                        });
+                });
+
             modelBuilder.Entity("PlayPal.Data.Models.PlayPalUser", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -538,6 +570,62 @@ namespace PlayPal.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("9a641cdf-8c28-485f-b22a-3603c6df7a3d"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "ecc1bbf7-8d81-44ca-9f9d-0a707c00322b",
+                            Email = "Administrator@test.com",
+                            EmailConfirmed = false,
+                            IsDeleted = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMINISTRATOR@TEST.COM",
+                            NormalizedUserName = "ADMINISTRATOR@TEST.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHon03T/gaj7ElCT64LenbaxPOZEesadU0KuHyR7IkRnRXnnnXMlYvB1iLvvpHoKXw==",
+                            PhoneNumberConfirmed = false,
+                            PlayerId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            SecurityStamp = "944aae11-af63-4894-ba96-2c1a67baf28f",
+                            TwoFactorEnabled = false,
+                            UserName = "Administrator@test.com"
+                        },
+                        new
+                        {
+                            Id = new Guid("84b6df4e-b349-495e-a9e1-8541de1f2e2d"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "61a3fe97-7f8b-4255-8685-2bbd9a38a3cc",
+                            Email = "FieldOwner@test.com",
+                            EmailConfirmed = false,
+                            IsDeleted = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "FIELDOWNER@TEST.COM",
+                            NormalizedUserName = "FIELDOWNER@TEST.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJlNQWyr496OnCLGXfElJS2AYD7EFNRcgkB0rjcdY6dbQEbzvKtCC97Hucu1CU3OHA==",
+                            PhoneNumberConfirmed = false,
+                            PlayerId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            SecurityStamp = "b9d8ebd5-f5d9-4c01-acc9-03a06ec59b01",
+                            TwoFactorEnabled = false,
+                            UserName = "FieldOwner@test.com"
+                        },
+                        new
+                        {
+                            Id = new Guid("ec70c161-fc76-4b29-b3dc-03fdd605bf0d"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "cdbf20b2-b8ea-4c4f-8df1-58c56e170972",
+                            Email = "Player@test.com",
+                            EmailConfirmed = false,
+                            IsDeleted = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "PLAYER@TEST.COM",
+                            NormalizedUserName = "PLAYER@TEST.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPLSTfxmbQwWzXV3bQPMP72z82DRVrlpdSb7ZwKElR/naq84CI5wZNgHaQexeHXyaw==",
+                            PhoneNumberConfirmed = false,
+                            PlayerId = new Guid("00000000-0000-0000-0000-000000000000"),
+                            SecurityStamp = "97835b9b-4b17-4701-9a11-2d6c15afe728",
+                            TwoFactorEnabled = false,
+                            UserName = "Player@test.com"
+                        });
                 });
 
             modelBuilder.Entity("PlayPal.Data.Models.Team", b =>
@@ -572,16 +660,16 @@ namespace PlayPal.Data.Migrations
                     b.ToTable("Teams");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("PlayPal.Data.Models.PlayPalRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.HasOne("PlayPal.Data.Models.PlayPalUser", null)
                         .WithMany()
@@ -590,7 +678,7 @@ namespace PlayPal.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.HasOne("PlayPal.Data.Models.PlayPalUser", null)
                         .WithMany()
@@ -599,9 +687,9 @@ namespace PlayPal.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("PlayPal.Data.Models.PlayPalRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -614,7 +702,7 @@ namespace PlayPal.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.HasOne("PlayPal.Data.Models.PlayPalUser", null)
                         .WithMany()

@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PlayPal.Data.Models
 {
-    public class PlayPalUser : IdentityUser, IDeletable
+    public class PlayPalUser : IdentityUser<Guid>
     {
         public PlayPalUser()
         {

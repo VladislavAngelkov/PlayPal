@@ -16,7 +16,7 @@ namespace PlayPal.Data.Models
         public Guid Id { get; set; }
 
         /// <summary>
-        /// The identifier of the administrator, who issued th ban
+        /// The identifier of the administrator, who issued the ban
         /// </summary>
         [Comment("The identifier of the administrator, who issued th ban")]
         [Required]

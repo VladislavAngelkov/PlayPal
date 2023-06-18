@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PlayPal.Data;
 using PlayPal.Data.Models;
+using PlayPal.Data.Seeding;
+using PlayPal.Data.Seeding.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +17,7 @@ builder.Services.AddDefaultIdentity<PlayPalUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = builder.Configuration.GetValue<bool>("AccountConfiguration:RequireConfirmedAccount");
 
-    options.Password.RequireDigit = true;
+    options.Password.RequireDigit = builder.Configuration.GetValue<bool>("AccountConfiguration:RequireDigit");
 
     options.Password.RequireNonAlphanumeric = builder.Configuration.GetValue<bool>("AccountConfiguration:RequireNonAlphanumeric");
 
@@ -26,9 +28,12 @@ builder.Services.AddDefaultIdentity<PlayPalUser>(options =>
     options.Password.RequireLowercase = builder.Configuration.GetValue<bool>("AccountConfiguration:RequireLowercase");
 
 })
-    .AddRoles<IdentityRole>()
+    .AddRoles<PlayPalRole>()
     .AddEntityFrameworkStores<PlayPalDbContext>();
+
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddTransient<IEntityGenerator, EntityGenerator>();
 
 var app = builder.Build();
 

@@ -25,7 +25,7 @@ namespace PlayPal.Data.Models
         [Comment("The identifier of the user, owning the administrator profile")]
         [Required]
         [ForeignKey(nameof(User))]
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
 
         /// <summary>
         /// The user oning the administrator profile

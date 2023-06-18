@@ -1,15 +1,21 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PlayPal.Data.EntityConfigurations;
 using PlayPal.Data.Models;
+using PlayPal.Data.Seeding;
+using PlayPal.Data.Seeding.Interfaces;
 
 namespace PlayPal.Data
 {
-    public class PlayPalDbContext : IdentityDbContext<PlayPalUser>
+    public class PlayPalDbContext : IdentityDbContext<PlayPalUser, PlayPalRole, Guid>
     {
-        public PlayPalDbContext(DbContextOptions<PlayPalDbContext> options) : base(options)
+        private readonly IEntityGenerator _generator;
+        public PlayPalDbContext(
+            DbContextOptions<PlayPalDbContext> options, IEntityGenerator generator)
+            : base(options)
         {
-            
+            _generator = generator;
         }
 
         public DbSet<Player> Players { get; set; } = null!;
@@ -26,19 +32,7 @@ namespace PlayPal.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfiguration<PendingPlayerGame>(new PendingPlayerGameConfiguration());
-
-            builder.ApplyConfiguration<Message>(new MessageConfiguration());
-
-            builder.ApplyConfiguration<Ban>(new BanConfiguration());
-
-            builder.ApplyConfiguration<Game>(new GameConfiguration());
-
-            builder.ApplyConfiguration<Goal>(new GoalConfiguration());
-
-            builder.ApplyConfiguration<PlayerTeam>(new PlayerTeamConfiguration());
-
-            builder.ApplyConfiguration<Team>(new TeamConfiguration());
+            builder.ConfigureEntities(_generator);
 
             base.OnModelCreating(builder);
         }
