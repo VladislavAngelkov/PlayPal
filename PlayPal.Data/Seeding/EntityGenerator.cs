@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using PlayPal.Data.Models;
-using PlayPal.Data.Seeding.Interfaces;
 
 namespace PlayPal.Data.Seeding
 {
-    public class EntityGenerator : IEntityGenerator
+    public class EntityGenerator 
     {
         public ICollection<PlayPalRole> GenerateRoles()
         {

@@ -1,24 +1,21 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PlayPal.Data.Models;
-using PlayPal.Data.Seeding.Interfaces;
+using PlayPal.Data.Seeding;
 
 namespace PlayPal.Data.EntityConfigurations
 {
     public class PlayPalUserConfiguration : IEntityTypeConfiguration<PlayPalUser>
     {
-        private readonly IEntityGenerator _generator;
-
-        public PlayPalUserConfiguration(
-            IEntityGenerator generator)
+        public PlayPalUserConfiguration()
         {
-            _generator = generator;
         }
 
         public void Configure(EntityTypeBuilder<PlayPalUser> builder)
         {
-            var users = _generator.GenerateUsers();
+            var generator = new EntityGenerator();
+
+            var users = generator.GenerateUsers();
 
             builder.HasData(users);
         }

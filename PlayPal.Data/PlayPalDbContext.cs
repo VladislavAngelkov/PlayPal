@@ -1,21 +1,16 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using PlayPal.Data.EntityConfigurations;
 using PlayPal.Data.Models;
-using PlayPal.Data.Seeding;
-using PlayPal.Data.Seeding.Interfaces;
+using System.Reflection;
 
 namespace PlayPal.Data
 {
     public class PlayPalDbContext : IdentityDbContext<PlayPalUser, PlayPalRole, Guid>
     {
-        private readonly IEntityGenerator _generator;
         public PlayPalDbContext(
-            DbContextOptions<PlayPalDbContext> options, IEntityGenerator generator)
+            DbContextOptions<PlayPalDbContext> options)
             : base(options)
         {
-            _generator = generator;
         }
 
         public DbSet<Player> Players { get; set; } = null!;
@@ -32,7 +27,8 @@ namespace PlayPal.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ConfigureEntities(_generator);
+            var currentAssembly = Assembly.GetAssembly(typeof(PlayPalDbContext));
+            builder.ApplyConfigurationsFromAssembly(currentAssembly!);
 
             base.OnModelCreating(builder);
         }

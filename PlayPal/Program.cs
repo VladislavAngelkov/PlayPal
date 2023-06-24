@@ -1,9 +1,7 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PlayPal.Data;
 using PlayPal.Data.Models;
-using PlayPal.Data.Seeding;
-using PlayPal.Data.Seeding.Interfaces;
+using PlayPal.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,9 +29,9 @@ builder.Services.AddDefaultIdentity<PlayPalUser>(options =>
     .AddRoles<PlayPalRole>()
     .AddEntityFrameworkStores<PlayPalDbContext>();
 
-builder.Services.AddControllersWithViews();
+builder.AddServices();
 
-builder.Services.AddTransient<IEntityGenerator, EntityGenerator>();
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 

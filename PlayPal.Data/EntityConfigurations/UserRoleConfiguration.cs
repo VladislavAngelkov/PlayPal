@@ -1,21 +1,22 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PlayPal.Data.Seeding.Interfaces;
+using PlayPal.Data.Seeding;
 
 namespace PlayPal.Data.EntityConfigurations
 {
     public class UserRoleConfiguration : IEntityTypeConfiguration<IdentityUserRole<Guid>>
     {
-        private readonly IEntityGenerator _generator;
-
-        public UserRoleConfiguration(IEntityGenerator generator)
+        public UserRoleConfiguration()
         {
-            _generator = generator;
         }
+
         public void Configure(EntityTypeBuilder<IdentityUserRole<Guid>> builder)
         {
-            var userRoles = _generator.GenerateUserRoles();
+            var generator = new EntityGenerator();
+
+            var userRoles = generator.GenerateUserRoles();
+
             builder.HasData(userRoles);
         }
     }

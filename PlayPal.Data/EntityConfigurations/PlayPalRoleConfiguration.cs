@@ -1,21 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PlayPal.Data.Models;
-using PlayPal.Data.Seeding.Interfaces;
+using PlayPal.Data.Seeding;
 
 namespace PlayPal.Data.EntityConfigurations
 {
     public class PlayPalRoleConfiguration : IEntityTypeConfiguration<PlayPalRole>
     {
-        private readonly IEntityGenerator _generator;
-        public PlayPalRoleConfiguration(IEntityGenerator generator)
+        public PlayPalRoleConfiguration()
         {
-            _generator = generator; 
         }
 
         public void Configure(EntityTypeBuilder<PlayPalRole> builder)
         {
-            var roles = _generator.GenerateRoles();
+            var generator = new EntityGenerator();
+
+            var roles = generator.GenerateRoles();
+
             builder.HasData(roles);
         }
     }

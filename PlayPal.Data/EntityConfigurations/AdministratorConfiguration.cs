@@ -1,22 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PlayPal.Data.Models;
-using PlayPal.Data.Seeding.Interfaces;
+using PlayPal.Data.Seeding;
 
 namespace PlayPal.Data.EntityConfigurations
 {
     public class AdministratorConfiguration : IEntityTypeConfiguration<Administrator>
     {
-        private readonly IEntityGenerator _generator;
-
-        public AdministratorConfiguration(IEntityGenerator generator)
+        public AdministratorConfiguration()
         {
-            _generator = generator;
         }
 
         public void Configure(EntityTypeBuilder<Administrator> builder)
         {
-            var admins = _generator.GenerateEntity<Administrator>();
+            var generator = new EntityGenerator();
+
+            var admins = generator.GenerateEntity<Administrator>();
 
             builder.HasData(admins);
         }
