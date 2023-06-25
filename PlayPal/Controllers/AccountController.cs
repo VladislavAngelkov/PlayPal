@@ -74,6 +74,8 @@ namespace PlayPal.Controllers
                 //return View(model);
             }
 
+            model.PlayerId = Guid.NewGuid();
+
             await _accountService.RegisterUser(model);
 
             return RedirectToAction("CreatePlayer", "Player", model);

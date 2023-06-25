@@ -2,7 +2,7 @@
 {
     public enum Position
     {
-        FiledPlayer,
+        FieldPlayer,
         GoalKeeper
     }
 }

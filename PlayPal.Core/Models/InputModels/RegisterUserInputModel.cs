@@ -8,7 +8,13 @@ namespace PlayPal.Core.Models.InputModels
         {
             Id = Guid.NewGuid();
         }
-        public Guid Id { get; set; }    
+        public Guid Id { get; set; }   
+        
+        public Guid? PlayerId { get; set; }
+
+        public Guid? AdministratorId { get; set; }
+
+        public Guid? FieldOwnerId { get; set; }
 
         [Required]
         [EmailAddress]

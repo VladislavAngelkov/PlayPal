@@ -16,7 +16,7 @@ namespace PlayPal.Core.Services
             _repository = repository;
         }
 
-        public async Task CreatePlayer(CreatePlayerInputModel model)
+        public async Task<Guid> CreatePlayerAsync(CreatePlayerInputModel model)
         {
             var player = new Player()
             {
@@ -27,6 +27,8 @@ namespace PlayPal.Core.Services
             };
 
             await _repository.AddAsync(player);
+
+            return player.Id;
         }
     }
 }

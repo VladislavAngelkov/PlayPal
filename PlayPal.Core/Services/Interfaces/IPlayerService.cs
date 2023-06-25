@@ -4,6 +4,6 @@ namespace PlayPal.Core.Services.Interfaces
 {
     public interface IPlayerService
     {
-        public Task CreatePlayer(CreatePlayerInputModel model);
+        public Task<Guid> CreatePlayerAsync(CreatePlayerInputModel model);
     }
 }
