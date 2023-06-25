@@ -8,6 +8,11 @@ namespace PlayPal.Data.Models
 {
     public class Field : IDeletable
     {
+        public Field()
+        {
+            Games = new HashSet<Game>();
+        }
+
         /// <summary>
         /// Filed's identifier
         /// </summary>
@@ -42,7 +47,12 @@ namespace PlayPal.Data.Models
         /// <summary>
         /// The field owner
         /// </summary>
-        public FieldOwner Owner { get; set; } = null!;
+        public virtual FieldOwner Owner { get; set; } = null!;
+
+        /// <summary>
+        /// Collection of all games on that field
+        /// </summary>
+        public virtual ICollection<Game> Games { get; set; }
 
         /// <summary>
         /// Indicate if this field record is considered deleted
