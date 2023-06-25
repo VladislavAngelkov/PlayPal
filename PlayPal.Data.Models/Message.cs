@@ -46,12 +46,5 @@ namespace PlayPal.Data.Models
         [Required]
         [MaxLength(MessageConstants.ContentMaxLength)]
         public string Content { get; set; } = null!;
-
-        /// <summary>
-        /// Indicate if this message is considered deleted
-        /// </summary>
-        [Comment("Indicate if this message is considered deleted")]
-        [Required]
-        public bool IsDeleted { get; set; }
     }
 }

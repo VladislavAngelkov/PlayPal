@@ -16,7 +16,7 @@
     <header >
         <nav class="navbar navbar-expand-lg bg-transparent" data-bs-theme="dark">
             <div class="container-fluid" >
-                <a class="navbar-brand" href="#">PlayPal</a>
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">PlayPal</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -24,13 +24,13 @@
 
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#">
+                            <a class="nav-link active" asp-controller="Game" asp-action="JoinGame">
                                 Join game
                                 <span class="visually-hidden">(current)</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="#">Create game</a>
+                            <a class="nav-link active" asp-controller="Game" asp-action="CreateGame">Create game</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active" href="#">Contact us</a>
@@ -44,6 +44,7 @@
             </div>
         </nav>
     </header>
+    <hr />
 
     <div class="container">
         <main role="main" class="pb-3">
@@ -65,5 +66,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    
 </body>
 </html>

@@ -36,12 +36,5 @@ namespace PlayPal.Data.Models
         /// The game in which the goal was scored
         /// </summary>
         public virtual Game Game { get; set; } = null!;
-
-        /// <summary>
-        /// Indicate if this player profile is considered deleted
-        /// </summary>
-        [Comment("Indicate if this goal is considered deleted")]
-        [Required]
-        public bool IsDeleted { get; set; }
     }
 }

@@ -53,12 +53,5 @@ namespace PlayPal.Data.Models
         /// Collection of all games on that field
         /// </summary>
         public virtual ICollection<Game> Games { get; set; }
-
-        /// <summary>
-        /// Indicate if this field record is considered deleted
-        /// </summary>
-        [Comment("Indicate if this field record is considered deleted")]
-        [Required]
-        public bool IsDeleted { get; set; }
     }
 }

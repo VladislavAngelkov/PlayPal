@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="container-fluid" style="width:100%;margin:auto">
+    <div class="center" style="width:50%;margin:auto">
+        <br />
+        <h1 style="align-content:center">
+            Strat your journey now
+        </h1>
+        <br />
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-white bg-transparent mb-3 center" style="width:90%;margin:auto">
+                <div class="card-header" style="background-color:green">
+                    <h4 class="card-title">Register as player</h4>
+                </div>
+                <div class="bg-transparent card-body" style="border-style:solid; border-color:green">
+                    <p class="card-text">
+                        Meet new people 
+                    </p>
+                    <p>
+                        Enjoy playing football wherever you are
+                    </p>
+                    <p>
+                        Connect with other football enthusiasts
+                    </p>
+                </div>
+                <br />
+                <a asp-controller="Account" asp-action="RegisterAsPlayer" class="btn btn-success" style="width:90%;margin:auto;background-color:green;border-color:green">Become Player</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-transparent mb-3 center" style="width:90%;margin:auto">
+                <div class="card-header" style="background-color:darkorange">
+                    <h4 class="card-title">Apply for administrator</h4>
+                </div>
+                <div class="bg-transparent card-body" style="border-style:solid; border-color:darkorange">
+                    <p class="card-text">
+                        Manage the games
+                    </p>
+                    <p>
+                        Control the following of the rules
+                    </p>
+                    <p>
+                        Help the players and answer their questions
+                    </p>
+                </div>
+                <br />
+                <a class="btn btn-success" style="width:90%;margin:auto;background-color:green;border-color:green" asp-controller="Account" asp-action="RegisterAsAdministrator">Become Admin</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-transparent mb-3 center" style="width:90%;margin:auto">
+                <div class="card-header bg-transparent" style="border-style:solid;border-color:white">
+                    <h4 class="card-title">Become Field Manager</h4>
+                </div>
+                <div class="bg-transparent card-body" style="border-style:solid; border-color:white">
+                    <p class="card-text">
+                        Register your fields
+                    </p>
+                    <p>
+                        Manage them
+                    </p>
+                    <p>
+                        Let people know about you
+                    </p>
+                </div>
+                <br />
+                <button type="submit" class="btn btn-success" style="width:90%;margin:auto;background-color:green;border-color:green" asp-controller="Account" asp-action="RegisterAsFieldOwner">Become Field Manager</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -49,12 +49,5 @@ namespace PlayPal.Data.Models
         /// </summary>
         [InverseProperty("AwayTeam")]
         public virtual Game AwayGame { get; set; } = null!;
-
-        /// <summary>
-        /// Indicate if this team is considered deleted
-        /// </summary>
-        [Comment("Indicate if this team is considered deleted")]
-        [Required]
-        public bool IsDeleted { get; set; }
     }
 }

@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using PlayPal.Core.Repositories;
+using PlayPal.Core.Repositories.Interfaces;
 using PlayPal.Data;
 using PlayPal.Data.Models;
 using PlayPal.Extensions;
@@ -30,6 +32,7 @@ builder.Services.AddDefaultIdentity<PlayPalUser>(options =>
     .AddEntityFrameworkStores<PlayPalDbContext>();
 
 builder.AddServices();
+builder.Services.AddScoped<IRepository, Repository>();
 
 builder.Services.AddControllersWithViews();
 

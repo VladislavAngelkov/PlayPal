@@ -1,0 +1,3 @@
+﻿namespace PlayPal.Common.ValidationConstants
+{
+}

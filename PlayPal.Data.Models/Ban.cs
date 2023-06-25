@@ -49,12 +49,5 @@ namespace PlayPal.Data.Models
         [Comment("The date and hour, when the ban expires")]
         [Required]
         public DateTime BannedTo { get; set; }
-
-        /// <summary>
-        /// Indicate if this player profile is considered deleted
-        /// </summary>
-        [Comment("Indicate if this ban is considered deleted")]
-        [Required]
-        public bool IsDeleted { get; set; }
     }
 }

@@ -88,12 +88,5 @@ namespace PlayPal.Data.Models
         /// List of all goals scored by the player
         /// </summary>
         public virtual ICollection<Goal> Goals { get; set; }
-
-        /// <summary>
-        /// Indicate if this player profile is considered deleted
-        /// </summary>
-        [Comment("Indicate if this player profile is considered deleted")]
-        [Required]
-        public bool IsDeleted { get; set; }
     }
 }

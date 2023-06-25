@@ -20,6 +20,12 @@ namespace PlayPal.Data.Models
         [Key]
         public Guid Id { get; set; }
 
+        [Required]
+        public string FirstName { get; set; } = null!;
+
+        [Required]
+        public string LastName { get; set; } = null!;
+
         /// <summary>
         /// The identifier of the user, owning the administrator profile
         /// </summary>
@@ -38,12 +44,5 @@ namespace PlayPal.Data.Models
         /// </summary>
         [Comment("Collection of all bans, issued by the administrator")]
         public virtual ICollection<Ban> Bans { get; set; }
-
-        /// <summary>
-        /// Indicate if this administrator profile is considered deleted
-        /// </summary>
-        [Comment("Indicate if this administrator profile is considered deleted")]
-        [Required]
-        public bool IsDeleted { get; set; }
     }
 }

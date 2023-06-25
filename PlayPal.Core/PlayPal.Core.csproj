@@ -11,9 +11,4 @@
     <ProjectReference Include="..\PlayPal.Data\PlayPal.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\InputModels\" />
-    <Folder Include="Repositories\Interfaces\" />
-  </ItemGroup>
-
 </Project>

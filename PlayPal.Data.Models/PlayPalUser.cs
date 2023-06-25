@@ -17,13 +17,12 @@ namespace PlayPal.Data.Models
         /// The identifier of the player profile, that is owned by this user
         /// </summary>
         [Comment("The identifier of the player profile, that is owned by this user.")]
-        [Required]
-        public Guid PlayerId { get; set; }
+        public Guid? PlayerId { get; set; }
 
         /// <summary>
         /// The player enity, that is owned by this user
         /// </summary>
-        public virtual Player Player { get; set; } = null!;
+        public virtual Player? Player { get; set; }
 
         /// <summary>
         /// The identifier of the administrator profile, that is owned by this user
@@ -40,7 +39,7 @@ namespace PlayPal.Data.Models
         /// The identifier of the fieled owner profile, that is owned by this user
         /// </summary>
         [Comment("The identifier of the field owner profile, that is owned by this user.")]
-        public Guid? OwnerId { get; set; }
+        public Guid? FieldOwnerId { get; set; }
 
         /// <summary>
         /// The field owner entity, that is owned by this user

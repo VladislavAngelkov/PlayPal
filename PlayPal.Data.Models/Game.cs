@@ -83,12 +83,5 @@ namespace PlayPal.Data.Models
         /// </summary>
         [Comment("List of players that are awaiting for team assignment")]
         public virtual ICollection<PendingPlayerGame> PendingPlayers { get; set; }
-
-        /// <summary>
-        /// Indicate if this game is considered deleted
-        /// </summary>
-        [Comment("Indicate if this game is considered deleted")]
-        [Required]
-        public bool IsDeleted { get; set; }
     }
 }
