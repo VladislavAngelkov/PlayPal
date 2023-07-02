@@ -4,6 +4,6 @@ namespace PlayPal.Core.Services.Interfaces
 {
     public interface IAccountService
     {
-        public Task RegisterUser(RegisterUserInputModel model);
+        public Task RegisterPlayerUserAsync(RegisterUserInputModel model);
     }
 }

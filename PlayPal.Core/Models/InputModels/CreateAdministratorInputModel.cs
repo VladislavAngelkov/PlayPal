@@ -3,8 +3,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PlayPal.Core.Models.InputModels
 {
-    public class CreateAdministratorInputModel : RegisterUserInputModel
+    public class CreateAdministratorInputModel 
     {
+        public CreateAdministratorInputModel()
+        {
+            Id = Guid.NewGuid();
+        }
+
+        public Guid Id { get; set; }
+
         [Required]
         [StringLength(AdministratorConstants.FirstNameMaxLength, ErrorMessage = AdministratorConstants.NameErrorMessage, MinimumLength = AdministratorConstants.FirstNameMinLength)]
         public string FirstName { get; set; } = null!;

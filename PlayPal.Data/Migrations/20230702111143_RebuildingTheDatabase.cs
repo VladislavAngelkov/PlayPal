@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PlayPal.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class RebuildingTheDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,9 +28,9 @@ namespace PlayPal.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PlayerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The identifier of the player profile, that is owned by this user."),
+                    PlayerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true, comment: "The identifier of the player profile, that is owned by this user."),
                     AdministratorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true, comment: "The identifier of the administrator profile, that is owned by this user."),
-                    OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true, comment: "The identifier of the field owner profile, that is owned by this user."),
+                    FieldOwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true, comment: "The identifier of the field owner profile, that is owned by this user."),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Indicate if this player profile is considered deleted"),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -50,6 +50,19 @@ namespace PlayPal.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Positions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The identifier of the position"),
+                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false, comment: "The name of the postion"),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Indicate if this administrator profile is considered deleted")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Positions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -78,6 +91,8 @@ namespace PlayPal.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The identifier of the Administrator profile"),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The identifier of the user, owning the administrator profile"),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Indicate if this administrator profile is considered deleted")
                 },
@@ -182,9 +197,13 @@ namespace PlayPal.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Field owner's identifier."),
+                    CompanyName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, comment: "The name of the company that owns the field"),
+                    FirstName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false, comment: "The first name of the representive of the company that owns the field"),
+                    LastName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, comment: "The last name of the representive of the company that owns the field"),
+                    Title = table.Column<int>(type: "int", nullable: false, comment: "The title of the representive"),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The identifier of the user, owning owner's profile"),
                     ContactAddress = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, comment: "Field owner's physical address for official correspondence"),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Indicate if this field owner profile is considered deleted")
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Indicate if this administrator profile is considered deleted")
                 },
                 constraints: table =>
                 {
@@ -205,7 +224,7 @@ namespace PlayPal.Data.Migrations
                     SenderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The identifier of the user, that has send the message"),
                     ReceiverId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The identifier of the user, that has received the message"),
                     Content = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false, comment: "The content of the message"),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Indicate if this message is considered deleted")
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Indicate if this administrator profile is considered deleted")
                 },
                 constraints: table =>
                 {
@@ -229,9 +248,9 @@ namespace PlayPal.Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Player's identifier."),
                     Name = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false, comment: "The name, that player will be seen with by other users."),
                     CurrentCity = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, comment: "The current location of the player. Its used for finding nearby games."),
-                    Position = table.Column<int>(type: "int", nullable: false, comment: "The preffered position of the player."),
+                    PositionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The identifier of the preffered position of the player."),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The identifier of the user, owning player's profile"),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Indicate if this player profile is considered deleted")
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Indicate if this administrator profile is considered deleted")
                 },
                 constraints: table =>
                 {
@@ -240,6 +259,12 @@ namespace PlayPal.Data.Migrations
                         name: "FK_Players_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Players_Positions_PositionId",
+                        column: x => x.PositionId,
+                        principalTable: "Positions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -252,7 +277,7 @@ namespace PlayPal.Data.Migrations
                     City = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, comment: "The name of the city where the field is located"),
                     Address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, comment: "The address of the field (district, street, number)"),
                     OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The identifier of the field owner"),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Indicate if this field record is considered deleted")
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Indicate if this administrator profile is considered deleted")
                 },
                 constraints: table =>
                 {
@@ -274,7 +299,7 @@ namespace PlayPal.Data.Migrations
                     PlayerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The identifier of the player, who has been banned"),
                     Reason = table.Column<int>(type: "int", nullable: false, comment: "The reason for the ban"),
                     BannedTo = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "The date and hour, when the ban expires"),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Indicate if this ban is considered deleted")
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Indicate if this administrator profile is considered deleted")
                 },
                 constraints: table =>
                 {
@@ -301,7 +326,7 @@ namespace PlayPal.Data.Migrations
                     FieldId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The identifier of the field, where the game is played"),
                     StartingTime = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Mark the starting time of the game"),
                     EndingTime = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Mark the ending time of the game"),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Indicate if this game is considered deleted")
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Indicate if this administrator profile is considered deleted")
                 },
                 constraints: table =>
                 {
@@ -326,7 +351,7 @@ namespace PlayPal.Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The goal identifier"),
                     PlayerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The indentifier of the player, who scored the goal"),
                     GameId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The identifier of the game in which the goal was scored"),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Indicate if this goal is considered deleted")
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Indicate if this administrator profile is considered deleted")
                 },
                 constraints: table =>
                 {
@@ -373,7 +398,7 @@ namespace PlayPal.Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The indentifier of the team"),
                     HomeGameID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The identifier of the home game, in which the team played"),
                     AwayGameID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The identifier of the away game, in which the team played"),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Indicate if this team is considered deleted")
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, comment: "Indicate if this administrator profile is considered deleted")
                 },
                 constraints: table =>
                 {
@@ -417,35 +442,59 @@ namespace PlayPal.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("b333df2f-222c-4768-a9f5-0368b93aea47"), "7712b37c-2624-4115-ae23-5864bf4020b7", "Player", "PLAYER" },
-                    { new Guid("c3caf211-8a76-4415-a74a-6b7f0a0b9d50"), "e7631731-d800-43b5-95ec-7543c33cde3f", "FieldOwner", "FIELDOWNER" },
-                    { new Guid("f5356275-13f4-4d7c-8172-bbf054707e2f"), "c06f4ced-1a74-4d67-815c-164831843256", "Admin", "ADMIN" }
+                    { new Guid("b333df2f-222c-4768-a9f5-0368b93aea47"), "d2830678-d5ad-4a92-9d59-d55f0abe6849", "Player", "PLAYER" },
+                    { new Guid("c3caf211-8a76-4415-a74a-6b7f0a0b9d50"), "04fa9523-367a-4148-bf3e-56beeaa3537a", "FieldOwner", "FIELDOWNER" },
+                    { new Guid("f5356275-13f4-4d7c-8172-bbf054707e2f"), "6c1138e9-7af4-4675-8a17-4e665e6d7487", "Administrator", "ADMINISTRATOR" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "AdministratorId", "ConcurrencyStamp", "Email", "EmailConfirmed", "IsDeleted", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "OwnerId", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "PlayerId", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                columns: new[] { "Id", "AccessFailedCount", "AdministratorId", "ConcurrencyStamp", "Email", "EmailConfirmed", "FieldOwnerId", "IsDeleted", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "PlayerId", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { new Guid("84b6df4e-b349-495e-a9e1-8541de1f2e2d"), 0, null, "61a3fe97-7f8b-4255-8685-2bbd9a38a3cc", "FieldOwner@test.com", false, false, false, null, "FIELDOWNER@TEST.COM", "FIELDOWNER@TEST.COM", null, "AQAAAAEAACcQAAAAEJlNQWyr496OnCLGXfElJS2AYD7EFNRcgkB0rjcdY6dbQEbzvKtCC97Hucu1CU3OHA==", null, false, new Guid("00000000-0000-0000-0000-000000000000"), "b9d8ebd5-f5d9-4c01-acc9-03a06ec59b01", false, "FieldOwner@test.com" },
-                    { new Guid("9a641cdf-8c28-485f-b22a-3603c6df7a3d"), 0, null, "ecc1bbf7-8d81-44ca-9f9d-0a707c00322b", "Administrator@test.com", false, false, false, null, "ADMINISTRATOR@TEST.COM", "ADMINISTRATOR@TEST.COM", null, "AQAAAAEAACcQAAAAEHon03T/gaj7ElCT64LenbaxPOZEesadU0KuHyR7IkRnRXnnnXMlYvB1iLvvpHoKXw==", null, false, new Guid("00000000-0000-0000-0000-000000000000"), "944aae11-af63-4894-ba96-2c1a67baf28f", false, "Administrator@test.com" },
-                    { new Guid("ec70c161-fc76-4b29-b3dc-03fdd605bf0d"), 0, null, "cdbf20b2-b8ea-4c4f-8df1-58c56e170972", "Player@test.com", false, false, false, null, "PLAYER@TEST.COM", "PLAYER@TEST.COM", null, "AQAAAAEAACcQAAAAEPLSTfxmbQwWzXV3bQPMP72z82DRVrlpdSb7ZwKElR/naq84CI5wZNgHaQexeHXyaw==", null, false, new Guid("00000000-0000-0000-0000-000000000000"), "97835b9b-4b17-4701-9a11-2d6c15afe728", false, "Player@test.com" }
+                    { new Guid("84b6df4e-b349-495e-a9e1-8541de1f2e2d"), 0, null, "d444fd6e-12b7-4df2-83a4-ea627078d26f", "FieldOwner@test.com", false, null, false, false, null, "FIELDOWNER@TEST.COM", "FIELDOWNER@TEST.COM", "AQAAAAEAACcQAAAAEMOAgLyWGZqEBun/YQBJX3a9lIFU5FMmADuCY2SuOcsx/o34SOvfA2trZ6WXYci8gA==", null, false, null, "f7fcda59-e271-4f1b-8723-4163568cd747", false, "FieldOwner@test.com" },
+                    { new Guid("9a641cdf-8c28-485f-b22a-3603c6df7a3d"), 0, null, "41b1d6e0-cd25-49bd-acbe-303095f04901", "Administrator@test.com", false, null, false, false, null, "ADMINISTRATOR@TEST.COM", "ADMINISTRATOR@TEST.COM", "AQAAAAEAACcQAAAAEBXeCJbB/0Cq5XoGUIh7YKrQpdZMB30tgTwAzg6MKkLcj3KQOdkxfGIrwOHdkM5bUA==", null, false, null, "7a6196b1-af70-49b6-846b-018b95ad166d", false, "Administrator@test.com" },
+                    { new Guid("ec70c161-fc76-4b29-b3dc-03fdd605bf0d"), 0, null, "f8981aff-ee79-40b0-b362-bb90886718b3", "Player@test.com", false, null, false, false, null, "PLAYER@TEST.COM", "PLAYER@TEST.COM", "AQAAAAEAACcQAAAAEM1shknMLzzl5MTd3KUOaIb/iHJ8Rqj/tqECaEyFEEOqGvvrwr3U8y1SxwLhD171xg==", null, false, null, "18b9089e-1e9a-419f-8831-0c1706c2ea5e", false, "Player@test.com" }
                 });
 
             migrationBuilder.InsertData(
-                table: "AspNetUserRoles",
-                columns: new[] { "RoleId", "UserId" },
-                values: new object[] { new Guid("c3caf211-8a76-4415-a74a-6b7f0a0b9d50"), new Guid("84b6df4e-b349-495e-a9e1-8541de1f2e2d") });
+                table: "Positions",
+                columns: new[] { "Id", "IsDeleted", "Name" },
+                values: new object[,]
+                {
+                    { new Guid("5a491d86-fc04-4359-aef9-feca2630e6bf"), false, "GoalKeeper" },
+                    { new Guid("6b6e1b10-baac-4f32-b276-21d5de82ac52"), false, "FieldPlayer" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Administrators",
+                columns: new[] { "Id", "FirstName", "IsDeleted", "LastName", "UserId" },
+                values: new object[] { new Guid("34e53562-17e0-4e2d-84fb-7aa4ec4e88f3"), "Ivan", false, "Ivanov", new Guid("9a641cdf-8c28-485f-b22a-3603c6df7a3d") });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { new Guid("f5356275-13f4-4d7c-8172-bbf054707e2f"), new Guid("9a641cdf-8c28-485f-b22a-3603c6df7a3d") });
+                values: new object[,]
+                {
+                    { new Guid("c3caf211-8a76-4415-a74a-6b7f0a0b9d50"), new Guid("84b6df4e-b349-495e-a9e1-8541de1f2e2d") },
+                    { new Guid("f5356275-13f4-4d7c-8172-bbf054707e2f"), new Guid("9a641cdf-8c28-485f-b22a-3603c6df7a3d") },
+                    { new Guid("b333df2f-222c-4768-a9f5-0368b93aea47"), new Guid("ec70c161-fc76-4b29-b3dc-03fdd605bf0d") }
+                });
 
             migrationBuilder.InsertData(
-                table: "AspNetUserRoles",
-                columns: new[] { "RoleId", "UserId" },
-                values: new object[] { new Guid("b333df2f-222c-4768-a9f5-0368b93aea47"), new Guid("ec70c161-fc76-4b29-b3dc-03fdd605bf0d") });
+                table: "FieldOwners",
+                columns: new[] { "Id", "CompanyName", "ContactAddress", "FirstName", "IsDeleted", "LastName", "Title", "UserId" },
+                values: new object[] { new Guid("568302c8-4561-4e7d-a796-1ae35b530c5f"), "BestCompany", "Sofia, str. Vasil Levski #11", "Georgi", false, "Georgiev", 0, new Guid("84b6df4e-b349-495e-a9e1-8541de1f2e2d") });
+
+            migrationBuilder.InsertData(
+                table: "Players",
+                columns: new[] { "Id", "CurrentCity", "IsDeleted", "Name", "PositionId", "UserId" },
+                values: new object[] { new Guid("8d46b487-1b10-4de2-89b5-2beac2c6428f"), "Sofia", false, "Player", new Guid("5a491d86-fc04-4359-aef9-feca2630e6bf"), new Guid("ec70c161-fc76-4b29-b3dc-03fdd605bf0d") });
+
+            migrationBuilder.InsertData(
+                table: "Fields",
+                columns: new[] { "Id", "Address", "City", "IsDeleted", "OwnerId" },
+                values: new object[] { new Guid("06921ef3-e09a-456d-92ef-aada394af8bb"), "str. Hristo Botev 36", "Sofia", false, new Guid("568302c8-4561-4e7d-a796-1ae35b530c5f") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Administrators_UserId",
@@ -549,6 +598,11 @@ namespace PlayPal.Data.Migrations
                 column: "GameId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Players_PositionId",
+                table: "Players",
+                column: "PositionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Players_UserId",
                 table: "Players",
                 column: "UserId",
@@ -624,6 +678,9 @@ namespace PlayPal.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "FieldOwners");
+
+            migrationBuilder.DropTable(
+                name: "Positions");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

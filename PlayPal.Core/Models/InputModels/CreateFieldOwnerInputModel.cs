@@ -3,8 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PlayPal.Core.Models.InputModels
 {
-    public class CreateFieldOwnerInputModel : RegisterUserInputModel
+    public class CreateFieldOwnerInputModel 
     {
+        public CreateFieldOwnerInputModel()
+        {
+            Id = Guid.NewGuid();    
+        }
+        public Guid Id { get; set; }
+
         [Required]
         [StringLength(FieldOwnerConstants.FirstNameMaxLength, ErrorMessage = FieldOwnerConstants.NameErrorMessage, MinimumLength = FieldOwnerConstants.FirstNameMinLength)]
         public string FirstName { get; set; } = null!;

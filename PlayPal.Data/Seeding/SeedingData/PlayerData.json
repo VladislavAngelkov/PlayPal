@@ -1,8 +1,9 @@
 [
   {
+    "Id": "6276efc4-23ea-4440-9d4a-7b164a2c74a6",
     "Name": "Player",
     "CurrentCity": "Sofia",
-    "Position": 1,
+    "PositionId": "5a491d86-fc04-4359-aef9-feca2630e6bf",
     "UserId": "ec70c161-fc76-4b29-b3dc-03fdd605bf0d"
   }
 ]

@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using PlayPal.Core.Models.InputModels;
 using PlayPal.Core.Models.ViewModels;
 using PlayPal.Core.Services.Interfaces;
+using PlayPal.Data.Models;
 using PlayPal.Data.Models.Enums;
+using System.Security.Claims;
 using System.Text;
 
 namespace PlayPal.Controllers
@@ -10,10 +13,14 @@ namespace PlayPal.Controllers
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
+        private readonly IPositionService _positionService;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(
+            IAccountService accountService,
+            IPositionService positionService)
         {
             _accountService = accountService;
+            _positionService = positionService;
         }
 
         [HttpGet]
@@ -23,62 +30,43 @@ namespace PlayPal.Controllers
         }
 
         [HttpGet]
-        public IActionResult RegisterAsPlayer()
+        public async Task<IActionResult> RegisterAsPlayer()
         {
-            var positions = new List<PositionViewModel>()
-            {
-                new PositionViewModel()
-                {
-                    Position = "GoalKeeper"
-                },
-                new PositionViewModel()
-                {
-                    Position = "FieldPlayer"
-                },
-            };
+            var positions = await _positionService.GetAllPositionsModels();
 
-            var model = new CreatePlayerInputModel();
-            model.Positions = positions;
+            var model = new RegisterUserInputModel();
+            model.Player = new CreatePlayerInputModel();
+            model.Player.Positions = positions;
 
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterAsPlayer(CreatePlayerInputModel model)
+        public async Task<IActionResult> RegisterAsPlayer(RegisterUserInputModel model)
         {
-            if (!ModelState.IsValid)
+            var positions = await _positionService.GetAllPositionsModels();
+
+            if (!positions.Any(p => p.Id == model.Player!.Position))
             {
-                ModelState.AddModelError("", "Invalid registration attempt");
-
-                var positions = new List<PositionViewModel>()
-                {
-                    new PositionViewModel()
-                    {
-                        Position = "GoalKeeper"
-                    },
-                    new PositionViewModel()
-                    {
-                        Position = "FieldPlayer"
-                    },
-                };
-
-                model.Positions = positions;
-                var errors = new StringBuilder();
-
-                foreach (var error in ViewData.ModelState.Values.SelectMany(modelState => modelState.Errors)) 
-                {
-                    errors.AppendLine(error.ToString());
-                }
-
-                return Ok(errors.ToString());
-                //return View(model);
+                ModelState.AddModelError("", "Selected position does not exist!");
             }
 
-            model.PlayerId = Guid.NewGuid();
+            if (!ModelState.IsValid)
+            {
+                model.Player!.Positions = positions;
 
-            await _accountService.RegisterUser(model);
+                //var message = string.Join(" | ", ModelState.Values
+                //    .SelectMany(v => v.Errors)
+                //    .Select(e => e.ErrorMessage));
 
-            return RedirectToAction("CreatePlayer", "Player", model);
+                //return Ok(message);
+
+                return View(model);
+            }
+
+            await _accountService.RegisterPlayerUserAsync(model);
+
+            return RedirectToAction("JoinGame", "Game");
         }
     }
 }

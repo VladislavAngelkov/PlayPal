@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PlayPal.Core.Repositories;
 using PlayPal.Core.Repositories.Interfaces;
@@ -28,7 +29,7 @@ builder.Services.AddDefaultIdentity<PlayPalUser>(options =>
     options.Password.RequireLowercase = builder.Configuration.GetValue<bool>("AccountConfiguration:RequireLowercase");
 
 })
-    .AddRoles<PlayPalRole>()
+    .AddRoles<IdentityRole<Guid>>()
     .AddEntityFrameworkStores<PlayPalDbContext>();
 
 builder.AddServices();

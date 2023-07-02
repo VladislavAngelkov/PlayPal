@@ -1,4 +1,4 @@
-﻿@model CreatePlayerInputModel
+﻿@model RegisterUserInputModel
 
 @{
     ViewData["Title"] = "Register";
@@ -8,9 +8,8 @@
     <div class="col-md-6">
     </div>
     <div class="col-md-6">
-        <form method="post">
+        <form method="post" asp-controller="Account" asp-action="RegisterAsPlayer">
             <input asp-for="Id" type="hidden" value=@Model.Id />
-            <input asp-for="Positions" type="hidden" value=@Model.Positions/>
             <div class="form-group">
                 <label asp-for=Email class="form-label mt-4">Email address</label>
                 <input asp-for="Email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
@@ -31,23 +30,23 @@
             </div>
 
             <div class="form-group">
-            <label asp-for="Name" class="form-label mt-4">Name</label>
-            <input asp-for="Name" class="form-control"  placeholder="Name">
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="@Model.Player!.Name" class="form-label mt-4">Name</label>
+                <input asp-for="@Model.Player!.Name" class="form-control" placeholder="Name">
+                <span asp-validation-for="@Model.Player!.Name" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-            <label asp-for="City" class="form-label mt-4">City</label>
-            <input asp-for="City" class="form-control"  placeholder="City">
-                <span asp-validation-for="City" class="text-danger"></span>
+                <label asp-for="@Model.Player!.City" class="form-label mt-4">City</label>
+                <input asp-for="@Model.Player!.City" class="form-control" placeholder="City">
+                <span asp-validation-for="@Model.Player!.City" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Position" class="form-label mt-4">Select position</label>
-                <select asp-for="Position" class="form-select" id="exampleSelect1">
-                    @foreach (var ps in Model.Positions)
+                <label asp-for="@Model.Player!.Position" class="form-label mt-4">Select position</label>
+                <select asp-for="@Model.Player.Position" class="form-select" id="exampleSelect1">
+                    @foreach (var pos in @Model.Player.Positions)
                     {
-                        <option value="@ps.Position">@ps.Position</option>
+                        <option value="@pos.Id">@pos.Name</option>
                     }
                 </select>
             </div>
@@ -58,7 +57,5 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-    }
+    <partial name="_ValidationScriptsPartial" />
+}

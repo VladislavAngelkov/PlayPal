@@ -17,11 +17,5 @@ namespace PlayPal.Controllers
             _service = service;
         }
 
-        public async Task<IActionResult> CreatePlayer(CreatePlayerInputModel model)
-        {
-           var playerId = await _service.CreatePlayerAsync(model);
-
-            return RedirectToAction("JoinGame", "Game");
-        }
     }
 }

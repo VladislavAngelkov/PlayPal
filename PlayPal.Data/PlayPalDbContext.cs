@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PlayPal.Data.Models;
 using System.Reflection;
 
 namespace PlayPal.Data
 {
-    public class PlayPalDbContext : IdentityDbContext<PlayPalUser, PlayPalRole, Guid>
+    public class PlayPalDbContext : IdentityDbContext<PlayPalUser, IdentityRole<Guid>, Guid>
     {
         public PlayPalDbContext(
             DbContextOptions<PlayPalDbContext> options)
@@ -24,6 +25,7 @@ namespace PlayPal.Data
         public DbSet<Message> Messages { get; set; } = null!;
         public DbSet<PendingPlayerGame> PendingPlayersGames { get; set; } = null!;
         public DbSet<PlayerTeam> PlayersTeams { get; set; } = null!;
+        public DbSet<Position> Positions { get; set; } = null!; 
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

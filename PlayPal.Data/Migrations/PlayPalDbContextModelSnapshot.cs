@@ -22,6 +22,57 @@ namespace PlayPal.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("f5356275-13f4-4d7c-8172-bbf054707e2f"),
+                            ConcurrencyStamp = "7e327183-49c1-4beb-a332-d39590df88b6",
+                            Name = "Administrator",
+                            NormalizedName = "ADMINISTRATOR"
+                        },
+                        new
+                        {
+                            Id = new Guid("c3caf211-8a76-4415-a74a-6b7f0a0b9d50"),
+                            ConcurrencyStamp = "ba394090-9f0d-4908-906e-e0b9d2f23070",
+                            Name = "FieldOwner",
+                            NormalizedName = "FIELDOWNER"
+                        },
+                        new
+                        {
+                            Id = new Guid("b333df2f-222c-4768-a9f5-0368b93aea47"),
+                            ConcurrencyStamp = "765c7265-f385-4d2b-9cf1-4cbe9073dac8",
+                            Name = "Player",
+                            NormalizedName = "PLAYER"
+                        });
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
@@ -68,6 +119,29 @@ namespace PlayPal.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AspNetUserClaims", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ClaimType = "AdministratorId",
+                            ClaimValue = "fd40991a-dd39-4ce0-9179-82740d6383ee",
+                            UserId = new Guid("9a641cdf-8c28-485f-b22a-3603c6df7a3d")
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ClaimType = "FieldOwnerId",
+                            ClaimValue = "568302c8-4561-4e7d-a796-1ae35b530c5f",
+                            UserId = new Guid("84b6df4e-b349-495e-a9e1-8541de1f2e2d")
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ClaimType = "PlayerId",
+                            ClaimValue = "6276efc4-23ea-4440-9d4a-7b164a2c74a6",
+                            UserId = new Guid("ec70c161-fc76-4b29-b3dc-03fdd605bf0d")
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
@@ -179,7 +253,7 @@ namespace PlayPal.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("9532ac14-2efc-4345-aff7-2cbae927886b"),
+                            Id = new Guid("fd40991a-dd39-4ce0-9179-82740d6383ee"),
                             FirstName = "Ivan",
                             IsDeleted = false,
                             LastName = "Ivanov",
@@ -469,15 +543,22 @@ namespace PlayPal.Data.Migrations
                         .HasColumnType("nvarchar(40)")
                         .HasComment("The name, that player will be seen with by other users.");
 
-                    b.Property<int>("Position")
-                        .HasColumnType("int")
-                        .HasComment("The preffered position of the player.");
+                    b.Property<string>("NormalizedCurrentCity")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)")
+                        .HasComment("Normalized name of the player's city");
+
+                    b.Property<Guid>("PositionId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("The identifier of the preffered position of the player.");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier")
                         .HasComment("The identifier of the user, owning player's profile");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PositionId");
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -487,11 +568,11 @@ namespace PlayPal.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("6080ef67-c8d7-49f2-8639-f8c0779b50d8"),
+                            Id = new Guid("6276efc4-23ea-4440-9d4a-7b164a2c74a6"),
                             CurrentCity = "Sofia",
                             IsDeleted = false,
                             Name = "Player",
-                            Position = 1,
+                            PositionId = new Guid("5a491d86-fc04-4359-aef9-feca2630e6bf"),
                             UserId = new Guid("ec70c161-fc76-4b29-b3dc-03fdd605bf0d")
                         });
                 });
@@ -511,57 +592,6 @@ namespace PlayPal.Data.Migrations
                     b.HasIndex("TeamId");
 
                     b.ToTable("PlayersTeams");
-                });
-
-            modelBuilder.Entity("PlayPal.Data.Models.PlayPalRole", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("f5356275-13f4-4d7c-8172-bbf054707e2f"),
-                            ConcurrencyStamp = "79f9eacb-b0b4-40d9-bc87-3e2a60c5b3fb",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = new Guid("c3caf211-8a76-4415-a74a-6b7f0a0b9d50"),
-                            ConcurrencyStamp = "c85d80b2-bf51-4089-9ec5-8ccee776caab",
-                            Name = "FieldOwner",
-                            NormalizedName = "FIELDOWNER"
-                        },
-                        new
-                        {
-                            Id = new Guid("b333df2f-222c-4768-a9f5-0368b93aea47"),
-                            ConcurrencyStamp = "2193d0de-2deb-4151-9514-0d8ffacda5cf",
-                            Name = "Player",
-                            NormalizedName = "PLAYER"
-                        });
                 });
 
             modelBuilder.Entity("PlayPal.Data.Models.PlayPalUser", b =>
@@ -650,16 +680,16 @@ namespace PlayPal.Data.Migrations
                         {
                             Id = new Guid("9a641cdf-8c28-485f-b22a-3603c6df7a3d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b68ffe33-112d-410a-a84f-75581bed6e68",
+                            ConcurrencyStamp = "8a1a0440-f255-4b2c-945c-7f21953526c9",
                             Email = "Administrator@test.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMINISTRATOR@TEST.COM",
                             NormalizedUserName = "ADMINISTRATOR@TEST.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGbM3Jw+tJKVI6QBGmVyCkaB1tCXMtChGGiZYkc4+gCvOCAExLxl3rM4/EGS3EIQfQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBzEctoLSUKrwmDlZtff32tOEXPFomFILaUTSMEz2tD3US+mQ8B4JtcO5Yrg6abdNQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "fbcdb052-f0f1-4130-89a7-6ad2c8e7210d",
+                            SecurityStamp = "bf6ab313-a711-4bcd-ab09-ad9b5637d87e",
                             TwoFactorEnabled = false,
                             UserName = "Administrator@test.com"
                         },
@@ -667,16 +697,16 @@ namespace PlayPal.Data.Migrations
                         {
                             Id = new Guid("84b6df4e-b349-495e-a9e1-8541de1f2e2d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "64d9e88b-0542-4011-8c54-0da30685cf6b",
+                            ConcurrencyStamp = "dab5c1cb-a7da-48ff-845a-a6895157b882",
                             Email = "FieldOwner@test.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "FIELDOWNER@TEST.COM",
                             NormalizedUserName = "FIELDOWNER@TEST.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOd8p5/8ShW4KCtfZOI+vHMkRjkL3shIXftUsHFq4hU6HA5h5pvWfivawv0r/hwfJQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELM3b2+G3BO+5SjIpTCuEwmNYQfbTtI9GU+suC2p9TSGir+W6MS064F5AAlN0hFn7w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8bf28c32-e5fb-4921-98ef-0c98c1b9c7b8",
+                            SecurityStamp = "d0ca2598-343c-440b-8b20-e914e5a58804",
                             TwoFactorEnabled = false,
                             UserName = "FieldOwner@test.com"
                         },
@@ -684,18 +714,54 @@ namespace PlayPal.Data.Migrations
                         {
                             Id = new Guid("ec70c161-fc76-4b29-b3dc-03fdd605bf0d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "50268bfa-7534-4954-9394-a92e1219bbf4",
+                            ConcurrencyStamp = "aa26af01-7d14-4b52-a24a-26d210240e26",
                             Email = "Player@test.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "PLAYER@TEST.COM",
                             NormalizedUserName = "PLAYER@TEST.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJqd2wGocVcJzY3FFcpMX2V3qHOEnlULS6AIEDMQ2S/rrMn1VsjxLDjMpVTCVU3S1A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEE6rflpfO6mAIgKa74CbOVd4v4YhRbMCXYlqfF4N1mKM3nTesEpl+6KOxe+PGwMXrA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "aee70854-d122-4c13-9c01-a1ea8ca29b0b",
+                            SecurityStamp = "ca57986b-7690-4cf4-ba69-ab91b4a79fa2",
                             TwoFactorEnabled = false,
                             UserName = "Player@test.com"
+                        });
+                });
+
+            modelBuilder.Entity("PlayPal.Data.Models.Position", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("The identifier of the position");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasComment("Indicate if this administrator profile is considered deleted");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasComment("The name of the postion");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Positions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("5a491d86-fc04-4359-aef9-feca2630e6bf"),
+                            IsDeleted = false,
+                            Name = "GoalKeeper"
+                        },
+                        new
+                        {
+                            Id = new Guid("6b6e1b10-baac-4f32-b276-21d5de82ac52"),
+                            IsDeleted = false,
+                            Name = "FieldPlayer"
                         });
                 });
 
@@ -733,7 +799,7 @@ namespace PlayPal.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("PlayPal.Data.Models.PlayPalRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -760,7 +826,7 @@ namespace PlayPal.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("PlayPal.Data.Models.PlayPalRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -912,11 +978,19 @@ namespace PlayPal.Data.Migrations
 
             modelBuilder.Entity("PlayPal.Data.Models.Player", b =>
                 {
+                    b.HasOne("PlayPal.Data.Models.Position", "Position")
+                        .WithMany()
+                        .HasForeignKey("PositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("PlayPal.Data.Models.PlayPalUser", "User")
                         .WithOne("Player")
                         .HasForeignKey("PlayPal.Data.Models.Player", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Position");
 
                     b.Navigation("User");
                 });

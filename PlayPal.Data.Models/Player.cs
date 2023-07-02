@@ -44,10 +44,24 @@ namespace PlayPal.Data.Models
         public string CurrentCity { get; set; } = null!;
 
         /// <summary>
+        /// Normalized name of the player's city
+        /// Used for finding nearby games.
+        /// </summary>
+        [Comment("Normalized name of the player's city")]
+        [MaxLength(PlayerConstants.CitiMaxLength)]
+        public string? NormalizedCurrentCity { get; set; }
+
+        /// <summary>
+        /// The identifier of the preffered position of the player.
+        /// </summary>
+        [Comment("The identifier of the preffered position of the player.")]
+        [Required]
+        [ForeignKey(nameof(Position))]
+        public Guid PositionId { get; set; }
+
+        /// <summary>
         /// The preffered position of the player.
         /// </summary>
-        [Comment("The preffered position of the player.")]
-        [Required]
         public Position Position { get; set; }
 
         /// <summary>
