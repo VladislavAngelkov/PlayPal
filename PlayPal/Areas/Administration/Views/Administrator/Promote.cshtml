@@ -1,0 +1,41 @@
+﻿@using PlayPal.Core.Models.ViewModels
+@model ICollection<ApplicationAdministratorViewModel>
+<div class="text-center">
+    <h2>
+        Administrator control panel
+    </h2>
+</div>
+<br />
+<div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Email</th>
+                <th scope="col">Promote</th>
+                <th scope="col">Reject</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var application in Model)
+            {
+                <tr class="table-active">
+                    <th scope="row">@application.Email</th>
+                    <td>
+                        <form asp-area="Administration" asp-controller="Administrator" asp-action="Promote">
+                            <input type="hidden" value="@application.Email" name="email">
+                            <input type="hidden" value="@application.AdministratorId" name="administratorId">
+                            <button type="submit" class="btn btn-success">Accept</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form asp-area="Administration" asp-controller="Administrator" asp-action="Reject">
+                            <input type="hidden" value="@application.Email" name="email">
+                            <input type="hidden" value="@application.AdministratorId" name="administratorId">
+                            <button type="submit" class="btn btn-danger">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

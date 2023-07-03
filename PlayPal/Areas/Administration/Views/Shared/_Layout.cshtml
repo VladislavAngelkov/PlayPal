@@ -1,0 +1,63 @@
+﻿@using PlayPal.Common
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PlayPal</title>
+    <link rel="stylesheet" href="~/css/CosmoBootswatchTheme/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/CosmoBootswatchTheme/_bootswatch.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/CosmoBootswatchTheme/_variables.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/PlayPal.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header >
+        <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+            <div class="container-fluid">
+                <a class="navbar-brand">PlayPal</a>
+                <div class="collapse navbar-collapse" id="navbarColor02">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" asp-area="Administration" asp-controller="Administrator" asp-action="Promote">
+                                Promote Administrator
+                                <span class="visually-hidden">(current)</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Administration" asp-controller="FieldOwner" asp-action="Approve">Approve Field Owner</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Administration" asp-controller="Player" asp-action="All">Mange Players</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <hr />
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted" style="background-color:darkorange;">
+        <div class="container" style="color:white">
+            &copy; @ApplicationConstants.YearOfRelease
+            @if (DateTime.UtcNow.Year>ApplicationConstants.YearOfRelease)
+            {
+                <a>-@DateTime.UtcNow.Year</a>
+            }
+             - PlayPal
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    
+</body>
+</html>

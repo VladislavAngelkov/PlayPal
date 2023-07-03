@@ -26,12 +26,22 @@ namespace PlayPal.Controllers
         [HttpGet]
         public IActionResult Register()
         {
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("JoinGame", "Game");
+            }
+
             return View();
         }
 
         [HttpGet]
         public async Task<IActionResult> RegisterAsPlayer()
         {
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("JoinGame", "Game");
+            }
+
             var positions = await _positionService.GetAllPositionsModels();
 
             var model = new RegisterUserInputModel();
@@ -67,6 +77,34 @@ namespace PlayPal.Controllers
             await _accountService.RegisterPlayerUserAsync(model);
 
             return RedirectToAction("JoinGame", "Game");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ApplyForAdministrator()
+        {
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Administration", "Administrator", "Promote");
+            }
+
+            var model = new RegisterUserInputModel();
+            var administrator = new CreateAdministratorInputModel();
+            model.Administrator = administrator;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApplyForAdministrator(RegisterUserInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            await _accountService.ApplyAdministratorAsync(model);
+
+            return View("Success");
         }
     }
 }

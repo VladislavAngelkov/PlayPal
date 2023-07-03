@@ -13,18 +13,21 @@ namespace PlayPal.Core.Services
         private readonly IUserStore<PlayPalUser> _userStore;
         private readonly IUserEmailStore<PlayPalUser> _emailStore;
         private readonly IPlayerService _playerService;
+        private readonly IAdministratorService _administratorService;
 
         public AccountService(
             UserManager<PlayPalUser> userManager,
             IUserStore<PlayPalUser> userStore,
             SignInManager<PlayPalUser> signInManager,
-            IPlayerService playerService)
+            IPlayerService playerService,
+            IAdministratorService administratorService)
         {
             _userManager = userManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _playerService = playerService;
+            _administratorService = administratorService;
         }
 
         public async Task RegisterPlayerUserAsync(RegisterUserInputModel model)
@@ -37,6 +40,13 @@ namespace PlayPal.Core.Services
 
             var claim = new Claim("PlayerId", model.Player!.Id.ToString());
             await _userManager.AddClaimAsync(user, claim);
+        }
+
+        public async Task ApplyAdministratorAsync(RegisterUserInputModel model)
+        {
+            var user = await RegisterUserAsync(model);
+
+            await _administratorService.CreateAdministrator(model);
         }
 
         private async Task<PlayPalUser> RegisterUserAsync(RegisterUserInputModel model)
