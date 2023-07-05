@@ -127,23 +127,59 @@ namespace PlayPal.Data.Seeding
             };
             userClaims.Add(administratorClaim);
 
-            var fieldOwnerClaim = new IdentityUserClaim<Guid>()
+            var administratorNameClaim = new IdentityUserClaim<Guid>()
             {
                 Id = 2,
+                UserId = Guid.Parse(userGuids[0]),
+                ClaimType = "Name",
+                ClaimValue = "Ivan Ivanow"
+            };
+            userClaims.Add(administratorNameClaim);
+
+            var fieldOwnerClaim = new IdentityUserClaim<Guid>()
+            {
+                Id = 3,
                 UserId = Guid.Parse(userGuids[1]),
                 ClaimType = "FieldOwnerId",
                 ClaimValue = "568302c8-4561-4e7d-a796-1ae35b530c5f"
             };
             userClaims.Add(fieldOwnerClaim);
 
+            var fieldOwnerNameClaim = new IdentityUserClaim<Guid>()
+            {
+                Id = 4,
+                UserId = Guid.Parse(userGuids[1]),
+                ClaimType = "Name",
+                ClaimValue = "Mr Georgi Georgiev"
+            };
+            userClaims.Add(fieldOwnerNameClaim);
+
             var playerClaim = new IdentityUserClaim<Guid>()
             {
-                Id = 3,
+                Id = 5,
                 UserId = Guid.Parse(userGuids[2]),
                 ClaimType = "PlayerId",
                 ClaimValue = "6276efc4-23ea-4440-9d4a-7b164a2c74a6"
             };
             userClaims.Add(playerClaim);
+
+            var playerNameClaim = new IdentityUserClaim<Guid>()
+            {
+                Id = 6,
+                UserId = Guid.Parse(userGuids[2]),
+                ClaimType = "Name",
+                ClaimValue = "Player"
+            };
+            userClaims.Add(playerNameClaim);
+
+            var playerCityClaim = new IdentityUserClaim<Guid>()
+            {
+                Id = 7,
+                UserId = Guid.Parse(userGuids[2]),
+                ClaimType = "City",
+                ClaimValue = "Sofia"
+            };
+            userClaims.Add(playerCityClaim);
 
             return userClaims;
         }

@@ -9,25 +9,26 @@ namespace PlayPal.Core.Models.InputModels
         {
             Id = Guid.NewGuid();    
         }
+
         public Guid Id { get; set; }
 
         [Required]
-        [StringLength(FieldOwnerConstants.FirstNameMaxLength, ErrorMessage = FieldOwnerConstants.NameErrorMessage, MinimumLength = FieldOwnerConstants.FirstNameMinLength)]
+        [StringLength(FieldOwnerConstants.FirstNameMaxLength, MinimumLength = FieldOwnerConstants.FirstNameMinLength)]
         public string FirstName { get; set; } = null!;
 
         [Required]
-        [StringLength(FieldOwnerConstants.LastNameMaxLength, ErrorMessage = FieldOwnerConstants.NameErrorMessage, MinimumLength = FieldOwnerConstants.LastNameMinLength)]
+        [StringLength(FieldOwnerConstants.LastNameMaxLength, MinimumLength = FieldOwnerConstants.LastNameMinLength)]
         public string LastName { get; set;} = null!;
 
         [Required]
-        [StringLength(FieldOwnerConstants.CompanyNameMaxLength, ErrorMessage = FieldOwnerConstants.CompanyNameErrorMessage, MinimumLength = FieldOwnerConstants.CompanyNameMinLength)]
-        public string Company { get; set; } = null!;
+        [StringLength(FieldOwnerConstants.CompanyNameMaxLength, MinimumLength = FieldOwnerConstants.CompanyNameMinLength)]
+        public string CompanyName { get; set; } = null!;
 
         [Required]
         public string Title { get; set; } = null!;
 
         [Required]
-        [StringLength(FieldOwnerConstants.ContactAddressMaxLength, ErrorMessage = FieldOwnerConstants.AddressErrorMessage, MinimumLength = FieldOwnerConstants.ContactAddressMinLength)]
+        [StringLength(FieldOwnerConstants.ContactAddressMaxLength, MinimumLength = FieldOwnerConstants.ContactAddressMinLength)]
         public string ContactAddres { get; set; } = null!;
 
     }

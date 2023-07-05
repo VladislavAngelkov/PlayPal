@@ -14,13 +14,15 @@ namespace PlayPal.Core.Services
         private readonly IUserEmailStore<PlayPalUser> _emailStore;
         private readonly IPlayerService _playerService;
         private readonly IAdministratorService _administratorService;
+        private readonly IFieldOwnerService _fieldOwnerService;
 
         public AccountService(
             UserManager<PlayPalUser> userManager,
             IUserStore<PlayPalUser> userStore,
             SignInManager<PlayPalUser> signInManager,
             IPlayerService playerService,
-            IAdministratorService administratorService)
+            IAdministratorService administratorService,
+            IFieldOwnerService fieldOwnerService)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -28,9 +30,10 @@ namespace PlayPal.Core.Services
             _signInManager = signInManager;
             _playerService = playerService;
             _administratorService = administratorService;
+            _fieldOwnerService = fieldOwnerService;
         }
 
-        public async Task RegisterPlayerUserAsync(RegisterUserInputModel model)
+        public async Task<PlayPalUser> RegisterPlayerUserAsync(RegisterUserInputModel model)
         {
             var user = await RegisterUserAsync(model);
 
@@ -38,15 +41,48 @@ namespace PlayPal.Core.Services
 
             await _userManager.AddToRoleAsync(user, "Player");
 
-            var claim = new Claim("PlayerId", model.Player!.Id.ToString());
-            await _userManager.AddClaimAsync(user, claim);
+            var playerIdClaim = new Claim("PlayerId", model.Player!.Id.ToString());
+            await _userManager.AddClaimAsync(user, playerIdClaim);
+
+            var cityClaim = new Claim("City", model.Player.City);
+            await _userManager.AddClaimAsync(user, cityClaim);
+
+            var nameClaim = new Claim("Name", model.Player.Name);
+            await _userManager.AddClaimAsync(user, nameClaim);
+
+            return user;
         }
 
-        public async Task ApplyAdministratorAsync(RegisterUserInputModel model)
+        public async Task<PlayPalUser> ApplyAdministratorAsync(RegisterUserInputModel model)
         {
             var user = await RegisterUserAsync(model);
 
             await _administratorService.CreateAdministrator(model);
+
+            await _userManager.AddToRoleAsync(user, "Administrator");
+
+            var administratorIdClaim = new Claim("AdministratorId", model.Administrator!.Id.ToString());
+            await _userManager.AddClaimAsync(user, administratorIdClaim);
+
+            var nameClaim = new Claim("Name", $"{model.Administrator.FirstName} {model.Administrator.LastName}");
+            await _userManager.AddClaimAsync(user, nameClaim);
+
+            return user;
+        }
+
+        public async Task<PlayPalUser> RegisterFieldOwnerAsync(RegisterUserInputModel model)
+        {
+            var user = await RegisterUserAsync(model);
+
+            await _fieldOwnerService.CreateFieldOwner(model);
+
+            var fieldOwnerIdClaim = new Claim("FieldOwnerId", model.FieldOwner!.Id.ToString());
+            await _userManager.AddClaimAsync(user, fieldOwnerIdClaim);
+
+            var nameClaim = new Claim("Name", $"{model.FieldOwner.Title} {model.FieldOwner.FirstName} {model.FieldOwner.LastName}");
+            await _userManager.AddClaimAsync(user, nameClaim);
+
+            return user;
         }
 
         private async Task<PlayPalUser> RegisterUserAsync(RegisterUserInputModel model)
@@ -72,8 +108,6 @@ namespace PlayPal.Core.Services
 
             return user;
         }
-
-
 
         private IUserEmailStore<PlayPalUser> GetEmailStore()
         {

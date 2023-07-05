@@ -1,11 +1,14 @@
 ﻿using PlayPal.Core.Models.InputModels;
+using PlayPal.Data.Models;
 
 namespace PlayPal.Core.Services.Interfaces
 {
     public interface IAccountService
     {
-        public Task RegisterPlayerUserAsync(RegisterUserInputModel model);
+        public Task<PlayPalUser> RegisterPlayerUserAsync(RegisterUserInputModel model);
 
-        public Task ApplyAdministratorAsync(RegisterUserInputModel model);
+        public Task<PlayPalUser> RegisterFieldOwnerAsync(RegisterUserInputModel model);
+
+        public Task<PlayPalUser> ApplyAdministratorAsync(RegisterUserInputModel model);
     }
 }

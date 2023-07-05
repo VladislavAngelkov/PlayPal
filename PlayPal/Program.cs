@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PlayPal.Core.Repositories;
@@ -27,13 +28,15 @@ builder.Services.AddDefaultIdentity<PlayPalUser>(options =>
     options.Password.RequireUppercase = builder.Configuration.GetValue<bool>("AccountConfiguration:RequireUppercase");
 
     options.Password.RequireLowercase = builder.Configuration.GetValue<bool>("AccountConfiguration:RequireLowercase");
-
 })
     .AddRoles<IdentityRole<Guid>>()
     .AddEntityFrameworkStores<PlayPalDbContext>();
-
 builder.AddServices();
 builder.Services.AddScoped<IRepository, Repository>();
+
+//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+//    .AddCookie();
+
 
 builder.Services.AddControllersWithViews();
 
