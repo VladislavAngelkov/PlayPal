@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PlayPal.Controllers;
 using PlayPal.Core.Models.ViewModels;
 using PlayPal.Core.Services.Interfaces;
 
@@ -7,7 +8,7 @@ namespace PlayPal.Areas.Administration.Controllers
 {
     [Area("Administration")]
     [Authorize(Roles = "Administrator")]
-    public class AdministratorController : Controller
+    public class AdministratorController : PlayPalBaseController
     {
         private readonly IAdministratorService _administratorService;
 

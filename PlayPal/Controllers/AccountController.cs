@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PlayPal.Core.Models.InputModels;
 using PlayPal.Core.Services.Interfaces;
@@ -6,7 +7,7 @@ using PlayPal.Data.Models;
 
 namespace PlayPal.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : PlayPalBaseController
     {
         private readonly IAccountService _accountService;
         private readonly IPositionService _positionService;
@@ -25,6 +26,7 @@ namespace PlayPal.Controllers
             _signInManager = signInManager;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Register()
         {
@@ -33,6 +35,7 @@ namespace PlayPal.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> RegisterAsPlayer()
         {
@@ -47,6 +50,7 @@ namespace PlayPal.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> RegisterAsPlayer(RegisterUserInputModel model)
         {
@@ -86,6 +90,7 @@ namespace PlayPal.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult ApplyForAdministrator()
         {
@@ -98,6 +103,7 @@ namespace PlayPal.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> ApplyForAdministrator(RegisterUserInputModel model)
         {
@@ -121,6 +127,7 @@ namespace PlayPal.Controllers
 
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult RegisterAsFieldOwner()
         {
@@ -133,6 +140,7 @@ namespace PlayPal.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> RegisterAsFieldOwner(RegisterUserInputModel model)
         {

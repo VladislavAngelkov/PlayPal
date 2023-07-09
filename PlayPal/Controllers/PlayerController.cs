@@ -8,7 +8,7 @@ using PlayPal.Data.Models.Enums;
 
 namespace PlayPal.Controllers
 {
-    public class PlayerController : Controller
+    public class PlayerController : PlayPalBaseController
     {
         private readonly IPlayerService _service;
 
