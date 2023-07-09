@@ -84,9 +84,7 @@ namespace PlayPal.Controllers
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
 
-                return View("Register");
-
-                //return RedirectToAction("JoinGame", "Game");
+                return RedirectToAction("JoinGame", "Game");
             }
         }
 
@@ -160,6 +158,78 @@ namespace PlayPal.Controllers
                 await _signInManager.SignInAsync(user, isPersistent: false);
 
                 return RedirectToAction("Mine", "Field", "FieldManagment");
+            }
+        }
+
+        [HttpGet]
+        public IActionResult Manage()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(string returnUrl = null)
+        {
+            //string returnUrl = Request.Path;
+            var model = new LoginUserInputModel();
+            model.returnUrl = returnUrl;
+
+            await _signInManager.SignOutAsync();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(LoginUserInputModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, lockoutOnFailure: false);
+
+                if (result.Succeeded)
+                {
+                    if (model.returnUrl != null)
+                    {
+                        return LocalRedirect(model.returnUrl);
+
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+               
+                if (result.IsLockedOut)
+                {
+                    return View("Lockout");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+
+                    return View(model);
+                }
+            }
+            else
+            {
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout(string returnUrl)
+        {
+            await _signInManager.SignOutAsync();
+
+            if (returnUrl != null)
+            {
+                return LocalRedirect(returnUrl);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
             }
         }
 

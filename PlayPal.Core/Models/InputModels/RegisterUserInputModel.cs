@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PlayPal.Common.ValidationConstants;
+using System.ComponentModel.DataAnnotations;
 
 namespace PlayPal.Core.Models.InputModels
 {
@@ -23,7 +24,7 @@ namespace PlayPal.Core.Models.InputModels
         public string Email { get; set; } = null!;
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(PlayPalUserConstants.PasswordMaxLength, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; } = null!;

@@ -19,6 +19,12 @@ namespace PlayPal.Areas.Administration.Controllers
         }
 
         [HttpGet]
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Promote()
         {
             var appliedForAdministratorUsers = await _administratorService.GetAdministratorApplicationsAsync();

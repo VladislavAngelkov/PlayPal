@@ -33,6 +33,9 @@
   <ItemGroup>
     <Folder Include="Areas\Administration\Data\" />
     <Folder Include="Areas\Administration\Models\" />
+    <Folder Include="Areas\FieldManagment\Data\" />
+    <Folder Include="Areas\FieldManagment\Models\" />
+    <Folder Include="Areas\Identity\" />
   </ItemGroup>
 
 </Project>
