@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using PlayPal.Common.IdentityConstants;
 using PlayPal.Common.Notifications;
 using PlayPal.Core.Models.InputModels;
+using PlayPal.Core.Models.ViewModels;
 using PlayPal.Core.Services.Interfaces;
 using PlayPal.Data.Models;
 
@@ -175,7 +177,9 @@ namespace PlayPal.Controllers
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
 
-                    return View("Success");
+                    TempData[ToastrMessageTypes.Success] = SuccessMessages.AdministratorSuccess;
+
+                    return RedirectToAction("Index", "Administrator", new {area="Administration"});
                 }
             }
             catch (Exception)
@@ -303,7 +307,7 @@ namespace PlayPal.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, ErrorMessages.InvalidLogin);
 
                     return View(model);
                 }
@@ -316,7 +320,7 @@ namespace PlayPal.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Logout(string returnUrl)
+        public async Task<IActionResult> Logout()
         {
             bool isLogged = IdentityCheck();
 
@@ -324,19 +328,21 @@ namespace PlayPal.Controllers
             {
                 await _signInManager.SignOutAsync();
 
-                if (returnUrl != null)
-                {
-                    return LocalRedirect(returnUrl);
-                }
-                else
-                {
-                    return RedirectToAction("Index", "Home");
-                }
+                return RedirectToAction("Index", "Home");
             }
             else
             {
                 return RedirectToAction("Login", "Account");
             }
+        }
+
+        [HttpPost]
+        [Authorize(Policy = PlayPalPolicyNames.Adminstration)]
+        public async Task<IActionResult> DeleteUser(AdministratorRequestViewModel model)
+        {
+            await _accountService.DeleteUser(model.UserId);
+
+            return RedirectToAction("Promote", "Administrator", new {Area="Administration"});
         }
 
         private bool IdentityCheck()

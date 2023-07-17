@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using PlayPal.Common.IdentityConstants;
 using PlayPal.Core.Models.InputModels;
 using PlayPal.Core.Services.Interfaces;
 using PlayPal.Data.Models;
@@ -39,15 +40,15 @@ namespace PlayPal.Core.Services
 
             await _playerService.CreatePlayerAsync(model);
 
-            await _userManager.AddToRoleAsync(user, "Player");
+            await _userManager.AddToRoleAsync(user, PlayPalRoleNames.Player);
 
-            var playerIdClaim = new Claim("PlayerId", model.Player!.Id.ToString());
+            var playerIdClaim = new Claim(PlayPalClaimTypes.PlayerId, model.Player!.Id.ToString());
             await _userManager.AddClaimAsync(user, playerIdClaim);
 
-            var cityClaim = new Claim("City", model.Player.City);
+            var cityClaim = new Claim(PlayPalClaimTypes.City, model.Player.City);
             await _userManager.AddClaimAsync(user, cityClaim);
 
-            var nameClaim = new Claim("Name", model.Player.Name);
+            var nameClaim = new Claim(PlayPalClaimTypes.Name, model.Player.Name);
             await _userManager.AddClaimAsync(user, nameClaim);
 
             return user;
@@ -59,12 +60,9 @@ namespace PlayPal.Core.Services
 
             await _administratorService.CreateAdministrator(model);
 
-            await _userManager.AddToRoleAsync(user, "Administrator");
+            await _userManager.AddToRoleAsync(user, PlayPalRoleNames.Administrator);
 
-            var administratorIdClaim = new Claim("AdministratorId", model.Administrator!.Id.ToString());
-            await _userManager.AddClaimAsync(user, administratorIdClaim);
-
-            var nameClaim = new Claim("Name", $"{model.Administrator.FirstName} {model.Administrator.LastName}");
+            var nameClaim = new Claim(PlayPalClaimTypes.Name, $"{model.Administrator.FirstName} {model.Administrator.LastName}");
             await _userManager.AddClaimAsync(user, nameClaim);
 
             return user;
@@ -76,10 +74,10 @@ namespace PlayPal.Core.Services
 
             await _fieldOwnerService.CreateFieldOwner(model);
 
-            var fieldOwnerIdClaim = new Claim("FieldOwnerId", model.FieldOwner!.Id.ToString());
+            var fieldOwnerIdClaim = new Claim(PlayPalClaimTypes.FieldOwnerId, model.FieldOwner!.Id.ToString());
             await _userManager.AddClaimAsync(user, fieldOwnerIdClaim);
 
-            var nameClaim = new Claim("Name", $"{model.FieldOwner.Title} {model.FieldOwner.FirstName} {model.FieldOwner.LastName}");
+            var nameClaim = new Claim(PlayPalClaimTypes.Name, $"{model.FieldOwner.Title} {model.FieldOwner.FirstName} {model.FieldOwner.LastName}");
             await _userManager.AddClaimAsync(user, nameClaim);
 
             return user;
@@ -107,6 +105,26 @@ namespace PlayPal.Core.Services
             var result = await _userManager.CreateAsync(user, model.Password);
 
             return user;
+        }
+
+        public async Task DeleteUser(Guid userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            var administratorId = user.AdministratorId;
+            var fieldOwnerId = user.FieldOwnerId;
+            var playerId = user.PlayerId;
+
+            if (user != null)
+            {
+                await _userManager.DeleteAsync(user);
+            }
+
+            await _administratorService.DeleteAdministratorAsync(administratorId);
+
+            await _fieldOwnerService.DeleteFieldOwnerAsync(fieldOwnerId);
+
+            await _playerService.DeletePlayerAsync(playerId);
         }
 
         private IUserEmailStore<PlayPalUser> GetEmailStore()

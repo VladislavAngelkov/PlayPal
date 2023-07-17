@@ -57,14 +57,13 @@ namespace PlayPal.Data.Models
         /// The identifier of the user, owning owner's profile
         /// </summary>
         [Comment("The identifier of the user, owning owner's profile")]
-        [Required]
         [ForeignKey(nameof(User))]
-        public Guid UserId { get; set; }
+        public Guid? UserId { get; set; }
 
         /// <summary>
         /// The user enitity, owning owner's profile
         /// </summary>
-        public virtual PlayPalUser User { get; set; } = null!;
+        public virtual PlayPalUser? User { get; set; }
 
         /// <summary>
         /// Field owner's physical address for official correspondence

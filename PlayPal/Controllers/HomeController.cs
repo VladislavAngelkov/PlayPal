@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PlayPal.Common.IdentityConstants;
 using PlayPal.Common.Notifications;
-using PlayPal.Data.Models;
 using PlayPal.Models;
 using System.Diagnostics;
 
@@ -14,15 +14,15 @@ namespace PlayPal.Controllers
         {
             if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                if (User.IsInRole("Administrator"))
+                if (User.IsInRole(PlayPalRoleNames.Administrator))
                 {
                     return RedirectToAction("Index", "Administrator", new { Area = "Administration" });
                 }
-                else if (User.IsInRole("FieldOwner"))
+                else if (User.IsInRole(PlayPalRoleNames.FieldOwner))
                 {
                     return RedirectToAction("Mine", "Field", new { Area = "FieldManagment" });
                 }
-                else if (User.IsInRole("Player"))
+                else if (User.IsInRole(PlayPalRoleNames.Player))
                 {
                     return RedirectToAction("JoinGame", "Game");
                 }

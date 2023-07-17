@@ -1,6 +1,7 @@
 ﻿namespace PlayPal.Common.Notifications
 {
-    public class ErrorMessages
+    public static class ErrorMessages
     {
+        public static string InvalidLogin = "Invalid login attempt. Check your email and password!";
     }
 }

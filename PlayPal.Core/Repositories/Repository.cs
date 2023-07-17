@@ -182,5 +182,16 @@ namespace PlayPal.Core.Repositories
             var entities = All<T>(deleteWhereClause);
             DeleteRange<T>(entities);
         }
+
+        public async Task HardDeleteAsync<T>(object id) 
+            where T : class
+        {
+            T? entity = await DbSet<T>().FindAsync(id);
+
+            if (entity != null)
+            {
+                DbSet<T>().Remove(entity);
+            }
+        }
     }
 }

@@ -7,8 +7,10 @@ namespace PlayPal.Core.Services.Interfaces
     {
         public Task CreateAdministrator(RegisterUserInputModel model);
 
-        public Task<ICollection<ApplicationAdministratorViewModel>> GetAdministratorApplicationsAsync();
+        public Task<ICollection<AdministratorRequestViewModel>> GetAdministratorRequestsAsync();
 
         public Task PromoteUserToAdministrator(string email, Guid administratorId);
+
+        public Task DeleteAdministratorAsync(Guid? administratorId);
     }
 }

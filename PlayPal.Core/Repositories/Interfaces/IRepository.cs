@@ -75,5 +75,7 @@ namespace PlayPal.Core.Repositories.Interfaces
         /// </summary>
         /// <returns>Error code</returns>
         Task<int> SaveChangesAsync();
+
+        Task HardDeleteAsync<T>(object id) where T : class;
     }
 }

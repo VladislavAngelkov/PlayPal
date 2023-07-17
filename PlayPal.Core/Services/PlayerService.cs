@@ -35,5 +35,21 @@ namespace PlayPal.Core.Services
 
             return player.Id;
         }
+
+        public async Task DeletePlayerAsync(Guid? playerId)
+        {
+            if (playerId != null)
+            {
+                var player = await _repository.GetByIdAsync<Player>(playerId);
+
+                if (player != null)
+                {
+                    player.UserId = null;
+                    player.User = null;
+                    await _repository.DeleteAsync<Player>(playerId);
+                    await _repository.SaveChangesAsync();
+                }
+            }
+        }
     }
 }

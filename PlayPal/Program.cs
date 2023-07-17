@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PlayPal.Common.IdentityConstants;
 using PlayPal.Core.Repositories;
 using PlayPal.Core.Repositories.Interfaces;
 using PlayPal.Data;
@@ -40,6 +41,14 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 builder.AddServices();
 builder.Services.AddScoped<IRepository, Repository>();
+builder.Services.AddAuthorization(policy =>
+{
+    policy.AddPolicy(PlayPalPolicyNames.Adminstration, options =>
+    {
+        options.RequireRole(PlayPalRoleNames.Administrator);
+        options.RequireClaim(PlayPalClaimTypes.AdministratorId);
+    });
+});
 
 builder.Services.AddControllersWithViews();
 

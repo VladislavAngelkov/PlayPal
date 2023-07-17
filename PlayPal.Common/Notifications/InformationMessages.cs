@@ -1,6 +1,6 @@
 ﻿namespace PlayPal.Common.Notifications
 {
-    public class InformationMessages
+    public static class InformationMessages
     {
     }
 }

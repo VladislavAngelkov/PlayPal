@@ -5,5 +5,7 @@ namespace PlayPal.Core.Services.Interfaces
     public interface IPlayerService
     {
         public Task<Guid> CreatePlayerAsync(RegisterUserInputModel model);
+
+        public Task DeletePlayerAsync(Guid? playerId);
     }
 }

@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PlayPal.Common.IdentityConstants;
 using PlayPal.Core.Models.InputModels;
 using PlayPal.Core.Models.ViewModels;
 using PlayPal.Core.Repositories.Interfaces;
 using PlayPal.Core.Services.Interfaces;
 using PlayPal.Data.Models;
-using System.Net.Http.Headers;
 using System.Security.Claims;
 
 namespace PlayPal.Core.Services
@@ -36,7 +36,7 @@ namespace PlayPal.Core.Services
             await _repository.AddAsync<Administrator>(administrator);
         }
 
-        public async Task<ICollection<ApplicationAdministratorViewModel>> GetAdministratorApplicationsAsync()
+        public async Task<ICollection<AdministratorRequestViewModel>> GetAdministratorRequestsAsync()
         {
             var administrators = await _userManager
                 .Users
@@ -44,34 +44,51 @@ namespace PlayPal.Core.Services
                 .AsNoTracking()
                 .ToListAsync();
 
-            var administratorsApplications = new List<ApplicationAdministratorViewModel>();
+            var administratorsRequests = new List<AdministratorRequestViewModel>();
 
             foreach (var administrator in administrators)
             {
-                if (!await _userManager.IsInRoleAsync(administrator, "Administrator"))
+                var userClaims = await _userManager.GetClaimsAsync(administrator);
+
+                if (!userClaims.Any(c => c.Type == PlayPalClaimTypes.AdministratorId))
                 {
-                    var application = new ApplicationAdministratorViewModel()
+                    var application = new AdministratorRequestViewModel()
                     {
+                        UserId = administrator.Id,
                         AdministratorId = administrator.AdministratorId,
                         Email = administrator.Email
                     };
 
-                    administratorsApplications.Add(application);
+                    administratorsRequests.Add(application);
                 }
             }
 
-            return administratorsApplications;
+            return administratorsRequests;
         }
 
         public async Task PromoteUserToAdministrator(string email, Guid administratorId)
         {
             var user = await _userManager.FindByEmailAsync(email);
 
-            await _userManager.AddToRoleAsync(user, "Administrator");
-
-            var claim = new Claim("AdministratorId", administratorId.ToString());
+            var claim = new Claim(PlayPalClaimTypes.AdministratorId, administratorId.ToString());
             
             await _userManager.AddClaimAsync(user, claim);
+        }
+
+        public async Task DeleteAdministratorAsync(Guid? administratorId)
+        {
+            if (administratorId != null)
+            {
+                var administrator = await _repository.GetByIdAsync<Administrator>(administratorId);
+
+                if (administrator != null)
+                {
+                    administrator.UserId = null;
+                    administrator.User = null;
+                    await _repository.DeleteAsync<Administrator>(administratorId);
+                    await _repository.SaveChangesAsync();
+                }
+            }
         }
     }
 }

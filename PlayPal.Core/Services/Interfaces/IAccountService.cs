@@ -10,5 +10,7 @@ namespace PlayPal.Core.Services.Interfaces
         public Task<PlayPalUser> RegisterFieldOwnerAsync(RegisterUserInputModel model);
 
         public Task<PlayPalUser> ApplyAdministratorAsync(RegisterUserInputModel model);
+
+        public Task DeleteUser(Guid userId);
     }
 }

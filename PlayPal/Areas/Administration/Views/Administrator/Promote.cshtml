@@ -1,5 +1,5 @@
 ﻿@using PlayPal.Core.Models.ViewModels
-@model ICollection<ApplicationAdministratorViewModel>
+@model ICollection<AdministratorRequestViewModel>
 <div class="text-center">
     <h2>
         Administrator control panel
@@ -16,21 +16,23 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var application in Model)
+            @foreach (var admin in Model)
             {
                 <tr class="table-active">
-                    <th scope="row">@application.Email</th>
+                    <th scope="row">@admin.Email</th>
                     <td>
                         <form asp-area="Administration" asp-controller="Administrator" asp-action="Promote">
-                            <input type="hidden" value="@application.Email" name="email">
-                            <input type="hidden" value="@application.AdministratorId" name="administratorId">
+                            <input type="hidden" value="@admin.Email" name="@nameof(admin.Email)">
+                            <input type="hidden" value="@admin.UserId" name="@nameof(admin.UserId)">
+                            <input type="hidden" value="@admin.AdministratorId" name="@nameof(admin.AdministratorId)">
                             <button type="submit" class="btn btn-success">Accept</button>
                         </form>
                     </td>
                     <td>
-                        <form asp-area="Administration" asp-controller="Administrator" asp-action="Reject">
-                            <input type="hidden" value="@application.Email" name="email">
-                            <input type="hidden" value="@application.AdministratorId" name="administratorId">
+                        <form asp-area="" asp-controller="Account" asp-action="DeleteUser">
+                            <input type="hidden" value="@admin.Email" name="@nameof(admin.Email)">
+                            <input type="hidden" value="@admin.UserId" name="@nameof(admin.UserId)">
+                            <input type="hidden" value="@admin.AdministratorId" name="@nameof(admin.AdministratorId)">
                             <button type="submit" class="btn btn-danger">Reject</button>
                         </form>
                     </td>

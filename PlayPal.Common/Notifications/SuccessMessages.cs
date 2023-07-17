@@ -1,6 +1,7 @@
 ﻿namespace PlayPal.Common.Notifications
 {
-    public class SuccessMessages
+    public static class SuccessMessages
     {
+        public const string AdministratorSuccess = "You successfuly applied for administrator";
     }
 }

@@ -30,14 +30,13 @@ namespace PlayPal.Data.Models
         /// The identifier of the user, owning the administrator profile
         /// </summary>
         [Comment("The identifier of the user, owning the administrator profile")]
-        [Required]
         [ForeignKey(nameof(User))]
-        public Guid UserId { get; set; }
+        public Guid? UserId { get; set; }
 
         /// <summary>
         /// The user oning the administrator profile
         /// </summary>
-        public PlayPalUser User { get; set; } = null!;
+        public PlayPalUser? User { get; set; }
 
         /// <summary>
         /// Collection of all bans, issued by the administrator

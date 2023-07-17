@@ -68,14 +68,13 @@ namespace PlayPal.Data.Models
         /// The identifier of the user, owning player's profile
         /// </summary>
         [Comment("The identifier of the user, owning player's profile")]
-        [Required]
         [ForeignKey(nameof(User))]
-        public Guid UserId { get; set; }
+        public Guid? UserId { get; set; }
 
         /// <summary>
         /// The user enitity, owning player's profile
         /// </summary>
-        public virtual PlayPalUser User { get; set; } = null!;
+        public virtual PlayPalUser? User { get; set; }
 
         /// <summary>
         /// Collection of games, that the player has applied to, but is still not accepted in any of the two teams
