@@ -11,9 +11,15 @@
     <link rel="stylesheet" href="~/css/CyborgBootswatchTeme/_variables.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PlayPal.styles.css" asp-append-version="true" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" asp-append-version="true"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" asp-append-version="true" />
+
+
 </head>
 <body>
     <header >
+        <partial name="_NotificationsPartial" />
         <nav class="navbar navbar-expand-lg bg-transparent" data-bs-theme="dark">
             <div class="container-fluid" >
                 <a class="navbar-brand" asp-controller="Home" asp-action="Index">PlayPal</a>
@@ -62,9 +68,11 @@
              - PlayPal
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    
+   
     @await RenderSectionAsync("Scripts", required: false)
     
 </body>

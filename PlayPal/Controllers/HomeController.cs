@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PlayPal.Common.Notifications;
 using PlayPal.Data.Models;
 using PlayPal.Models;
 using System.Diagnostics;

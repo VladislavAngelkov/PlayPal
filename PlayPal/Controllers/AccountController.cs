@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using PlayPal.Common.Notifications;
 using PlayPal.Core.Models.InputModels;
 using PlayPal.Core.Services.Interfaces;
 using PlayPal.Data.Models;
@@ -28,71 +29,123 @@ namespace PlayPal.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult Register()
+        public IActionResult Register(string? returnUrl = null)
         {
-            //IdentityCheck();
+            bool isLogged = IdentityCheck();
+
+            if (isLogged)
+            {
+                TempData[ToastrMessageTypes.Warning] = WarningMessages.AlreadyLogged;
+
+                if (returnUrl != null)
+                {
+                    return LocalRedirect(returnUrl);
+                }
+
+                return RedirectToAction("Index", "Home");
+            }
 
             return View();
         }
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> RegisterAsPlayer()
+        public async Task<IActionResult> RegisterAsPlayer(string? returnUrl)
         {
-            IdentityCheck();
+            bool isLogged = IdentityCheck();
 
-            var positions = await _positionService.GetAllPositionsModels();
+            if (isLogged)
+            {
+                TempData[ToastrMessageTypes.Warning] = WarningMessages.AlreadyLogged;
 
-            var model = new RegisterUserInputModel();
-            model.Player = new CreatePlayerInputModel();
-            model.Player.Positions = positions;
+                if (returnUrl != null)
+                {
+                    return LocalRedirect(returnUrl);
+                }
 
-            return View(model);
+                return RedirectToAction("Index", "Home");
+            }
+
+            try
+            {
+                var positions = await _positionService.GetAllPositionsModels();
+
+                var model = new RegisterUserInputModel();
+                model.Player = new CreatePlayerInputModel();
+                model.Player.Positions = positions;
+
+                return View(model);
+            }
+            catch (Exception)
+            {
+
+                return RedirectToAction("Error", "Home");
+            }
         }
 
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> RegisterAsPlayer(RegisterUserInputModel model)
         {
-            var positions = await _positionService.GetAllPositionsModels();
-
-            if (!positions.Any(p => p.Id == model.Player!.Position))
+            try
             {
-                ModelState.AddModelError("", "Selected position does not exist!");
+                var positions = await _positionService.GetAllPositionsModels();
+
+                if (!positions.Any(p => p.Id == model.Player!.Position))
+                {
+                    ModelState.AddModelError("", "Selected position does not exist!");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    model.Player!.Positions = positions;
+
+                    //var message = string.Join(" | ", ModelState.Values
+                    //    .SelectMany(v => v.Errors)
+                    //    .Select(e => e.ErrorMessage));
+
+                    //return Ok(message);
+
+                    return View(model);
+                }
+
+                var user = await _accountService.RegisterPlayerUserAsync(model);
+
+                if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                {
+                    return Ok("Confirm your account");
+                }
+                else
+                {
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    return RedirectToAction("JoinGame", "Game");
+                }
             }
-
-            if (!ModelState.IsValid)
+            catch (Exception)
             {
-                model.Player!.Positions = positions;
 
-                //var message = string.Join(" | ", ModelState.Values
-                //    .SelectMany(v => v.Errors)
-                //    .Select(e => e.ErrorMessage));
-
-                //return Ok(message);
-
-                return View(model);
-            }
-
-            var user = await _accountService.RegisterPlayerUserAsync(model);
-
-            if (_userManager.Options.SignIn.RequireConfirmedAccount)
-            {
-                return Ok("Confirm your account");
-            }
-            else
-            {
-                await _signInManager.SignInAsync(user, isPersistent: false);
-
-                return RedirectToAction("JoinGame", "Game");
+                return RedirectToAction("Index", "Home");
             }
         }
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult ApplyForAdministrator()
+        public IActionResult ApplyForAdministrator(string? returnUrl)
         {
-            IdentityCheck();
+            bool isLogged = IdentityCheck();
+
+            if (isLogged)
+            {
+                TempData[ToastrMessageTypes.Warning] = WarningMessages.AlreadyLogged;
+
+                if (returnUrl != null)
+                {
+                    return LocalRedirect(returnUrl);
+                }
+
+                return RedirectToAction("Index", "Home");
+            }
 
             var model = new RegisterUserInputModel();
             var administrator = new CreateAdministratorInputModel();
@@ -110,26 +163,46 @@ namespace PlayPal.Controllers
                 return View(model);
             }
 
-            var user = await _accountService.ApplyAdministratorAsync(model);
-
-            if (_userManager.Options.SignIn.RequireConfirmedAccount)
+            try
             {
-                return Ok("Confirm your account");
+                var user = await _accountService.ApplyAdministratorAsync(model);
+
+                if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                {
+                    return Ok("Confirm your account");
+                }
+                else
+                {
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    return View("Success");
+                }
             }
-            else
+            catch (Exception)
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
 
-                return View("Success");
+                return RedirectToAction("Error", "Home");
             }
 
         }
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult RegisterAsFieldOwner()
+        public IActionResult RegisterAsFieldOwner(string? returnUrl)
         {
-            IdentityCheck();
+            bool isLogged = IdentityCheck();
+
+            if (isLogged)
+            {
+                TempData[ToastrMessageTypes.Warning] = WarningMessages.AlreadyLogged;
+
+                if (returnUrl != null)
+                {
+                    return LocalRedirect(returnUrl);
+                }
+
+                return RedirectToAction("Index", "Home");
+            }
 
             var model = new RegisterUserInputModel();
             var fieldOwner = new CreateFieldOwnerInputModel();
@@ -147,17 +220,25 @@ namespace PlayPal.Controllers
                 return View(model);
             }
 
-            var user = await _accountService.RegisterFieldOwnerAsync(model);
-
-            if (_userManager.Options.SignIn.RequireConfirmedAccount)
+            try
             {
-                return Ok("Confirm your account");
+                var user = await _accountService.RegisterFieldOwnerAsync(model);
+
+                if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                {
+                    return Ok("Confirm your account");
+                }
+                else
+                {
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    return RedirectToAction("Mine", "Field", "FieldManagment");
+                }
             }
-            else
+            catch (Exception)
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
 
-                return RedirectToAction("Mine", "Field", "FieldManagment");
+                return RedirectToAction("Error", "Home");
             }
         }
 
@@ -169,13 +250,24 @@ namespace PlayPal.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(string returnUrl = null)
+        public IActionResult Login(string? returnUrl = null)
         {
-            //string returnUrl = Request.Path;
+            bool isLogged = IdentityCheck();
+
+            if (isLogged)
+            {
+                TempData[ToastrMessageTypes.Warning] = WarningMessages.AlreadyLogged;
+
+                if (returnUrl != null)
+                {
+                    return LocalRedirect(returnUrl);
+                }
+
+                return RedirectToAction("Index", "Home");
+            }
+
             var model = new LoginUserInputModel();
             model.returnUrl = returnUrl;
-
-            await _signInManager.SignOutAsync();
 
             return View(model);
         }
@@ -184,7 +276,12 @@ namespace PlayPal.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginUserInputModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
             {
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, lockoutOnFailure: false);
 
@@ -193,14 +290,13 @@ namespace PlayPal.Controllers
                     if (model.returnUrl != null)
                     {
                         return LocalRedirect(model.returnUrl);
-
                     }
                     else
                     {
                         return RedirectToAction("Index", "Home");
                     }
                 }
-               
+
                 if (result.IsLockedOut)
                 {
                     return View("Lockout");
@@ -212,42 +308,25 @@ namespace PlayPal.Controllers
                     return View(model);
                 }
             }
-            else
+            catch (Exception)
             {
-                return View(model);
+
+                return RedirectToAction("Error", "Home");
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> Logout(string returnUrl)
         {
-            await _signInManager.SignOutAsync();
+            bool isLogged = IdentityCheck();
 
-            if (returnUrl != null)
+            if (isLogged)
             {
-                return LocalRedirect(returnUrl);
-            }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
-        }
+                await _signInManager.SignOutAsync();
 
-        private IActionResult IdentityCheck()
-        {
-            if (User.Identity != null && User.Identity.IsAuthenticated)
-            {
-                if (User.IsInRole("Administrator"))
+                if (returnUrl != null)
                 {
-                    return RedirectToAction("Promote", "Administrator", "Administration");
-                }
-                else if (User.IsInRole("FieldOwner"))
-                {
-                    return RedirectToAction("Mine", "Field", "FiledManagment");
-                }
-                else if (User.IsInRole("Player"))
-                {
-                    return RedirectToAction("JoinGame", "Game", new { City = User.Claims.First(c => c.ValueType == "City") });
+                    return LocalRedirect(returnUrl);
                 }
                 else
                 {
@@ -256,8 +335,18 @@ namespace PlayPal.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Login", "Account");
             }
+        }
+
+        private bool IdentityCheck()
+        {
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

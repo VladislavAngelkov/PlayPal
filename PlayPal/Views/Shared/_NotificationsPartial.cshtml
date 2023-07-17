@@ -1,0 +1,21 @@
+﻿﻿@using static PlayPal.Common.Notifications.ToastrMessageTypes
+
+@if (TempData.ContainsKey(Error))
+{
+    <script>toastr.error('@TempData[Error]');</script>
+}
+
+@if (TempData.ContainsKey(Warning))
+{
+    <script>toastr.warning('@TempData[Warning]');</script>
+}
+
+@if (TempData.ContainsKey(Information))
+{
+    <script>toastr.info('@TempData[Information]');</script>
+}
+
+@if (TempData.ContainsKey(Success))
+{
+    <script>toastr.success('@TempData[Success]');</script>
+}
