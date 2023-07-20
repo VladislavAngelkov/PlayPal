@@ -12,5 +12,7 @@ namespace PlayPal.Core.Services.Interfaces
         public Task<PlayPalUser> ApplyAdministratorAsync(RegisterUserInputModel model);
 
         public Task DeleteUser(Guid userId);
+
+        public Task<bool> UserExist(string email);
     }
 }

@@ -74,6 +74,8 @@ namespace PlayPal.Core.Services
 
             await _fieldOwnerService.CreateFieldOwner(model);
 
+            await _userManager.AddToRoleAsync(user, PlayPalRoleNames.FieldOwner);
+
             var fieldOwnerIdClaim = new Claim(PlayPalClaimTypes.FieldOwnerId, model.FieldOwner!.Id.ToString());
             await _userManager.AddClaimAsync(user, fieldOwnerIdClaim);
 
@@ -125,6 +127,15 @@ namespace PlayPal.Core.Services
             await _fieldOwnerService.DeleteFieldOwnerAsync(fieldOwnerId);
 
             await _playerService.DeletePlayerAsync(playerId);
+        }
+
+        public async Task<bool> UserExist(string email)
+        {
+            if (await _userManager.FindByEmailAsync(email) != null)
+            {
+                return true;
+            }
+            return false;
         }
 
         private IUserEmailStore<PlayPalUser> GetEmailStore()

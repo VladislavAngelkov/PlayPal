@@ -2,13 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using PlayPal.Common.IdentityConstants;
 using PlayPal.Controllers;
-using PlayPal.Core.Models.ViewModels;
 using PlayPal.Core.Services.Interfaces;
 
 namespace PlayPal.Areas.Administration.Controllers
 {
     [Area("Administration")]
-    [Authorize(Roles = "Administrator")]
     public class AdministratorController : PlayPalBaseController
     {
         private readonly IAdministratorService _administratorService;
@@ -19,6 +17,7 @@ namespace PlayPal.Areas.Administration.Controllers
             _administratorService = administratorService;
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         public IActionResult Index()
         {
@@ -51,5 +50,7 @@ namespace PlayPal.Areas.Administration.Controllers
 
             return RedirectToAction("Promote");
         }
+
+
     }
 }

@@ -27,6 +27,8 @@ namespace PlayPal.Data
         public DbSet<PlayerTeam> PlayersTeams { get; set; } = null!;
         public DbSet<Position> Positions { get; set; } = null!; 
 
+        public DbSet<Report> Reports { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             var currentAssembly = Assembly.GetAssembly(typeof(PlayPalDbContext));

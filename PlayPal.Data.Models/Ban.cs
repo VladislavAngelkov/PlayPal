@@ -2,7 +2,6 @@
 using PlayPal.Data.Models.Enums;
 using PlayPal.Data.Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
 
 namespace PlayPal.Data.Models
 {

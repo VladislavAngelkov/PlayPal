@@ -51,5 +51,12 @@ namespace PlayPal.Core.Services
                 }
             }
         }
+
+        public async Task<Player> GetPlayerAsync(Guid id)
+        {
+            var player = await _repository.GetByIdAsync<Player>(id);
+
+            return player;
+        }
     }
 }

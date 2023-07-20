@@ -98,6 +98,11 @@ namespace PlayPal.Controllers
                     ModelState.AddModelError("", "Selected position does not exist!");
                 }
 
+                if (await _accountService.UserExist(model.Email))
+                {
+                    ModelState.AddModelError("", ErrorMessages.UsedEmail);
+                }
+
                 if (!ModelState.IsValid)
                 {
                     model.Player!.Positions = positions;
@@ -160,6 +165,11 @@ namespace PlayPal.Controllers
         [HttpPost]
         public async Task<IActionResult> ApplyForAdministrator(RegisterUserInputModel model)
         {
+            if (await _accountService.UserExist(model.Email))
+            {
+                ModelState.AddModelError("", ErrorMessages.UsedEmail);
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -219,6 +229,11 @@ namespace PlayPal.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterAsFieldOwner(RegisterUserInputModel model)
         {
+            if (await _accountService.UserExist(model.Email))
+            {
+                ModelState.AddModelError("", ErrorMessages.UsedEmail);
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -239,10 +254,10 @@ namespace PlayPal.Controllers
                     return RedirectToAction("Mine", "Field", "FieldManagment");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                return RedirectToAction("Error", "Home");
+                return Ok(ex.Message);
+                //return RedirectToAction("Error", "Home");
             }
         }
 

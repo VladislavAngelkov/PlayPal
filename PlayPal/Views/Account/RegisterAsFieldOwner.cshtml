@@ -1,0 +1,76 @@
+﻿@model RegisterUserInputModel
+@using PlayPal.Data.Models.Enums
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="row">
+    <div class="col-md-6">
+    </div>
+    <div class="col-md-6">
+        <form method="post" asp-controller="Account" asp-action="ApplyForAdministrator">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Id" type="hidden" value=@Model.Id />
+            <div class="form-group">
+                <label asp-for=Email class="form-label mt-4">Email address</label>
+                <input asp-for="Email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                <span asp-validation-for="Email" class="text-danger"></span>
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password" class="form-label mt-4">Password</label>
+                <input asp-for="Password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ConfirmPassword" class="form-label mt-4">Confirm Password</label>
+                <input asp-for="ConfirmPassword" type="password" class="form-control" id="exampleInputPassword1" placeholder="Confirm Password">
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="exampleSelect1" class="form-label mt-4">Example disabled select</label>
+                <select asp-for="@Model.FieldOwner.Title" class="form-select" id="exampleDisabledSelect1">
+                    <option value="@Title.Mr.ToString()">Mr</option>
+                    <option value="@Title.Mrs.ToString()">Mrs</option>
+                    <option value="@Title.Ms.ToString()">Ms</option>
+                    <option value="@Title.Miss.ToString()">Miss</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="@Model.FieldOwner!.FirstName" class="form-label mt-4">First Name</label>
+                <input asp-for="@Model.FieldOwner!.FirstName" class="form-control" placeholder="First Name">
+                <span asp-validation-for="@Model.FieldOwner!.FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="@Model.FieldOwner!.LastName" class="form-label mt-4">Last Name</label>
+                <input asp-for="@Model.FieldOwner!.LastName" class="form-control" placeholder="Last Name">
+                <span asp-validation-for="@Model.FieldOwner!.LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="@Model.FieldOwner!.CompanyName" class="form-label mt-4">Company name</label>
+                <input asp-for="@Model.FieldOwner!.CompanyName" class="form-control" placeholder="Company name">
+                <span asp-validation-for="@Model.FieldOwner!.CompanyName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="@Model.FieldOwner!.ContactAddres" class="form-label mt-4">Contact address</label>
+                <input asp-for="@Model.FieldOwner!.ContactAddres" class="form-control" placeholder="Contact address">
+                <span asp-validation-for="@Model.FieldOwner!.ContactAddres" class="text-danger"></span>
+            </div>
+
+            <br />
+            <button asp-controller="Account" asp-action="RegisterAsFieldOwner" type="submit" class="btn btn-success">Apply</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

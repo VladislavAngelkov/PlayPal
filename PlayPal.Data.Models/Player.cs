@@ -17,6 +17,8 @@ namespace PlayPal.Data.Models
             Bans = new HashSet<Ban>();
             CreatedGames = new HashSet<Game>();
             Goals = new HashSet<Goal>();
+            SubmittedReports = new HashSet<Report>();
+            ReceivedReports = new HashSet<Report>();
         }
 
         /// <summary>
@@ -62,7 +64,7 @@ namespace PlayPal.Data.Models
         /// <summary>
         /// The preffered position of the player.
         /// </summary>
-        public Position Position { get; set; }
+        public Position Position { get; set; } = null!;
 
         /// <summary>
         /// The identifier of the user, owning player's profile
@@ -101,5 +103,11 @@ namespace PlayPal.Data.Models
         /// List of all goals scored by the player
         /// </summary>
         public virtual ICollection<Goal> Goals { get; set; }
+
+        [InverseProperty("ReportingPlayer")]
+        public virtual ICollection<Report> SubmittedReports { get; set; }
+
+        [InverseProperty("ReportedPlayer")]
+        public virtual ICollection<Report> ReceivedReports { get; set; }
     }
 }
