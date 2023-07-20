@@ -71,23 +71,20 @@ namespace PlayPal.Core.Services
             var user = await _userManager.FindByEmailAsync(email);
 
             var claim = new Claim(PlayPalClaimTypes.AdministratorId, administratorId.ToString());
-            
+
             await _userManager.AddClaimAsync(user, claim);
         }
 
-        public async Task DeleteAdministratorAsync(Guid? administratorId)
+        public async Task DeleteAdministratorAsync(Guid administratorId)
         {
-            if (administratorId != null)
-            {
-                var administrator = await _repository.GetByIdAsync<Administrator>(administratorId);
+            var administrator = await _repository.GetByIdAsync<Administrator>(administratorId);
 
-                if (administrator != null)
-                {
-                    administrator.UserId = null;
-                    administrator.User = null;
-                    await _repository.DeleteAsync<Administrator>(administratorId);
-                    await _repository.SaveChangesAsync();
-                }
+            if (administrator != null)
+            {
+                administrator.UserId = null;
+                administrator.User = null;
+                await _repository.DeleteAsync<Administrator>(administratorId);
+                await _repository.SaveChangesAsync();
             }
         }
     }

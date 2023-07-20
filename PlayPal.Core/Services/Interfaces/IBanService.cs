@@ -1,4 +1,5 @@
-﻿using PlayPal.Core.Models.ViewModels;
+﻿using PlayPal.Core.Models.InputModels;
+using PlayPal.Core.Models.ViewModels;
 
 namespace PlayPal.Core.Services.Interfaces
 {
@@ -6,6 +7,6 @@ namespace PlayPal.Core.Services.Interfaces
     {
         public Task<BanViewModel> GetLatestBan(Guid playerId);
 
-        
+        public Task BanPlayer(BanInputModel model);
     }
 }

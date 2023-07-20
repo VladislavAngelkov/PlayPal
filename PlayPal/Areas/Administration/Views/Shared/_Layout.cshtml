@@ -14,7 +14,6 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" asp-append-version="true"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" asp-append-version="true" />
-
 </head>
 <body>
     <header >
@@ -27,20 +26,21 @@
                         <li class="nav-item">
                             <a class="nav-link active" asp-area="Administration" asp-controller="Administrator" asp-action="Promote">
                                 Promote Administrator
-                                <span class="visually-hidden">(current)</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="Administration" asp-controller="Report" asp-action="All">Reports</a>
+                            <a class="nav-link active" asp-area="Administration" asp-controller="Report" asp-action="All">
+                                Reports
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="Administration" asp-controller="Field" asp-action="All">Fields</a>
+                            <a class="nav-link active" asp-area="Administration" asp-controller="Field" asp-action="All">Fields</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Message" asp-action="All">Messages</a>
+                            <a class="nav-link active" asp-area="" asp-controller="Message" asp-action="All">Messages</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Player" asp-action="Search">Players</a>
+                            <a class="nav-link active" asp-area="" asp-controller="Player" asp-action="Search">Players</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />

@@ -1,0 +1,49 @@
+﻿@model BanInputModel
+@using PlayPal.Data.Models.Enums
+
+@{
+    TempData["Title"] = "Ban";
+}
+
+<div class="text-center">
+    <h2>
+        @TempData["Title"]
+    </h2>
+</div>
+
+<div class="row align-content-center">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-6">
+        <form method="post" asp-area="Administration" asp-controller="Ban" asp-action="Ban">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Id" type="hidden" value=@Model.Id />
+            <input asp-for="AdministratorId" type="hidden" value=@Model.AdministratorId />
+            <input asp-for="PlayerId" type="hidden" value=@Model.PlayerId />
+            <div class="form-group">
+                <label asp-for="@Model.Reason" class="form-label mt-4">Select reason</label>
+                <select asp-for="@Model.Reason" class="form-select" id="exampleSelect1">
+                    <option value="@Reason.DangerousPlay">@Reason.DangerousPlay.ToString()</option>
+                    <option value="@Reason.SkippingOrLeavingGame">@Reason.SkippingOrLeavingGame.ToString()</option>
+                    <option value="@Reason.Insults">@Reason.Insults.ToString()</option>
+                </select>
+            </div>
+           
+            <div class="form-group">
+                <label asp-for=@Model.BannedTo class="form-label mt-4">Banned To:  </label>
+                <input type="datetime-local" value="@DateTime.Now" asp-for=@Model.BannedTo />
+                <span asp-validation-for="@Model.BannedTo" class="text-danger"></span>
+            </div>
+            <br />
+            <button asp-area="Administration" asp-controller="Ban" asp-action="Ban" type="submit" class="btn btn-danger">Ban</button>
+        </form>
+    </div>
+    <div class="col-md-3">
+    </div>
+</div>
+<script>
+    $('#datetimepicker').data("DateTimePicker").FUNCTION()
+</script>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

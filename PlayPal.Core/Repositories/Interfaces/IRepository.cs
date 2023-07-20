@@ -34,7 +34,7 @@ namespace PlayPal.Core.Repositories.Interfaces
         /// </summary>
         /// <param name="id">record identificator</param>
         /// <returns>Single record</returns>
-        Task<T> GetByIdAsync<T>(object id) where T : IDeletable;
+        Task<T> GetByIdAsync<T>(Guid id) where T : IDeletable;
 
         /// <summary>
         /// Adds entity to the database
@@ -64,7 +64,7 @@ namespace PlayPal.Core.Repositories.Interfaces
         /// Deletes a record from database
         /// </summary>
         /// <param name="id">Identificator of record to be deleted</param>
-        Task DeleteAsync<T>(object id) where T : IDeletable;
+        Task DeleteAsync<T>(Guid id) where T : IDeletable;
 
         void DeleteRange<T>(IEnumerable<T> entities) where T : IDeletable;
 

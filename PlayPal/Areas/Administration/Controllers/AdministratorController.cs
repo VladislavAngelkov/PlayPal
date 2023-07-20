@@ -17,7 +17,7 @@ namespace PlayPal.Areas.Administration.Controllers
             _administratorService = administratorService;
         }
 
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = PlayPalRoleNames.Administrator)]
         [HttpGet]
         public IActionResult Index()
         {

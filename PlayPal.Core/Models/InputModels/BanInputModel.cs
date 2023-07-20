@@ -15,7 +15,7 @@ namespace PlayPal.Core.Models.InputModels
 
         public Guid PlayerId { get; set; }
 
-        public Reason Reason { get; set; }
+        public string Reason { get; set; } = null!;
 
         [BanDateTime]
         public DateTime BannedTo { get; set; }

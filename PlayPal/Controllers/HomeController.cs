@@ -42,22 +42,6 @@ namespace PlayPal.Controllers
                 }
                 else if (User.IsInRole(PlayPalRoleNames.Player))
                 {
-                    var playerId = Guid.Parse(User.Claims.First(c => c.Type == PlayPalClaimTypes.PlayerId).Value);
-
-                    var player = await _playerService.GetPlayerAsync(playerId);
-
-                    if (player != null)
-                    {
-                        var latestBan = await _banService.GetLatestBan(playerId);
-
-                        if (latestBan != null && latestBan.BannedTo > DateTime.UtcNow)
-                        {
-                            await _signinManager.SignOutAsync();
-
-                            return View("Banned", latestBan);
-                        }
-                    }
-
                     return RedirectToAction("JoinGame", "Game");
                 }
                 else

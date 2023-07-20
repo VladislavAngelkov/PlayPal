@@ -90,7 +90,7 @@ namespace PlayPal.Core.Repositories
         /// Deletes a record from database
         /// </summary>
         /// <param name="id">Identificator of record to be deleted</param>
-        public async Task DeleteAsync<T>(object id) where T : IDeletable
+        public async Task DeleteAsync<T>(Guid id) where T : IDeletable
         {
             T entity = await GetByIdAsync<T>(id);
 
@@ -116,7 +116,7 @@ namespace PlayPal.Core.Repositories
         /// </summary>
         /// <param name="id">record identificator</param>
         /// <returns>Single record</returns>
-        public async Task<T> GetByIdAsync<T>(object id) where T : IDeletable
+        public async Task<T> GetByIdAsync<T>(Guid id) where T : IDeletable
         {
             T entity = await DbSet<T>().FindAsync(id);
 

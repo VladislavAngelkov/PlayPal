@@ -1,4 +1,6 @@
-﻿using PlayPal.Core.Models.ViewModels;
+﻿using Microsoft.EntityFrameworkCore;
+using PlayPal.Core.Models.InputModels;
+using PlayPal.Core.Models.ViewModels;
 using PlayPal.Core.Repositories.Interfaces;
 using PlayPal.Core.Services.Interfaces;
 using PlayPal.Data.Models;
@@ -14,10 +16,29 @@ namespace PlayPal.Core.Services
         {
             _repository = repository;
         }
+
+        public async Task BanPlayer(BanInputModel model)
+        {
+            var ban = new Ban()
+            {
+                Id = model.Id,
+                PlayerId = model.PlayerId,
+                AdministratorId = model.AdministratorId,
+                BannedTo = model.BannedTo,
+                Reason = Enum.Parse<Reason>(model.Reason)
+            };
+
+            await _repository.AddAsync(ban);
+            await _repository.SaveChangesAsync();
+        }
+
         public async Task<BanViewModel> GetLatestBan(Guid playerId)
         {
             var player = await _repository
-                .GetByIdAsync<Player>(playerId);
+                .All<Player>(p => p.Id == playerId)
+                .Include(p => p.Bans)
+                .FirstAsync();
+                
             var ban = player.Bans
                 .OrderByDescending(b => b.BannedTo)
                 .FirstOrDefault();

@@ -20,10 +20,11 @@ namespace PlayPal.Core.Services
             _positionService = positionService;
         }
 
-        public async Task<Guid> CreatePlayerAsync(RegisterUserInputModel model)
+        public async Task CreatePlayerAsync(RegisterUserInputModel model)
         {
             var player = new Player()
             {
+                Id = model.Player!.Id,
                 Name = model.Player!.Name,
                 CurrentCity = model.Player.City,
                 NormalizedCurrentCity = model.Player.City.ToUpper(),
@@ -32,21 +33,20 @@ namespace PlayPal.Core.Services
             };
 
             await _repository.AddAsync(player);
-
-            return player.Id;
+            await _repository.SaveChangesAsync();
         }
 
         public async Task DeletePlayerAsync(Guid? playerId)
         {
             if (playerId != null)
             {
-                var player = await _repository.GetByIdAsync<Player>(playerId);
+                var player = await _repository.GetByIdAsync<Player>((Guid)playerId);
 
                 if (player != null)
                 {
                     player.UserId = null;
                     player.User = null;
-                    await _repository.DeleteAsync<Player>(playerId);
+                    await _repository.DeleteAsync<Player>((Guid)playerId);
                     await _repository.SaveChangesAsync();
                 }
             }

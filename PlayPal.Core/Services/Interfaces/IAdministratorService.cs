@@ -11,6 +11,6 @@ namespace PlayPal.Core.Services.Interfaces
 
         public Task PromoteUserToAdministrator(string email, Guid administratorId);
 
-        public Task DeleteAdministratorAsync(Guid? administratorId);
+        public Task DeleteAdministratorAsync(Guid administratorId);
     }
 }

@@ -122,11 +122,20 @@ namespace PlayPal.Core.Services
                 await _userManager.DeleteAsync(user);
             }
 
-            await _administratorService.DeleteAdministratorAsync(administratorId);
+            if (administratorId!=null)
+            {
+                await _administratorService.DeleteAdministratorAsync((Guid)administratorId);
+            }
 
-            await _fieldOwnerService.DeleteFieldOwnerAsync(fieldOwnerId);
+            if (fieldOwnerId != null)
+            {
+                await _fieldOwnerService.DeleteFieldOwnerAsync((Guid)fieldOwnerId);
+            }
 
-            await _playerService.DeletePlayerAsync(playerId);
+            if (playerId != null)
+            {
+                await _playerService.DeletePlayerAsync((Guid)playerId);
+            }
         }
 
         public async Task<bool> UserExist(string email)

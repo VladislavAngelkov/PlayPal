@@ -5,6 +5,7 @@ using PlayPal.Common.IdentityConstants;
 using PlayPal.Common.Notifications;
 using PlayPal.Core.Models.InputModels;
 using PlayPal.Core.Models.ViewModels;
+using PlayPal.Core.Services;
 using PlayPal.Core.Services.Interfaces;
 using PlayPal.Data.Models;
 
@@ -16,17 +17,23 @@ namespace PlayPal.Controllers
         private readonly IPositionService _positionService;
         private readonly UserManager<PlayPalUser> _userManager;
         private readonly SignInManager<PlayPalUser> _signInManager;
+        private readonly IPlayerService _playerService;
+        private readonly IBanService _banService;
 
         public AccountController(
             IAccountService accountService,
             IPositionService positionService,
             UserManager<PlayPalUser> userManager,
-            SignInManager<PlayPalUser> signInManager)
+            SignInManager<PlayPalUser> signInManager,
+            IPlayerService playerService,
+            IBanService banService)
         {
             _accountService = accountService;
             _positionService = positionService;
             _userManager = userManager;
             _signInManager = signInManager;
+            _playerService = playerService;
+            _banService = banService;
         }
 
         [AllowAnonymous]
@@ -189,7 +196,7 @@ namespace PlayPal.Controllers
 
                     TempData[ToastrMessageTypes.Success] = SuccessMessages.AdministratorSuccess;
 
-                    return RedirectToAction("Index", "Administrator", new {area="Administration"});
+                    return RedirectToAction("Index", "Administrator", new { area = "Administration" });
                 }
             }
             catch (Exception)
@@ -306,6 +313,10 @@ namespace PlayPal.Controllers
 
                 if (result.Succeeded)
                 {
+
+                    return RedirectToAction("BanCheck");
+
+
                     if (model.returnUrl != null)
                     {
                         return LocalRedirect(model.returnUrl);
@@ -357,7 +368,7 @@ namespace PlayPal.Controllers
         {
             await _accountService.DeleteUser(model.UserId);
 
-            return RedirectToAction("Promote", "Administrator", new {Area="Administration"});
+            return RedirectToAction("Promote", "Administrator", new { Area = "Administration" });
         }
 
         private bool IdentityCheck()
@@ -368,6 +379,40 @@ namespace PlayPal.Controllers
             }
 
             return false;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> BanCheck(string returnUrl)
+        {
+            if (User.IsInRole(PlayPalRoleNames.Player))
+            {
+                var playerId = Guid.Parse(User.Claims.First(c => c.Type == PlayPalClaimTypes.PlayerId).Value);
+
+                var player = await _playerService.GetPlayerAsync(playerId);
+
+                if (player != null)
+                {
+                    var latestBan = await _banService.GetLatestBan(playerId);
+
+                    if (latestBan != null && latestBan.BannedTo > DateTime.UtcNow)
+                    {
+                        await _signInManager.SignOutAsync();
+
+                        TempData[ToastrMessageTypes.Warning] = String.Format(WarningMessages.Banned, latestBan.BannedTo.ToString("dd.MM.yyyy - hh:mm"), latestBan.Reason);
+
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+
+                if (returnUrl != null)
+                {
+                    return LocalRedirect(returnUrl);
+                }
+
+                return RedirectToAction("JoinGame", "Game");
+            }
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

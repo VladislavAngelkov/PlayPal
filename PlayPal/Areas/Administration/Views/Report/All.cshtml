@@ -1,0 +1,53 @@
+﻿@model ICollection<ReportViewModel>
+
+@{
+    TempData["Title"] = "Submitted reports";
+}
+
+<div class="text-center">
+    <h2>
+        @TempData["Title"]
+    </h2>
+</div>
+<br />
+<div class="container-fluid">
+    <div class="row" style="background-color:darkorange">
+        <div class="col-2">
+            Player
+        </div>
+        <div class="col-6">
+            Reason
+        </div>
+        <div class="col-2">
+            Mark as checked
+        </div>
+        <div class="col-2">
+            Ban
+        </div>
+    </div>
+
+    @foreach (var report in Model)
+    {
+        <div class="row">
+            <div class="col-2">
+                @report.ReportedPlayer
+            </div>
+            <div class="col-6">
+                @report.Reason
+            </div>
+            <div class="col-2">
+                <form asp-area="Administration" asp-controller="Report" asp-action="CheckReport" method="post">
+                    <input type="hidden" value="@report.Id" name="reportId"/>
+                    <button class="btn-success" type="submit">Mark as checked</button>
+                </form>
+            </div>
+            <div class="col-2">
+                <form asp-area="Administration" asp-controller="Ban" asp-action="Ban" method="post">
+                    <input type="hidden" value="@report.ReportedPlayer" name="playerEmail" />
+                    <button class="btn-success" type="submit">Ban</button>
+                </form>
+            </div>
+            <hr/>
+        </div>
+    }
+</div>

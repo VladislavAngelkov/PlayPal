@@ -6,7 +6,7 @@ namespace PlayPal.Core.Attributes
     {
         public override bool IsValid(object? value)
         {
-            var bannedTo = (DateTime)value;
+            var bannedTo = ((DateTime)value).ToUniversalTime();
 
             if (bannedTo<=DateTime.UtcNow)
             {

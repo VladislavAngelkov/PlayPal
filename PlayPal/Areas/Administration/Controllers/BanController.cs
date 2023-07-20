@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PlayPal.Common.IdentityConstants;
 using PlayPal.Controllers;
 using PlayPal.Core.Models.InputModels;
+using PlayPal.Core.Services.Interfaces;
 using System.Security.Cryptography.X509Certificates;
 
 namespace PlayPal.Areas.Administration.Controllers
@@ -11,16 +12,52 @@ namespace PlayPal.Areas.Administration.Controllers
     [Authorize(Policy = PlayPalPolicyNames.Adminstration)]
     public class BanController : PlayPalBaseController
     {
+        private readonly IBanService _banService;
+
+        public BanController(IBanService banService)
+        {
+            _banService = banService;
+        }
+
         [HttpGet]
-        public async Task<IActionResult> BanPlayer()
+        public IActionResult Ban(Guid playerId)
         {
             var model = new BanInputModel()
             {
                 AdministratorId = Guid.Parse(User.Claims
-                .First(c => c.Type == PlayPalClaimTypes.AdministratorId).Value)
+                .First(c => c.Type == PlayPalClaimTypes.AdministratorId).Value),
+                PlayerId = playerId
             };
 
-            return View();
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Ban(BanInputModel model, string? returnUrl= null)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                model.BannedTo = model.BannedTo.ToUniversalTime();
+
+                await _banService.BanPlayer(model);
+
+                if (returnUrl != null)
+                {
+                    return LocalRedirect(returnUrl);
+                }
+
+                return RedirectToAction("All", "Report", new {Area = "Administration" });
+            }
+            catch (Exception)
+            {
+
+                return RedirectToAction("Error", "Home");
+            }
         }
     }
 }

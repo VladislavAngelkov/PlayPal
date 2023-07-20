@@ -35,13 +35,13 @@ namespace PlayPal.Core.Services
         {
             if (fieldOwnerId != null)
             {
-                var fieldOwner = await _repository.GetByIdAsync<FieldOwner>(fieldOwnerId);
+                var fieldOwner = await _repository.GetByIdAsync<FieldOwner>((Guid)fieldOwnerId);
 
                 if (fieldOwner != null)
                 {
                     fieldOwner.UserId = null;
                     fieldOwner.User = null;
-                    await _repository.DeleteAsync<FieldOwner>(fieldOwnerId);
+                    await _repository.DeleteAsync<FieldOwner>((Guid)fieldOwnerId);
                     await _repository.SaveChangesAsync();
                 }
             }

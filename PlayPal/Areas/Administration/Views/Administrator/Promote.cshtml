@@ -1,8 +1,13 @@
 ﻿@using PlayPal.Core.Models.ViewModels
 @model ICollection<AdministratorRequestViewModel>
+
+@{
+    TempData["Title"] = "Administrator control panel";
+}
+
 <div class="text-center">
     <h2>
-        Administrator control panel
+        @TempData["Title"]
     </h2>
 </div>
 <br />
