@@ -20,6 +20,20 @@ namespace PlayPal.Areas.Administration.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> All()
+        {
+            try
+            {
+                var models = await _banService.GetAll();
+                return View(models);
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+        }
+
+        [HttpGet]
         public IActionResult Ban(Guid playerId)
         {
             var model = new BanInputModel()
@@ -56,6 +70,21 @@ namespace PlayPal.Areas.Administration.Controllers
             catch (Exception)
             {
 
+                return RedirectToAction("Error", "Home");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveBan(Guid id)
+        {
+            try
+            {
+                await _banService.RemoveBan(id);
+
+                return RedirectToAction("All");
+            }
+            catch (Exception ex)
+            {
                 return RedirectToAction("Error", "Home");
             }
         }

@@ -41,6 +41,7 @@ namespace PlayPal.Core.Services
                 
             var ban = player.Bans
                 .OrderByDescending(b => b.BannedTo)
+                .Where(b => !b.IsDeleted)
                 .FirstOrDefault();
 
             string reason = string.Empty;
@@ -68,6 +69,29 @@ namespace PlayPal.Core.Services
             };
 
             return model;
+        }
+
+        public async Task RemoveBan(Guid id)
+        {
+            await _repository.DeleteAsync<Ban>(id);
+        }
+
+        public async Task<ICollection<BanViewModel>> GetAll()
+        {
+            var bans = await _repository.All<Ban>()
+                .Where(b => !b.IsDeleted &&
+                b.BannedTo > DateTime.UtcNow)
+                .Include(b => b.Player.User)
+                .Select(b => new BanViewModel()
+                {
+                    Id= b.Id,
+                    BannedTo = b.BannedTo,
+                    Reason = b.Reason.ToString(),
+                    BannedPlayerEmail = b.Player.User!.Email
+                })
+                .ToListAsync();
+
+            return bans;
         }
     }
 }

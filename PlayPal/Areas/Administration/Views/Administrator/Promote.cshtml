@@ -11,38 +11,42 @@
     </h2>
 </div>
 <br />
-<div>
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th scope="col">Email</th>
-                <th scope="col">Promote</th>
-                <th scope="col">Reject</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var admin in Model)
-            {
-                <tr class="table-active">
-                    <th scope="row">@admin.Email</th>
-                    <td>
-                        <form asp-area="Administration" asp-controller="Administrator" asp-action="Promote">
-                            <input type="hidden" value="@admin.Email" name="@nameof(admin.Email)">
-                            <input type="hidden" value="@admin.UserId" name="@nameof(admin.UserId)">
-                            <input type="hidden" value="@admin.AdministratorId" name="@nameof(admin.AdministratorId)">
-                            <button type="submit" class="btn btn-success">Accept</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form asp-area="" asp-controller="Account" asp-action="DeleteUser">
-                            <input type="hidden" value="@admin.Email" name="@nameof(admin.Email)">
-                            <input type="hidden" value="@admin.UserId" name="@nameof(admin.UserId)">
-                            <input type="hidden" value="@admin.AdministratorId" name="@nameof(admin.AdministratorId)">
-                            <button type="submit" class="btn btn-danger">Reject</button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<div class="container-fluid">
+    <div class="row" style="background-color:darkorange">
+        <div class="col-6">
+            Email
+        </div>
+        <div class="col-3">
+            Promote
+        </div>
+        <div class="col-3">
+            Reject
+        </div>
+    </div>
+
+    @foreach (var admin in Model)
+    {
+        <div class="row">
+            <div class="col-2">
+                @admin.Email
+            </div>
+            <div class="col-6">
+                <form asp-area="Administration" asp-controller="Administrator" asp-action="Promote">
+                    <input type="hidden" value="@admin.Email" name="@nameof(admin.Email)">
+                    <input type="hidden" value="@admin.UserId" name="@nameof(admin.UserId)">
+                    <input type="hidden" value="@admin.AdministratorId" name="@nameof(admin.AdministratorId)">
+                    <button type="submit" class="btn btn-success">Accept</button>
+                </form>
+            </div>
+            <div class="col-2">
+                <form asp-area="" asp-controller="Account" asp-action="DeleteUser">
+                    <input type="hidden" value="@admin.Email" name="@nameof(admin.Email)">
+                    <input type="hidden" value="@admin.UserId" name="@nameof(admin.UserId)">
+                    <input type="hidden" value="@admin.AdministratorId" name="@nameof(admin.AdministratorId)">
+                    <button type="submit" class="btn btn-danger">Reject</button>
+                </form>
+            </div>
+            <hr />
+        </div>
+    }
 </div>

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PlayPal.Data;
 
@@ -11,9 +12,10 @@ using PlayPal.Data;
 namespace PlayPal.Data.Migrations
 {
     [DbContext(typeof(PlayPalDbContext))]
-    partial class PlayPalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230721071941_RefactoringMessageEntity")]
+    partial class RefactoringMessageEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,21 +55,21 @@ namespace PlayPal.Data.Migrations
                         new
                         {
                             Id = new Guid("f5356275-13f4-4d7c-8172-bbf054707e2f"),
-                            ConcurrencyStamp = "dd31307d-15be-46b7-a58a-ece1c24a631c",
+                            ConcurrencyStamp = "87643052-dd47-4dfd-b489-02cf35488b3e",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = new Guid("c3caf211-8a76-4415-a74a-6b7f0a0b9d50"),
-                            ConcurrencyStamp = "85229c67-a6f9-4b86-8aaf-f9155ed38937",
+                            ConcurrencyStamp = "f6c007b6-7f5c-467d-8236-943db053f708",
                             Name = "FieldOwner",
                             NormalizedName = "FIELDOWNER"
                         },
                         new
                         {
                             Id = new Guid("b333df2f-222c-4768-a9f5-0368b93aea47"),
-                            ConcurrencyStamp = "47088e57-cf41-4d1e-9b7d-9efecf318c04",
+                            ConcurrencyStamp = "7a58e7bf-4b64-4928-82ab-0ee4a906df88",
                             Name = "Player",
                             NormalizedName = "PLAYER"
                         });
@@ -517,6 +519,7 @@ namespace PlayPal.Data.Migrations
                         .HasComment("Indicate if this administrator profile is considered deleted");
 
                     b.Property<Guid?>("ReceiverId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier")
                         .HasComment("The identifier of the user, that has received the message");
 
@@ -527,12 +530,6 @@ namespace PlayPal.Data.Migrations
                     b.Property<Guid>("SenderId")
                         .HasColumnType("uniqueidentifier")
                         .HasComment("The identifier of the user, that has send the message");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
-                        .HasComment("The title of the message");
 
                     b.HasKey("Id");
 
@@ -721,16 +718,16 @@ namespace PlayPal.Data.Migrations
                         {
                             Id = new Guid("9a641cdf-8c28-485f-b22a-3603c6df7a3d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ae12434b-a705-408a-95fa-487e97e6b428",
+                            ConcurrencyStamp = "15414a66-2156-486e-87fc-a50d11355db5",
                             Email = "Administrator@test.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMINISTRATOR@TEST.COM",
                             NormalizedUserName = "ADMINISTRATOR@TEST.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAENhfALIO4RVQwGEHnuV0Iy7pgTG07hTngQ1UhKfrjmAJXMGJoA4h+fF1ykJ7m2WaEQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEK5Px2JvPVqDyXGNmVA+j2SVo6Zx/W0dQsRSqEiN4fqtETq5nycAW+YurBILE7RkYQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d2c200ca-655a-4412-809f-06b5d9c7d948",
+                            SecurityStamp = "85cebbc3-fffe-4a99-bf70-d291a7dc65b5",
                             TwoFactorEnabled = false,
                             UserName = "Administrator@test.com"
                         },
@@ -738,16 +735,16 @@ namespace PlayPal.Data.Migrations
                         {
                             Id = new Guid("84b6df4e-b349-495e-a9e1-8541de1f2e2d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "844bbd1f-ee8d-445f-b17c-ffc024b3a35c",
+                            ConcurrencyStamp = "a695b3c0-7071-4ca0-97e6-9c64fcf4b51d",
                             Email = "FieldOwner@test.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "FIELDOWNER@TEST.COM",
                             NormalizedUserName = "FIELDOWNER@TEST.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGmnZ6YKQh4VhTy+eMg+XNnAXBdQTxo5pSncwXH4LsXK/wooG3uEMtva7tX3cFFpWA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKMkMnSk3ZbIuPRsWgDKneBKK4cbL9DF/duNjpdwEqbwO8ZsJZMAILiEF+YccyQ/zQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5bdcb52e-8f3c-4e63-95ec-0da794fe0195",
+                            SecurityStamp = "c5985c77-38c8-4d9d-a618-e52256b43185",
                             TwoFactorEnabled = false,
                             UserName = "FieldOwner@test.com"
                         },
@@ -755,16 +752,16 @@ namespace PlayPal.Data.Migrations
                         {
                             Id = new Guid("ec70c161-fc76-4b29-b3dc-03fdd605bf0d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e4dac3b3-50be-48ae-8803-4a5fe70402dd",
+                            ConcurrencyStamp = "5104b02a-6a01-42b9-86e0-4ef62c0f0890",
                             Email = "Player@test.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "PLAYER@TEST.COM",
                             NormalizedUserName = "PLAYER@TEST.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDKnlVzdpgGtrlx6EobyuNbphMkl/DyHy7r93eIvpzRCpjVzThyjtHYhUMOYFY0WDQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEA5p2YLK/BnoDQ/3LQ87vlyWDxG2gTCsIyLr/76TXAqjHuDyIrxpg5vz+cUkHGtsPw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4459e93d-add1-4a7e-a892-d221fdc57eb5",
+                            SecurityStamp = "da0e1515-a2c5-4d88-af52-0762b886fa88",
                             TwoFactorEnabled = false,
                             UserName = "Player@test.com"
                         });
@@ -1011,7 +1008,8 @@ namespace PlayPal.Data.Migrations
                     b.HasOne("PlayPal.Data.Models.PlayPalUser", "Receiver")
                         .WithMany("ReceivedMessages")
                         .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("PlayPal.Data.Models.PlayPalUser", "Sender")
                         .WithMany("SendMessages")

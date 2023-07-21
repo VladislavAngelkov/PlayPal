@@ -17,6 +17,9 @@ namespace PlayPal.Data.EntityConfigurations
                 .WithMany(u => u.ReceivedMessages)
                 .HasForeignKey(m => m.ReceiverId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Property(m => m.ReceiverId)
+                .IsRequired(false);
         }
     }
 }

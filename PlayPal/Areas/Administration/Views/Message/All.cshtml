@@ -1,0 +1,37 @@
+﻿@model ICollection<MessageViewModel>
+
+@{
+    TempData["Title"] = "Messages for prossecing";
+}
+
+<div class="text-center">
+    <h2>
+        @TempData["Title"]
+    </h2>
+</div>
+<br />
+<div class="container-fluid">
+
+    @foreach (var message in Model)
+    {
+        <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+            <div class="card-header">Send from: @message.Sender</div>
+            <div class="card-body">
+                <h4 class="card-title">@message.Title</h4>
+                <p class="card-text">@message.Content</p>
+                <div class="align-items-center justify-content-center">
+                    <div class="align-items-center justify-content-center">
+                        <form method="post" asp-area="Administration" asp-controller="Message" asp-action="MarkAsSeen">
+                            <input type="hidden" value="@message.Id" name="id" />
+                            <button style="width:100%" type="submit" class="btn btn-warning">Mark sa seen</button>
+                        </form>
+                    </div>
+                    <br />
+                    <div class="align-items-center justify-content-center">
+                        <a style="width:100%" class="btn btn-success" asp-area="Administration" asp-controller="Message" asp-action="Reply" asp-route-messageId="@message.Id">Reply</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

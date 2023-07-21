@@ -31,13 +31,17 @@ namespace PlayPal.Data.Models
         /// The identifier of the user, that has recieved the message
         /// </summary>
         [Comment("The identifier of the user, that has received the message")]
-        [Required]
-        public Guid ReceiverId { get; set; }
+        public Guid? ReceiverId { get; set; }
 
         /// <summary>
         /// The user, that has received the message
         /// </summary>
         public virtual PlayPalUser Receiver { get; set; } = null!;
+
+        [Comment("The title of the message")]
+        [Required]
+        [MaxLength(MessageConstants.TitleMaxLength)]
+        public string Title { get; set; } = null!;
 
         /// <summary>
         /// The content of the message
@@ -46,5 +50,12 @@ namespace PlayPal.Data.Models
         [Required]
         [MaxLength(MessageConstants.ContentMaxLength)]
         public string Content { get; set; } = null!;
+
+        /// <summary>
+        /// Marks if the message is seen by receiver
+        /// </summary>
+        [Comment("Marks if the message is seen by receiver")]
+        [Required]
+        public bool Seen { get; set; }
     }
 }

@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PlayPal.Common.IdentityConstants;
 using PlayPal.Common.Notifications;
+using PlayPal.Common.StringFormats;
 using PlayPal.Core.Models.InputModels;
 using PlayPal.Core.Models.ViewModels;
 using PlayPal.Core.Services;
 using PlayPal.Core.Services.Interfaces;
 using PlayPal.Data.Models;
+using System.Runtime.Serialization;
 
 namespace PlayPal.Controllers
 {
@@ -398,7 +400,7 @@ namespace PlayPal.Controllers
                     {
                         await _signInManager.SignOutAsync();
 
-                        TempData[ToastrMessageTypes.Warning] = String.Format(WarningMessages.Banned, latestBan.BannedTo.ToString("dd.MM.yyyy - hh:mm"), latestBan.Reason);
+                        TempData[ToastrMessageTypes.Warning] = String.Format(WarningMessages.Banned, latestBan.BannedTo.ToString(DateTimeFormats.BannedToFormat), latestBan.Reason);
 
                         return RedirectToAction("Index", "Home");
                     }

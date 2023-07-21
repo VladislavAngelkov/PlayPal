@@ -1,0 +1,51 @@
+﻿@model ICollection<BanViewModel>
+@using PlayPal.Common.StringFormats
+
+@{
+    TempData["Title"] = "Submitted reports";
+}
+
+<div class="text-center">
+    <h2>
+        @TempData["Title"]
+    </h2>
+</div>
+<br />
+<div class="container-fluid">
+    <div class="row" style="background-color:darkorange">
+        <div class="col-2">
+            Player
+        </div>
+        <div class="col-6">
+            Reason
+        </div>
+        <div class="col-2">
+            Banned to
+        </div>
+        <div class="col-2">
+            Remove Ban
+        </div>
+    </div>
+
+    @foreach (var ban in Model)
+    {
+        <div class="row">
+            <div class="col-2">
+                @ban.BannedPlayerEmail
+            </div>
+            <div class="col-6">
+                @ban.Reason
+            </div>
+            <div class="col-2">
+                @ban.BannedTo.ToString(DateTimeFormats.BannedToFormat)
+            </div>
+            <div class="col-2">
+                <form asp-area="Administration" asp-controller="Ban" asp-action="RemoveBan" method="post">
+                    <input type="hidden" value="@ban.Id" name="id" />
+                    <button class="btn btn-success" type="submit">Remove Ban</button>
+                </form>
+            </div>
+            <hr />
+        </div>
+    }
+</div>

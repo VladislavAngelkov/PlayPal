@@ -8,5 +8,10 @@ namespace PlayPal.Core.Services.Interfaces
         public Task<BanViewModel> GetLatestBan(Guid playerId);
 
         public Task BanPlayer(BanInputModel model);
+
+        public Task RemoveBan(Guid id);
+
+        public Task<ICollection<BanViewModel>> GetAll();
+        
     }
 }

@@ -87,7 +87,7 @@ namespace PlayPal.Core.Repositories
         }
 
         /// <summary>
-        /// Deletes a record from database
+        /// Change the IsDeleted property to true
         /// </summary>
         /// <param name="id">Identificator of record to be deleted</param>
         public async Task DeleteAsync<T>(Guid id) where T : IDeletable

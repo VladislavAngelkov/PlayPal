@@ -1,0 +1,25 @@
+﻿@model ICollection<MessageViewModel>
+
+@{
+    TempData["Title"] = "Sent Messages";
+}
+
+<div class="text-center">
+    <h2>
+        @TempData["Title"]
+    </h2>
+</div>
+<br />
+<div class="container-fluid">
+
+    @foreach (var message in Model)
+    {
+        <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+            <div class="card-header">Sent to: @message.Receiver</div>
+            <div class="card-body">
+                <h4 class="card-title">@message.Title</h4>
+                <p class="card-text">@message.Content</p>
+            </div>
+        </div>
+    }
+</div>
