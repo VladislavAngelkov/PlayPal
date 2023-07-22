@@ -21,6 +21,14 @@ namespace PlayPal.Data.Models
         public Guid Id { get; set; }
 
         /// <summary>
+        /// The name of the field
+        /// </summary>
+        [Comment("The name of the field")]
+        [Required]
+        [MaxLength(FieldConstants.NameMaxLength)]
+        public string Name { get; set; } = null!;
+
+        /// <summary>
         /// The name of the city where the field is located
         /// </summary>
         [Comment("The name of the city where the field is located")]

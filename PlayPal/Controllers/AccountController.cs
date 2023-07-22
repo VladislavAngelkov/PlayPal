@@ -315,18 +315,7 @@ namespace PlayPal.Controllers
 
                 if (result.Succeeded)
                 {
-
                     return RedirectToAction("BanCheck");
-
-
-                    if (model.returnUrl != null)
-                    {
-                        return LocalRedirect(model.returnUrl);
-                    }
-                    else
-                    {
-                        return RedirectToAction("Index", "Home");
-                    }
                 }
 
                 if (result.IsLockedOut)

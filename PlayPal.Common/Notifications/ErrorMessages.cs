@@ -7,5 +7,9 @@
         public static string UsedEmail = "This email is already used!";
 
         public static string ReportDoesNotExist = "Report does not exist!";
+
+        public static string FieldDoesNotExist = "The selected field does not exist!";
+
+        public static string GameDoesNotExist = "The selected game does not exist";
     }
 }

@@ -18,6 +18,35 @@ namespace PlayPal.Areas.Administration.Controllers
             _playerService = playerService;
         }
 
-        
+        [HttpGet]
+        public IActionResult Search()
+        {
+            var model = new SearchPlayerInputModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Search(SearchPlayerInputModel model)
+        {
+            string name = model.Name;
+            string email = model.Email;
+            string city = model.City;
+
+            try
+            {
+                var players = await _playerService.SearchPlayer(name, email, city);
+
+                model.Players = players;
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
     }
 }

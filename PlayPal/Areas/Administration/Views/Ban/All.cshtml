@@ -2,7 +2,7 @@
 @using PlayPal.Common.StringFormats
 
 @{
-    TempData["Title"] = "Submitted reports";
+    TempData["Title"] = "Active bans";
 }
 
 <div class="text-center">
@@ -22,7 +22,7 @@
         <div class="col-2">
             Banned to
         </div>
-        <div class="col-2">
+        <div class="col-2 text-center">
             Remove Ban
         </div>
     </div>
@@ -30,19 +30,19 @@
     @foreach (var ban in Model)
     {
         <div class="row">
-            <div class="col-2">
+            <div class="col-2 mt-2">
                 @ban.BannedPlayerEmail
             </div>
-            <div class="col-6">
+            <div class="col-6 mt-2">
                 @ban.Reason
             </div>
-            <div class="col-2">
+            <div class="col-2 mt-2">
                 @ban.BannedTo.ToString(DateTimeFormats.BannedToFormat)
             </div>
-            <div class="col-2">
+            <div class="col-2 mt-1 mb-1">
                 <form asp-area="Administration" asp-controller="Ban" asp-action="RemoveBan" method="post">
                     <input type="hidden" value="@ban.Id" name="id" />
-                    <button class="btn btn-success" type="submit">Remove Ban</button>
+                    <button class="btn btn-success" type="submit" style="width:100%">Remove Ban</button>
                 </form>
             </div>
             <hr />

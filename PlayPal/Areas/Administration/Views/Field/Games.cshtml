@@ -1,0 +1,52 @@
+﻿@model FieldGameViewModel
+@using PlayPal.Common.StringFormats
+
+@{
+    TempData["Title"] = "Active Games";
+}
+
+<div class="text-center">
+    <h2>
+        @TempData["Title"]
+    </h2>
+</div>
+<br />
+<div class="container-fluid">
+    <div class="row" style="background-color:darkorange">
+        <div class="col-3">
+            Creator
+        </div>
+        <div class="col-3">
+            Starts at
+        </div>
+        <div class="col-3">
+            Ends at
+        </div>
+        <div class="col-3">
+            Delete Game
+        </div>
+    </div>
+
+    @foreach (var game in Model.Games)
+    {
+        <div class="row">
+            <div class="col-3">
+                @game.Creator
+            </div>
+            <div class="col-3">
+                @game.StartingTime.ToString(DateTimeFormats.GameStatEnd)
+            </div>
+            <div class="col-3">
+                @game.EndingTime.ToString(DateTimeFormats.GameStatEnd)
+            </div>
+            <div class="col-3">
+                <form asp-area="Administration" asp-controller="Field" asp-action="DeleteGame" method="post">
+                    <input type="hidden" value="@game.Id" name="gameId" />
+                    <input type="hidden" value="@Model.Id" name="fieldId" />
+                    <button class="btn btn-danger" type="submit">Delete Game</button>
+                </form>
+            </div>
+            <hr />
+        </div>
+    }
+</div>

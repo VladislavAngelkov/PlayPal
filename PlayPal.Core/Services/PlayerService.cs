@@ -1,4 +1,6 @@
-﻿using PlayPal.Core.Models.InputModels;
+﻿using Microsoft.EntityFrameworkCore;
+using PlayPal.Core.Models.InputModels;
+using PlayPal.Core.Models.ViewModels;
 using PlayPal.Core.Repositories.Interfaces;
 using PlayPal.Core.Services.Interfaces;
 using PlayPal.Data;
@@ -57,6 +59,25 @@ namespace PlayPal.Core.Services
             var player = await _repository.GetByIdAsync<Player>(id);
 
             return player;
+        }
+
+        public async Task<ICollection<PlayerViewModel>> SearchPlayer(string name, string email, string city)
+        {
+            var players = await _repository.All<Player>()
+                .Include(p => p.User)
+                .Where(p => (name != null ? p.Name.ToUpper().Contains(name.ToUpper()) : true) &&
+                (email != null ? p.User!.Email.ToUpper().Contains(email.ToUpper()) : true) &&
+                (city != null ? p.CurrentCity.ToUpper().Contains(city.ToUpper()) : true))
+                .Select(p => new PlayerViewModel()
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    City = p.CurrentCity,
+                    Email = p.User!.Email
+                })
+                .ToListAsync();
+
+            return players;
         }
     }
 }

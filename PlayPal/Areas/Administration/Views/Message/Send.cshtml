@@ -16,6 +16,7 @@
         </div>
         <div class="row col-6">
             <form method="post" asp-area="Administration" asp-controller="Message" asp-action="Send">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input asp-for=@Model.Id type="hidden" value="@Model.Id" name="Id"/>
                 <input asp-for=@Model.Receiver type="hidden" value="@Model.Receiver" name="Receiver" />
                 <input asp-for=@Model.ReceiverId type="hidden" value="@Model.ReceiverId" name="ReceiverId" />

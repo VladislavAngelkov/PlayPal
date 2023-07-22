@@ -16,10 +16,10 @@
         <div class="col-6">
             Email
         </div>
-        <div class="col-3">
+        <div class="col-3 text-center">
             Promote
         </div>
-        <div class="col-3">
+        <div class="col-3 text-center">
             Reject
         </div>
     </div>
@@ -27,23 +27,23 @@
     @foreach (var admin in Model)
     {
         <div class="row">
-            <div class="col-2">
+            <div class="col-6 mt-2">
                 @admin.Email
             </div>
-            <div class="col-6">
+            <div class="col-3 mt-1 mb-1">
                 <form asp-area="Administration" asp-controller="Administrator" asp-action="Promote">
                     <input type="hidden" value="@admin.Email" name="@nameof(admin.Email)">
                     <input type="hidden" value="@admin.UserId" name="@nameof(admin.UserId)">
                     <input type="hidden" value="@admin.AdministratorId" name="@nameof(admin.AdministratorId)">
-                    <button type="submit" class="btn btn-success">Accept</button>
+                    <button type="submit" class="btn btn-success" style="width:100%">Accept</button>
                 </form>
             </div>
-            <div class="col-2">
+            <div class="col-3 mt-1 mb-1">
                 <form asp-area="" asp-controller="Account" asp-action="DeleteUser">
                     <input type="hidden" value="@admin.Email" name="@nameof(admin.Email)">
                     <input type="hidden" value="@admin.UserId" name="@nameof(admin.UserId)">
                     <input type="hidden" value="@admin.AdministratorId" name="@nameof(admin.AdministratorId)">
-                    <button type="submit" class="btn btn-danger">Reject</button>
+                    <button type="submit" class="btn btn-danger" style="width:100%">Reject</button>
                 </form>
             </div>
             <hr />
