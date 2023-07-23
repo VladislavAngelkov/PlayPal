@@ -1,8 +1,53 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model LoginUserInputModel
+
+@{
+    TempData["Title"] = "Welcome to PlayPal";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1>
+        @TempData["Title"]
+    </h1>
+    <h5>
+        Connecting players from all over the word
+    </h5>
 </div>
+
+<br />
+<div class="row">
+    <div class="col-md-6">
+        <h5>
+            You don't have account?
+        </h5>
+        <a asp-area="" asp-controller="Account" asp-action="Register" type="submit" class="btn btn-success" style="width:80%; background-color:deepskyblue">Register</a>
+    </div>
+    <div class="col-md-6">
+        <div>
+            <h2>
+                Log in
+            </h2>
+        </div>
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Email" class="form-label mt-4">Email address</label>
+                <input asp-for="Email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                <span asp-validation-for="Email" class="text-danger"></span>
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password" class="form-label mt-4">Password</label>
+                <input asp-for="Password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <br />
+            <button asp-area="" asp-controller="Account" asp-action="Login" type="submit" class="btn btn-success mt-2" style="width:100%">Log in</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

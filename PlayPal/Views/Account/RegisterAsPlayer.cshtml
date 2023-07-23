@@ -10,25 +10,10 @@
     <div class="col-md-6">
         <form method="post" asp-controller="Account" asp-action="RegisterAsPlayer">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input asp-for="Id" type="hidden" value=@Model.Id />
-            <div class="form-group">
-                <label asp-for=Email class="form-label mt-4">Email address</label>
-                <input asp-for="Email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                <span asp-validation-for="Email" class="text-danger"></span>
-                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Password" class="form-label mt-4">Password</label>
-                <input asp-for="Password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="ConfirmPassword" class="form-label mt-4">Confirm Password</label>
-                <input asp-for="ConfirmPassword" type="password" class="form-control" id="exampleInputPassword1" placeholder="Confirm Password">
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-            </div>
+            <input asp-for="@Model.Id" type="hidden" value=@Model.Id />
+            <input asp-for="@Model.Email" type="hidden" value=@Model.Email />
+            <input asp-for="@Model.Password" type="hidden" value=@Model.Password />
+            <input asp-for="@Model.ConfirmPassword" type="hidden" value=@Model.ConfirmPassword />
 
             <div class="form-group">
                 <label asp-for="@Model.Player!.Name" class="form-label mt-4">Name</label>
@@ -52,7 +37,7 @@
                 </select>
             </div>
             <br />
-            <button asp-controller="Account" asp-action="RegisterAsPlayer" type="submit" class="btn btn-success">Register</button>
+            <button asp-controller="Account" asp-action="RegisterAsPlayer" type="submit" class="btn btn-success" style="width:100%">Register</button>
         </form>
     </div>
 </div>

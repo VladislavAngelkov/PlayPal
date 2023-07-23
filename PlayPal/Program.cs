@@ -35,7 +35,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
 
-    options.LoginPath = "/Account/Login";
+    options.LoginPath = "/Home/Index";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
     options.SlidingExpiration = true;
 });
@@ -47,6 +47,18 @@ builder.Services.AddAuthorization(policy =>
     {
         options.RequireRole(PlayPalRoleNames.Administrator);
         options.RequireClaim(PlayPalClaimTypes.AdministratorId);
+    });
+
+    policy.AddPolicy(PlayPalPolicyNames.FieldManagment, options =>
+    {
+        options.RequireRole(PlayPalRoleNames.FieldOwner);
+        options.RequireClaim(PlayPalClaimTypes.FieldOwnerId);
+    });
+
+    policy.AddPolicy(PlayPalPolicyNames.Player, options =>
+    {
+        options.RequireRole(PlayPalRoleNames.Player);
+        options.RequireClaim(PlayPalClaimTypes.PlayerId);
     });
 });
 

@@ -42,7 +42,7 @@ namespace PlayPal.Data.Models
         /// </summary>
         [Comment("The current location of the player. Its used for finding nearby games.")]
         [Required]
-        [MaxLength(PlayerConstants.CitiMaxLength)]
+        [MaxLength(PlayerConstants.CityMaxLength)]
         public string CurrentCity { get; set; } = null!;
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace PlayPal.Data.Models
         /// Used for finding nearby games.
         /// </summary>
         [Comment("Normalized name of the player's city")]
-        [MaxLength(PlayerConstants.CitiMaxLength)]
+        [MaxLength(PlayerConstants.CityMaxLength)]
         public string? NormalizedCurrentCity { get; set; }
 
         /// <summary>

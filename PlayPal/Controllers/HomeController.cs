@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using PlayPal.Common.IdentityConstants;
-using PlayPal.Common.Notifications;
+using PlayPal.Core.Models.InputModels;
 using PlayPal.Core.Services.Interfaces;
 using PlayPal.Data.Models;
 using PlayPal.Models;
@@ -28,29 +27,18 @@ namespace PlayPal.Controllers
 
 
         [AllowAnonymous]
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public IActionResult Index(string returnUrl)
         {
             if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                if (User.IsInRole(PlayPalRoleNames.Administrator))
-                {
-                    return RedirectToAction("Index", "Administrator", new { Area = "Administration" });
-                }
-                else if (User.IsInRole(PlayPalRoleNames.FieldOwner))
-                {
-                    return RedirectToAction("Mine", "Field", new { Area = "FieldManagment" });
-                }
-                else if (User.IsInRole(PlayPalRoleNames.Player))
-                {
-                    return RedirectToAction("JoinGame", "Game");
-                }
-                else
-                {
-                    return View();
-                }
+                return RedirectToAction("Manage", "Account");
             }
 
-            return View();
+            var model = new LoginUserInputModel();
+            model.returnUrl = returnUrl;
+
+            return View(model);
         }
 
         [AllowAnonymous]

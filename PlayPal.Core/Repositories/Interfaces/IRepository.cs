@@ -52,7 +52,7 @@ namespace PlayPal.Core.Repositories.Interfaces
         /// Updates a record in database
         /// </summary>
         /// <param name="entity">Entity for record to be updated</param>
-        void Update<T>(T entity) where T : IDeletable;
+        Task Update<T>(T entity) where T : IDeletable;
 
         /// <summary>
         /// Updates set of records in the database

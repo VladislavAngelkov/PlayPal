@@ -7,8 +7,8 @@
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
-            <a class="nav-link text-bg-light" asp-area="" asp-controller="Account" asp-action="Manage" title="Manage">
-                Hello
+            <a class="nav-link active" asp-area="Administration" asp-controller="Administrator" asp-action="ViewProfile" title="Manage">
+                Hello,
                 @if (User.Claims.Any(c => c.Type == "Name"))
                 {
                     @User.Claims.First(c =>c.Type  == "Name").Value
@@ -23,15 +23,6 @@
             <form class="form-inline" asp-area="" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                 <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
             </form>
-        </li>
-    }
-    else
-    {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
         </li>
     }
 </ul>

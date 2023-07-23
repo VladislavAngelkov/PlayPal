@@ -141,7 +141,7 @@ namespace PlayPal.Core.Repositories
         /// Updates a record in database
         /// </summary>
         /// <param name="entity">Entity for record to be updated</param>
-        public async void Update<T>(T entity) where T : IDeletable
+        public async Task Update<T>(T entity) where T : IDeletable
         {
             this.DbSet<T>().Update(entity);
             await SaveChangesAsync();

@@ -24,7 +24,7 @@ namespace PlayPal.Core.Models.InputModels
         public string Email { get; set; } = null!;
 
         [Required]
-        [StringLength(PlayPalUserConstants.PasswordMaxLength, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(PlayPalUserConstants.PasswordMaxLength, MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; } = null!;

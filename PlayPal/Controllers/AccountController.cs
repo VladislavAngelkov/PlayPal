@@ -9,7 +9,9 @@ using PlayPal.Core.Models.ViewModels;
 using PlayPal.Core.Services;
 using PlayPal.Core.Services.Interfaces;
 using PlayPal.Data.Models;
+using PlayPal.Extensions;
 using System.Runtime.Serialization;
+using System.Security.Cryptography.X509Certificates;
 
 namespace PlayPal.Controllers
 {
@@ -40,7 +42,7 @@ namespace PlayPal.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult Register(string? returnUrl = null)
+        public IActionResult Register()
         {
             bool isLogged = IdentityCheck();
 
@@ -48,63 +50,62 @@ namespace PlayPal.Controllers
             {
                 TempData[ToastrMessageTypes.Warning] = WarningMessages.AlreadyLogged;
 
-                if (returnUrl != null)
-                {
-                    return LocalRedirect(returnUrl);
-                }
-
                 return RedirectToAction("Index", "Home");
             }
 
-            return View();
-        }
+            var model = new RegisterUserInputModel();
 
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<IActionResult> RegisterAsPlayer(string? returnUrl)
-        {
-            bool isLogged = IdentityCheck();
-
-            if (isLogged)
-            {
-                TempData[ToastrMessageTypes.Warning] = WarningMessages.AlreadyLogged;
-
-                if (returnUrl != null)
-                {
-                    return LocalRedirect(returnUrl);
-                }
-
-                return RedirectToAction("Index", "Home");
-            }
-
-            try
-            {
-                var positions = await _positionService.GetAllPositionsModels();
-
-                var model = new RegisterUserInputModel();
-                model.Player = new CreatePlayerInputModel();
-                model.Player.Positions = positions;
-
-                return View(model);
-            }
-            catch (Exception)
-            {
-
-                return RedirectToAction("Error", "Home");
-            }
+            return View(model);
         }
 
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> RegisterAsPlayer(RegisterUserInputModel model)
         {
+            bool isLogged = IdentityCheck();
+
+            if (isLogged)
+            {
+                TempData[ToastrMessageTypes.Warning] = WarningMessages.AlreadyLogged;
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (await _accountService.UserExist(model.Email))
+            {
+                ModelState.AddModelError("", ErrorMessages.UsedEmail);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Register", model);
+            }
+
+            if (model.Player == null)
+            {
+                try
+                {
+                    var positions = await _positionService.GetAllPositionsModels();
+
+                    model.Player = new CreatePlayerInputModel();
+                    model.Player.Positions = positions;
+
+                    return View(model);
+                }
+                catch (Exception)
+                {
+
+                    return RedirectToAction("Error", "Home");
+                }
+            }
+
             try
             {
                 var positions = await _positionService.GetAllPositionsModels();
 
                 if (!positions.Any(p => p.Id == model.Player!.Position))
                 {
-                    ModelState.AddModelError("", "Selected position does not exist!");
+                    ModelState.AddModelError("", ErrorMessages.PositionDoesNotExist);
                 }
 
                 if (await _accountService.UserExist(model.Email))
@@ -146,8 +147,8 @@ namespace PlayPal.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet]
-        public IActionResult ApplyForAdministrator(string? returnUrl)
+        [HttpPost]
+        public async Task<IActionResult> ApplyForAdministrator(RegisterUserInputModel model)
         {
             bool isLogged = IdentityCheck();
 
@@ -155,25 +156,9 @@ namespace PlayPal.Controllers
             {
                 TempData[ToastrMessageTypes.Warning] = WarningMessages.AlreadyLogged;
 
-                if (returnUrl != null)
-                {
-                    return LocalRedirect(returnUrl);
-                }
-
                 return RedirectToAction("Index", "Home");
             }
 
-            var model = new RegisterUserInputModel();
-            var administrator = new CreateAdministratorInputModel();
-            model.Administrator = administrator;
-
-            return View(model);
-        }
-
-        [AllowAnonymous]
-        [HttpPost]
-        public async Task<IActionResult> ApplyForAdministrator(RegisterUserInputModel model)
-        {
             if (await _accountService.UserExist(model.Email))
             {
                 ModelState.AddModelError("", ErrorMessages.UsedEmail);
@@ -181,6 +166,13 @@ namespace PlayPal.Controllers
 
             if (!ModelState.IsValid)
             {
+                return RedirectToAction("Register", model);
+            }
+
+            if (model.Administrator == null)
+            {
+                model.Administrator = new CreateAdministratorInputModel();
+
                 return View(model);
             }
 
@@ -210,8 +202,8 @@ namespace PlayPal.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet]
-        public IActionResult RegisterAsFieldOwner(string? returnUrl)
+        [HttpPost]
+        public async Task<IActionResult> RegisterAsFieldOwner(RegisterUserInputModel model)
         {
             bool isLogged = IdentityCheck();
 
@@ -219,25 +211,9 @@ namespace PlayPal.Controllers
             {
                 TempData[ToastrMessageTypes.Warning] = WarningMessages.AlreadyLogged;
 
-                if (returnUrl != null)
-                {
-                    return LocalRedirect(returnUrl);
-                }
-
                 return RedirectToAction("Index", "Home");
             }
 
-            var model = new RegisterUserInputModel();
-            var fieldOwner = new CreateFieldOwnerInputModel();
-            model.FieldOwner = fieldOwner;
-
-            return View(model);
-        }
-
-        [AllowAnonymous]
-        [HttpPost]
-        public async Task<IActionResult> RegisterAsFieldOwner(RegisterUserInputModel model)
-        {
             if (await _accountService.UserExist(model.Email))
             {
                 ModelState.AddModelError("", ErrorMessages.UsedEmail);
@@ -245,6 +221,13 @@ namespace PlayPal.Controllers
 
             if (!ModelState.IsValid)
             {
+                return RedirectToAction("Register", model);
+            }
+
+            if (model.FieldOwner == null)
+            {
+                model.FieldOwner = new CreateFieldOwnerInputModel();
+
                 return View(model);
             }
 
@@ -273,31 +256,22 @@ namespace PlayPal.Controllers
         [HttpGet]
         public IActionResult Manage()
         {
-            return View();
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult Login(string? returnUrl = null)
-        {
-            bool isLogged = IdentityCheck();
-
-            if (isLogged)
+            if (User.IsInRole(PlayPalRoleNames.Administrator))
             {
-                TempData[ToastrMessageTypes.Warning] = WarningMessages.AlreadyLogged;
-
-                if (returnUrl != null)
-                {
-                    return LocalRedirect(returnUrl);
-                }
-
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Administrator", new { Area = "Administration" });
             }
-
-            var model = new LoginUserInputModel();
-            model.returnUrl = returnUrl;
-
-            return View(model);
+            else if (User.IsInRole(PlayPalRoleNames.FieldOwner))
+            {
+                return RedirectToAction("Mine", "Field", new { Area = "FieldManagment" });
+            }
+            else if (User.IsInRole(PlayPalRoleNames.Player))
+            {
+                return RedirectToAction("BanCheck", "Account");
+            }
+            else
+            {
+                return RedirectToAction("Error");
+            }
         }
 
         [HttpPost]
@@ -373,11 +347,11 @@ namespace PlayPal.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> BanCheck(string returnUrl)
+        public async Task<IActionResult> BanCheck()
         {
             if (User.IsInRole(PlayPalRoleNames.Player))
             {
-                var playerId = Guid.Parse(User.Claims.First(c => c.Type == PlayPalClaimTypes.PlayerId).Value);
+                var playerId = (Guid)User.PlayerId()!;
 
                 var player = await _playerService.GetPlayerAsync(playerId);
 
@@ -393,17 +367,16 @@ namespace PlayPal.Controllers
 
                         return RedirectToAction("Index", "Home");
                     }
+
+                    return RedirectToAction("JoinGame", "Game");
                 }
 
-                if (returnUrl != null)
-                {
-                    return LocalRedirect(returnUrl);
-                }
-
-                return RedirectToAction("JoinGame", "Game");
+                return RedirectToAction("Index", "Home");
             }
 
             return RedirectToAction("Index", "Home");
         }
+
+        
     }
 }

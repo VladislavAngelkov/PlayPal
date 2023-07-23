@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PlayPal.Core.Models.InputModels;
 using PlayPal.Core.Models.ViewModels;
 using PlayPal.Core.Repositories.Interfaces;
 using PlayPal.Core.Services.Interfaces;
@@ -13,6 +14,20 @@ namespace PlayPal.Core.Services
         public FieldService(IRepository repository)
         {
             _repository = repository;
+        }
+
+        public async Task AddAsync(FieldInputModel model)
+        {
+            var field = new Field()
+            {
+                Id = model.Id,
+                Name = model.Name,
+                City = model.City,
+                Address = model.Address,
+                OwnerId = model.OwnerId
+            };
+
+            await _repository.AddAsync(field);
         }
 
         public async Task<ICollection<AdministrationFieldViewModel>> AllAsync()
@@ -49,6 +64,21 @@ namespace PlayPal.Core.Services
             return true;    
         }
 
-        
+        public async Task<ICollection<FieldViewModel>> GetFieldsByOwnerAsync(Guid ownerId)
+        {
+            var models = await _repository.All<Field>()
+                .Where(f => f.OwnerId == ownerId)
+                .Select(f => new FieldViewModel()
+                {
+                    Id = f.Id,
+                    Name = f.Name,
+                    City = f.City,
+                    Address = f.Address,
+                    OwnerId = f.OwnerId
+                })
+                .ToListAsync();
+
+            return models;
+        }
     }
 }

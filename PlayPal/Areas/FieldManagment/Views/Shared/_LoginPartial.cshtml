@@ -6,8 +6,8 @@
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
-        <li class="nav-item">
-            <a class="nav-link text-bg-light" asp-area="" asp-controller="Account" asp-action="Manage" title="Manage">
+        <li class="nav-item align-items-center">
+            <a class="nav-link active" asp-area="FieldManagment" asp-controller="FieldOwner" asp-action="ViewProfile" title="Manage">
                 Hello
                 @if (User.Claims.Any(c => c.Type == "Name"))
                 {

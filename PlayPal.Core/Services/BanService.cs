@@ -46,6 +46,8 @@ namespace PlayPal.Core.Services
 
             string reason = string.Empty;
 
+            
+
             if (ban != null)
             {
                 if (ban.Reason == Reason.DangerousPlay)
@@ -60,15 +62,15 @@ namespace PlayPal.Core.Services
                 {
                     reason = "You have skipped or leaved games before they have ended";
                 }
+
+                var model = new BanViewModel();
+                model.BannedTo = ban.BannedTo;
+                model.Reason = reason;
+
+                return model;
             }
 
-            var model = new BanViewModel()
-            {
-                BannedTo = ban.BannedTo,
-                Reason = reason
-            };
-
-            return model;
+            return null;
         }
 
         public async Task RemoveBan(Guid id)

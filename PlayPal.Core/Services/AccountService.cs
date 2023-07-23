@@ -147,6 +147,18 @@ namespace PlayPal.Core.Services
             return false;
         }
 
+        public async Task UpdateUserName(Guid userId, string newName)
+        {
+            var user = _userManager.FindByIdAsync(userId.ToString()).Result;
+
+            var claims = await _userManager.GetClaimsAsync(user);
+
+            var oldNameClaim = claims.FirstOrDefault(c => c.Type == PlayPalClaimTypes.Name);
+
+            var newNameClaim = new Claim(PlayPalClaimTypes.Name, newName);
+
+            await _userManager.ReplaceClaimAsync(user, oldNameClaim, newNameClaim);
+        }
         private IUserEmailStore<PlayPalUser> GetEmailStore()
         {
             if (!_userManager.SupportsUserEmail)

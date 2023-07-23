@@ -1,5 +1,58 @@
-﻿<div>
-    <h1>
-        Welcome from FieldManagment/Field/Mine
-    </h1>
+﻿@model ICollection<FieldViewModel>
+
+@{
+    TempData["Title"] = "Fields";
+}
+
+<div class="text-center">
+    <h2>
+        @TempData["Title"]
+    </h2>
+</div>
+<br />
+<div class="container-fluid">
+    <div class="row" style="background-color:darkorange">
+        <div class="col-3">
+            Name
+        </div>
+        <div class="col-2">
+            City
+        </div>
+        <div class="col-3">
+            Address
+        </div>
+        <div class="col-2">
+            View Games
+        </div>
+        <div class="col-2 text-center">
+            Delete
+        </div>
+    </div>
+
+    @foreach (var field in Model)
+    {
+        <div class="row">
+            <div class="col-3 mt-2">
+                @field.Name
+            </div>
+            <div class="col-2 mt-2">
+                @field.City
+            </div>
+            <div class="col-3 mt-2">
+                @field.Address
+            </div>
+            <div class="col-2 mt-1 mb-1">
+                <a asp-area="FieldManagment" asp-controller="Field" asp-action="Games" asp-route-fieldId="@field.Id">
+                    Veiw Games
+                </a>
+            </div>
+            <div class="col-2 mt-1 mb-1">
+                <form asp-area="FieldManagment" asp-controller="Field" asp-action="Delete" method="post">
+                    <input type="hidden" value="@field.Id" name="fieldId" />
+                    <button class="btn btn-danger" type="submit" style="width:100%">Delete</button>
+                </form>
+            </div>
+            <hr />
+        </div>
+    }
 </div>

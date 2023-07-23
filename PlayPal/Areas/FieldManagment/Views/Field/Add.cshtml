@@ -1,0 +1,50 @@
+﻿@model FieldInputModel
+
+@{
+    TempData["Title"] = "Add Field";
+}
+
+<div class="text-center">
+    <h2>
+        @TempData["Title"]
+    </h2>
+</div>
+
+<div class="row align-content-center">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-6">
+        <form method="post" asp-area="FieldManagment" asp-controller="Field" asp-action="Add">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <input asp-for="@Model.Id" type="hidden" value=@Model.Id />
+
+            <div class="form-group">
+                <label asp-for="@Model.Name" class="form-label mt-4">Name</label>
+                <input asp-for="@Model.Name" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter field's name'">
+                <span asp-validation-for="@Model.Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="@Model.City" class="form-label mt-4">City</label>
+                <input asp-for="@Model.City" type="text" class="form-control" id="exampleInputPassword1" placeholder="Enter the city">
+                <span asp-validation-for="@Model.City" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="@Model.Address" class="form-label mt-4">Address</label>
+                <input asp-for="@Model.Address" type="text" class="form-control" id="exampleInputPassword1" placeholder="Enter the field's location'">
+                <span asp-validation-for="@Model.Address" class="text-danger"></span>
+            </div>
+
+            <br />
+            <button type="submit" class="btn btn-success" style="width:100%">Add</button>
+        </form>
+    </div>
+    <div class="col-md-3">
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

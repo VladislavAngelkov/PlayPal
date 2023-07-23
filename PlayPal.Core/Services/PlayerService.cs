@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using PlayPal.Common.IdentityConstants;
 using PlayPal.Core.Models.InputModels;
 using PlayPal.Core.Models.ViewModels;
 using PlayPal.Core.Repositories.Interfaces;
@@ -6,6 +8,7 @@ using PlayPal.Core.Services.Interfaces;
 using PlayPal.Data;
 using PlayPal.Data.Models;
 using PlayPal.Data.Models.Enums;
+using System.Security.Claims;
 
 namespace PlayPal.Core.Services
 {
@@ -13,13 +16,16 @@ namespace PlayPal.Core.Services
     {
         private readonly IRepository _repository;
         private readonly IPositionService _positionService;
+        private readonly UserManager<PlayPalUser> _userManager;
 
         public PlayerService(
             IRepository repository,
-            IPositionService positionService)
+            IPositionService positionService,
+            UserManager<PlayPalUser> userManager)
         {
             _repository = repository;
             _positionService = positionService;
+            _userManager = userManager;
         }
 
         public async Task CreatePlayerAsync(RegisterUserInputModel model)
@@ -78,6 +84,31 @@ namespace PlayPal.Core.Services
                 .ToListAsync();
 
             return players;
+        }
+
+        public async Task UpdatePlayer(EditPlayerProfileInputModel model, Guid userId)
+        {
+            var player = await _repository.GetByIdAsync<Player>(model.Id);
+
+            player.Name = model.Name;
+            player.CurrentCity = model.CurrentCity;
+            player.PositionId = model.Position;
+
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            var claims = await _userManager.GetClaimsAsync(user);
+
+            var oldNameClaim = claims.FirstOrDefault(c => c.Type == PlayPalClaimTypes.Name);
+
+            await _userManager.RemoveClaimAsync(user, oldNameClaim);
+
+            string newName = model.Name;
+
+            var newNameClaim = new Claim(PlayPalClaimTypes.Name, newName);
+
+            await _userManager.AddClaimAsync(user, newNameClaim);
+
+            await _repository.Update(player);
         }
     }
 }

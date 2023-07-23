@@ -18,7 +18,7 @@ namespace PlayPal.Core.Models.InputModels
         [EmailAddress]
         public string? Email { get; set; }
 
-        [StringLength(PlayerConstants.CitiMaxLength, MinimumLength = PlayerConstants.CitiMinLength)]
+        [StringLength(PlayerConstants.CityMaxLength, MinimumLength = PlayerConstants.CityMinLength)]
         public string? City { get; set; }
 
         public ICollection<PlayerViewModel> Players { get; set; }

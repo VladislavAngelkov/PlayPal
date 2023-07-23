@@ -11,5 +11,7 @@
         public static string FieldDoesNotExist = "The selected field does not exist!";
 
         public static string GameDoesNotExist = "The selected game does not exist";
+
+        public static string PositionDoesNotExist = "The selected position does not exist";
     }
 }

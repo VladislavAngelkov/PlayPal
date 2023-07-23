@@ -87,5 +87,36 @@ namespace PlayPal.Core.Services
                 await _repository.SaveChangesAsync();
             }
         }
+
+        public async Task<Administrator> GetAdministratorAsync(Guid administratorId)
+        {
+            var administrator = await _repository.GetByIdAsync<Administrator>(administratorId);
+
+            return administrator;
+        }
+
+        public async Task UpdateAdministratorAsync(EditAdministratorProfileInputModel model, Guid userId)
+        {
+            var administrator = await _repository.GetByIdAsync<Administrator>(model.Id);
+
+            administrator.FirstName = model.FirstName;
+            administrator.LastName = model.LastName;
+
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            var claims = await _userManager.GetClaimsAsync(user);
+
+            var oldNameClaim = claims.FirstOrDefault(c => c.Type == PlayPalClaimTypes.Name);
+
+            await _userManager.RemoveClaimAsync(user, oldNameClaim);
+
+            string newName = $"{model.FirstName} {model.LastName}";
+
+            var newNameClaim = new Claim(PlayPalClaimTypes.Name, newName);
+
+            await _userManager.AddClaimAsync(user, newNameClaim);
+
+            await _repository.Update(administrator);
+        }
     }
 }

@@ -14,5 +14,7 @@ namespace PlayPal.Core.Services.Interfaces
         public Task DeleteUser(Guid userId);
 
         public Task<bool> UserExist(string email);
+
+        public Task UpdateUserName(Guid userId, string newName);
     }
 }

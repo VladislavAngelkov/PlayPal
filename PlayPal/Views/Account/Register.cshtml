@@ -1,77 +1,55 @@
-﻿@{
-    ViewData["Title"] = "Register";
+﻿@model RegisterUserInputModel
+
+@{
+    TempData["Title"] = "Register";
 }
 
-<div class="container-fluid" style="width:100%;margin:auto">
-    <div class="center" style="width:50%;margin:auto">
-        <br />
-        <h1 style="align-content:center">
-            Strat your journey now
-        </h1>
-        <br />
+<div class="text-center">
+    <h1>
+        @TempData["Title"]
+    </h1>
+    <h5>
+        Start your journey in the PlayPal community
+    </h5>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h5>
+            Already have an account?
+        </h5>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-success mt-2" style="width:80%">Log in</a>
     </div>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card text-white bg-transparent mb-3 center" style="width:90%;margin:auto">
-                <div class="card-header" style="background-color:green">
-                    <h4 class="card-title">Register as player</h4>
-                </div>
-                <div class="bg-transparent card-body" style="border-style:solid; border-color:green">
-                    <p class="card-text">
-                        Meet new people 
-                    </p>
-                    <p>
-                        Enjoy playing football wherever you are
-                    </p>
-                    <p>
-                        Connect with other football enthusiasts
-                    </p>
-                </div>
-                <br />
-                <a asp-controller="Account" asp-action="RegisterAsPlayer" class="btn btn-success" style="width:90%;margin:auto;background-color:green;border-color:green">Become Player</a>
+    <div class="col-md-6">
+        <form method="post" asp-controller="Account" asp-action="RegisterAsPlayer">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Id" type="hidden" value=@Model.Id />
+            <div class="form-group">
+                <label asp-for=Email class="form-label mt-4">Email address</label>
+                <input asp-for="Email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                <span asp-validation-for="Email" class="text-danger"></span>
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
             </div>
-        </div>
 
-        <div class="col-md-4">
-            <div class="card text-white bg-transparent mb-3 center" style="width:90%;margin:auto">
-                <div class="card-header" style="background-color:darkorange">
-                    <h4 class="card-title">Apply for administrator</h4>
-                </div>
-                <div class="bg-transparent card-body" style="border-style:solid; border-color:darkorange">
-                    <p class="card-text">
-                        Manage the games
-                    </p>
-                    <p>
-                        Control the following of the rules
-                    </p>
-                    <p>
-                        Help the players and answer their questions
-                    </p>
-                </div>
-                <br />
-                <a class="btn btn-success" style="width:90%;margin:auto;background-color:green;border-color:green" asp-controller="Account" asp-action="ApplyForAdministrator">Become Admin</a>
+            <div class="form-group">
+                <label asp-for="Password" class="form-label mt-4">Password</label>
+                <input asp-for="Password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                <span asp-validation-for="Password" class="text-danger"></span>
             </div>
-        </div>
 
-        <div class="col-md-4">
-            <div class="card text-white bg-transparent mb-3 center" style="width:90%;margin:auto">
-                <div class="card-header bg-transparent" style="border-style:solid;border-color:white">
-                    <h4 class="card-title">Become Field Manager</h4>
-                </div>
-                <div class="bg-transparent card-body" style="border-style:solid; border-color:white">
-                    <p class="card-text">
-                        Register your fields
-                    </p>
-                    <p>
-                        Manage them
-                    </p>
-                    <p>
-                        Let people know about you
-                    </p>
-                </div>
-                <br />
-                <a type="submit" class="btn btn-success" style="width:90%;margin:auto;background-color:green;border-color:green" asp-controller="Account" asp-action="RegisterAsFieldOwner">Become Field Manager</a>
+            <div class="form-group">
+                <label asp-for="ConfirmPassword" class="form-label mt-4">Confirm Password</label>
+                <input asp-for="ConfirmPassword" type="password" class="form-control" id="exampleInputPassword1" placeholder="Confirm Password">
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
-        </div>
+            <br />
+            <button asp-controller="Account" asp-action="RegisterAsPlayer" type="submit" class="btn btn-success mt-2" style="width:100%">Proceed registration as Player</button>
+            <button asp-controller="Account" asp-action="ApplyForAdministrator" type="submit" class="btn btn-warning mt-2" style="width:100%">Proceed registration as Administrator</button>
+            <button asp-controller="Account" asp-action="RegisterAsFieldOwner" type="submit" class="btn btn-info mt-2" style="width:100%">Proceed registration as Field Manager</button>
+        </form>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,5 +1,6 @@
 ﻿using PlayPal.Core.Models.InputModels;
 using PlayPal.Core.Models.ViewModels;
+using PlayPal.Data.Models;
 
 namespace PlayPal.Core.Services.Interfaces
 {
@@ -12,5 +13,9 @@ namespace PlayPal.Core.Services.Interfaces
         public Task PromoteUserToAdministrator(string email, Guid administratorId);
 
         public Task DeleteAdministratorAsync(Guid administratorId);
+
+        public Task<Administrator> GetAdministratorAsync(Guid administratorId);
+
+        public Task UpdateAdministratorAsync(EditAdministratorProfileInputModel model, Guid userId);
     }
 }
