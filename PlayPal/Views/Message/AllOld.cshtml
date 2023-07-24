@@ -1,7 +1,13 @@
 ﻿@model ICollection<MessageViewModel>
-
+@using PlayPal.Common.IdentityConstants
 @{
-    TempData["Title"] = "Sent Messages";
+    TempData["Title"] = "Old Messages";
+
+    if (User.IsInRole(PlayPalRoleNames.Administrator) ||
+    User.IsInRole(PlayPalRoleNames.FieldOwner))
+    {
+        Layout = ViewData["Layout"]!.ToString();
+    }
 }
 
 <div class="text-center">
@@ -15,7 +21,7 @@
     @foreach (var message in Model)
     {
         <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
-            <div class="card-header">Sent to: @message.Receiver</div>
+            <div class="card-header">Sent from: @message.Sender</div>
             <div class="card-body">
                 <h4 class="card-title">@message.Title</h4>
                 <p class="card-text">@message.Content</p>

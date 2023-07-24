@@ -4,10 +4,10 @@ namespace PlayPal.Core.Services.Interfaces
 {
     public interface IGameService
     {
-        public Task Delete(Guid gameId);
+        public Task DeleteAsync(Guid gameId);
 
-        public Task<bool> Exist(Guid gameId);
+        public Task<bool> ExistAsync(Guid gameId);
 
-        public Task<FieldGameViewModel> Games(Guid fieldId);
+        public Task<FieldGameViewModel> GamesAsync(Guid fieldId);
     }
 }

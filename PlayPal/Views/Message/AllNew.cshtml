@@ -1,7 +1,13 @@
 ﻿@model ICollection<MessageViewModel>
-
+@using PlayPal.Common.IdentityConstants
 @{
-    TempData["Title"] = "Messages for prossecing";
+    TempData["Title"] = "New Messages";
+
+    if (User.IsInRole(PlayPalRoleNames.Administrator) ||
+    User.IsInRole(PlayPalRoleNames.FieldOwner))
+    {
+        Layout = ViewData["Layout"]!.ToString();
+    }
 }
 
 <div class="text-center">
@@ -21,14 +27,16 @@
                 <p class="card-text">@message.Content</p>
                 <div class="align-items-center justify-content-center">
                     <div class="align-items-center justify-content-center">
-                        <form method="post" asp-area="Administration" asp-controller="Message" asp-action="MarkAsSeen">
+                        <form method="post" asp-area="" asp-controller="Message" asp-action="MarkAsSeen">
                             <input type="hidden" value="@message.Id" name="id" />
                             <button style="width:100%" type="submit" class="btn btn-warning">Mark sa seen</button>
                         </form>
                     </div>
                     <br />
                     <div class="align-items-center justify-content-center">
-                        <a style="width:100%" class="btn btn-success" asp-area="Administration" asp-controller="Message" asp-action="Reply" asp-route-messageId="@message.Id">Reply</a>
+                        <a style="width:100%"  class="btn btn-success" asp-area="" asp-controller="Message" asp-action="Send" asp-route-userId="@message.SenderId">
+                            Reply
+                        </a>
                     </div>
                 </div>
             </div>

@@ -16,5 +16,7 @@ namespace PlayPal.Core.Services.Interfaces
         public Task<bool> UserExist(string email);
 
         public Task UpdateUserName(Guid userId, string newName);
+
+        public Task ChangePassword(ChangePasswordInputModel model, Guid userId);
     }
 }

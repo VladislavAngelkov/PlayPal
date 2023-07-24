@@ -10,6 +10,6 @@
 
         public string Address { get; set; } = null!;
 
-        public Guid OwnerId { get; set; }
+        public string Owner { get; set; } = null!;
     }
 }

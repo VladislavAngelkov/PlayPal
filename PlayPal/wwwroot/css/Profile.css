@@ -8,24 +8,24 @@
 }*/
 
 .card {
-    width: 350px;
+    width: 500px;
     background-color: #efefef;
     border: none;
-    cursor: pointer;
+    /*cursor: pointer;*/
     transition: all 0.5s;
 }
 
 .image img {
-    transition: all 0.5s
+    transition: all 0.5s;
 }
 
 .card:hover .image img {
-    transform: scale(1.5)
+    transform: scale(1.2)
 }
 
 .btn {
     height: 140px;
-    width: 140px;
+    height: 140px;
     border-radius: 50%
 }
 
@@ -85,4 +85,14 @@ hr .new1 {
 
 .date {
     background-color: #ccc
+}
+
+.avatar {
+    vertical-align: middle;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color:coral;
+    padding:5px;
 }

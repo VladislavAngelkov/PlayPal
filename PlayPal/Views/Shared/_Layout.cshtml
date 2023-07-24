@@ -22,7 +22,7 @@
         <partial name="_NotificationsPartial" />
         <nav class="navbar navbar-expand-lg bg-transparent" data-bs-theme="dark">
             <div class="container-fluid" >
-                <a class="navbar-brand" asp-controller="Home" asp-action="Index">PlayPal</a>
+                <a style="color:coral; font-size:30px;" class="navbar-brand" asp-controller="Home" asp-action="Index">PlayPal</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -32,7 +32,7 @@
                     {
                         <ul class="navbar-nav me-auto">
                             <li class="nav-item">
-                                <a class="nav-link active" asp-controller="Game" asp-action="JoinGame">
+                                <a  class="nav-link active" asp-controller="Game" asp-action="JoinGame">
                                     Join game
                                     <span class="visually-hidden">(current)</span>
                                 </a>
@@ -43,8 +43,13 @@
                             <li class="nav-item">
                                 <a class="nav-link active" asp-controller="Game" asp-action="MyGames">My Games</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link active" asp-controller="Game" asp-action="History">History</a>
+                            <li class="nav-item dropdown active">
+                                <a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Messages</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" asp-area="" asp-controller="Message" asp-action="AllNew">New Messages</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Message" asp-action="AllOld">Old Messages</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Message" asp-action="Sent">Sent Messages</a>
+                                </div>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link active" href="#">Contact us</a>
@@ -67,7 +72,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted" style="background-color:darkorange;">
+    <footer class="border-top footer text-muted" style="background-color:coral;">
         <div class="container" style="color:white">
             &copy; @ApplicationConstants.YearOfRelease
             @if (DateTime.UtcNow.Year>ApplicationConstants.YearOfRelease)

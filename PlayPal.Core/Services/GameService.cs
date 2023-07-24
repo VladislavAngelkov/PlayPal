@@ -15,12 +15,12 @@ namespace PlayPal.Core.Services
             _repository = repository;
         }
 
-        public async Task Delete(Guid gameId)
+        public async Task DeleteAsync(Guid gameId)
         {
             await _repository.DeleteAsync<Game>(gameId);
         }
 
-        public async Task<bool> Exist(Guid gameId)
+        public async Task<bool> ExistAsync(Guid gameId)
         {
             var game = await _repository.GetByIdAsync<Game>(gameId);
 
@@ -32,7 +32,7 @@ namespace PlayPal.Core.Services
             return true;
         }
 
-        public async Task<FieldGameViewModel> Games(Guid fieldId)
+        public async Task<FieldGameViewModel> GamesAsync(Guid fieldId)
         {
             var games = await _repository.All<Game>()
                 .Where(g => g.FieldId == fieldId &&

@@ -11,7 +11,15 @@
 </div>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
+        <br />
+        <div>
+            <img src="~/img/profile_pic.jpg" class="avatar" title="Change profile picture" style="width: 300px; height: 300px; object-fit: cover; border-radius: 50%; background-color:coral; padding:5px;" />
+        </div>
+        <br />
+        <a asp-controller="Account" asp-action="ChangePassword" class="btn btn-success mt-2" style="width:300px;">Change Profile Picture</a>
+    </div>
+    <div class="col-md-2">
     </div>
     <div class="col-md-6">
         <form method="post" asp-area="Administration" asp-controller="Administrator" asp-action="EditProfile">
@@ -37,6 +45,8 @@
             </div>
             <button type="submit" class="btn btn-success mt-2" style="width:100%">Save Changes</button>
         </form>
+        <br />
+        <a asp-area="" asp-controller="Account" asp-action="ChangePassword" class="btn btn-danger mt-2" style="width:100%">Change Password</a>
     </div>
 </div>
 

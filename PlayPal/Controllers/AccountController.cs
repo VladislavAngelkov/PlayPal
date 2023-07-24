@@ -377,6 +377,46 @@ namespace PlayPal.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        
+        [HttpGet]
+        public IActionResult ChangePassword()
+        {
+            var model = new ChangePasswordInputModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                Guid userId = User.UserId();
+
+                await _accountService.ChangePassword(model, userId);
+
+                if (User.IsInRole(PlayPalRoleNames.Administrator))
+                {
+                    return RedirectToAction("ViewProfile", "Administrator", new { Area = "Administration" });
+                }
+                else if (User.IsInRole(PlayPalRoleNames.Player))
+                {
+                    return RedirectToAction("ViewProfile", "Player");
+                }
+                else
+                {
+                    return RedirectToAction("ViewProfile", "FieldOwner", new { Area = "Fieldmanagment" });
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

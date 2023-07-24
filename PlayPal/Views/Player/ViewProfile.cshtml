@@ -17,21 +17,21 @@
 <div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
     <div class="card p-4">
         <div class=" image d-flex flex-column justify-content-center align-items-center">
-            <button class="btn btn-secondary">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Cristiano_Ronaldo_2018.jpg/330px-Cristiano_Ronaldo_2018.jpg" height="100" width="100" />
-            </button>
+            <div class="justify-content-center align-items-center">
+                <img src="~/img/profile_pic.jpg" class="avatar" title="Change profile picture" style="width: 150px; height: 150px; object-fit: cover;" />
+            </div>
             <span class="name mt-3" style="color:black">@Model.Name</span> 
             <div class="d-flex flex-row justify-content-center align-items-center mt-3">
-                <span class="number">Current city: <span class="number" style="color:orange">@Model.CurrentCity</span></span>
+                <span class="number">Current city: <span class="number" style="color:coral">@Model.CurrentCity</span></span>
             </div>
             <div class="d-flex flex-row justify-content-center align-items-center mt-3">
-                <span class="number">Position: <span class="number" style="color:orange">@Model.Position</span></span>
+                <span class="number">Position: <span class="number" style="color:coral">@Model.Position</span></span>
             </div>
             <div class="d-flex flex-row justify-content-center align-items-center mt-3">
-                <span class="number">Games: <span class="number" style="color:orange">@Model.Games</span></span>
+                <span class="number">Games: <span class="number" style="color:coral">@Model.Games</span></span>
             </div>
             <div class="d-flex flex-row justify-content-center align-items-center mt-3">
-                <span class="number">Goals: <span class="number" style="color:orange">@Model.Goals</span></span>
+                <span class="number">Goals: <span class="number" style="color:coral">@Model.Goals</span></span>
             </div>
              <div class=" d-flex mt-2">
                 <button type="" class="btn1 btn-dark" asp-controller="Player" asp-action="EditProfile" onclick="location.href='@Url.Action("EditProfile", "Player")'">Edit Profile</button>

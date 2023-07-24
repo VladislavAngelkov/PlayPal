@@ -122,7 +122,7 @@ namespace PlayPal.Core.Services
                 await _userManager.DeleteAsync(user);
             }
 
-            if (administratorId!=null)
+            if (administratorId != null)
             {
                 await _administratorService.DeleteAdministratorAsync((Guid)administratorId);
             }
@@ -167,6 +167,19 @@ namespace PlayPal.Core.Services
             }
 
             return (IUserEmailStore<PlayPalUser>)_userStore;
+        }
+
+        public async Task ChangePassword(ChangePasswordInputModel model, Guid userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            var oldPassword = model.OldPassword;
+            var newPassword = model.NewPassword;
+
+            if (user != null)
+            {
+                await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+            }
         }
     }
 }

@@ -16,12 +16,72 @@ namespace PlayPal.Core.Services
             _repository = repository;
         }
 
-        public async Task<ICollection<MessageViewModel>> AllAsync(Guid userId)
+        public async Task<ICollection<MessageViewModel>> AllNewAdministrationAsync(Guid userId)
         {
             var models = await _repository.All<Message>()
                 .Where(m => m.ReceiverId == null &&
                 !m.Seen &&
                 m.SenderId != userId)
+                .Include(m => m.Sender)
+                .Select(m => new MessageViewModel()
+                {
+                    Id = m.Id,
+                    Sender = m.Sender.Email,
+                    SenderId = m.SenderId,
+                    Title = m.Title,
+                    Content = m.Content
+                })
+                .ToListAsync();
+
+            return models;
+        }
+
+        public async Task<ICollection<MessageViewModel>> AllOldAdministrationAsync(Guid userId)
+        {
+            var models = await _repository.All<Message>()
+                .Where(m => m.ReceiverId == null &&
+                m.Seen &&
+                m.SenderId != userId)
+                .Include(m => m.Sender)
+                .Select(m => new MessageViewModel()
+                {
+                    Id = m.Id,
+                    Sender = m.Sender.Email,
+                    SenderId = m.SenderId,
+                    Title = m.Title,
+                    Content = m.Content
+                })
+                .ToListAsync();
+
+            return models;
+        }
+
+        public async Task<ICollection<MessageViewModel>> AllNewAsync(Guid userId)
+        {
+            var models = await _repository.All<Message>()
+                .Where(m => !m.Seen &&
+                m.SenderId != userId &&
+                m.ReceiverId == userId)
+                .Include(m => m.Sender)
+                .Select(m => new MessageViewModel()
+                {
+                    Id = m.Id,
+                    Sender = m.Sender.Email,
+                    SenderId = m.SenderId,
+                    Title = m.Title,
+                    Content = m.Content
+                })
+                .ToListAsync();
+
+            return models;
+        }
+
+        public async Task<ICollection<MessageViewModel>> AllOldAsync(Guid userId)
+        {
+            var models = await _repository.All<Message>()
+                .Where(m => m.Seen &&
+                m.SenderId != userId &&
+                m.ReceiverId == userId)
                 .Include(m => m.Sender)
                 .Select(m => new MessageViewModel()
                 {

@@ -30,11 +30,16 @@ namespace PlayPal.Core.Services
             await _repository.AddAsync(field);
         }
 
-        public async Task<ICollection<AdministrationFieldViewModel>> AllAsync()
+        public async Task<ICollection<FieldViewModel>> AllAsync(Guid? fieldOwnerId = null)
         {
-            var models = await _repository.All<Field>()
+
+            var models = new List<FieldViewModel>();
+
+            if (fieldOwnerId == null)
+            {
+                models = await _repository.All<Field>()
                 .Include(f => f.Owner)
-                .Select(f => new AdministrationFieldViewModel()
+                .Select(f => new FieldViewModel()
                 {
                     Id = f.Id,
                     Name = f.Name,
@@ -43,6 +48,24 @@ namespace PlayPal.Core.Services
                     Owner = $"{f.Owner.Title} {f.Owner.FirstName} {f.Owner.LastName}"
                 })
                 .ToListAsync();
+            }
+            else
+            {
+                fieldOwnerId = (Guid)fieldOwnerId;
+
+                models = await _repository.All<Field>()
+                .Include(f => f.Owner)
+                .Where(f => f.OwnerId == fieldOwnerId)
+                .Select(f => new FieldViewModel()
+                {
+                    Id = f.Id,
+                    Name = f.Name,
+                    City = f.City,
+                    Address = f.Address,
+                    Owner = $"{f.Owner.Title} {f.Owner.FirstName} {f.Owner.LastName}"
+                })
+                .ToListAsync();
+            }
 
             return models;
         }
@@ -52,7 +75,7 @@ namespace PlayPal.Core.Services
             await _repository.DeleteAsync<Field>(fieldId);
         }
 
-        public async Task<bool> Exist(Guid fieldId)
+        public async Task<bool> ExistAsync(Guid fieldId)
         {
             var field = await _repository.GetByIdAsync<Field>(fieldId);
 
@@ -64,21 +87,12 @@ namespace PlayPal.Core.Services
             return true;    
         }
 
-        public async Task<ICollection<FieldViewModel>> GetFieldsByOwnerAsync(Guid ownerId)
+        public Task<Field> GetFieldAsync(Guid fieldId)
         {
-            var models = await _repository.All<Field>()
-                .Where(f => f.OwnerId == ownerId)
-                .Select(f => new FieldViewModel()
-                {
-                    Id = f.Id,
-                    Name = f.Name,
-                    City = f.City,
-                    Address = f.Address,
-                    OwnerId = f.OwnerId
-                })
-                .ToListAsync();
+            var field = _repository.GetByIdAsync<Field>(fieldId);
 
-            return models;
+            return field;
         }
+
     }
 }

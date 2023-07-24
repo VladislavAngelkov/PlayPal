@@ -42,7 +42,7 @@ namespace PlayPal.Areas.Administration.Controllers
         {
             try
             {
-                bool exist = await _fieldService.Exist(fieldId);
+                bool exist = await _fieldService.ExistAsync(fieldId);
 
                 if (!exist)
                 {
@@ -67,7 +67,7 @@ namespace PlayPal.Areas.Administration.Controllers
         {
             try
             {
-                bool exist = await _fieldService.Exist(fieldId);
+                bool exist = await _fieldService.ExistAsync(fieldId);
 
                 if (!exist)
                 {
@@ -77,7 +77,7 @@ namespace PlayPal.Areas.Administration.Controllers
                     return RedirectToAction("All");
                 }
 
-                var models = await _gameService.Games(fieldId);
+                var models = await _gameService.GamesAsync(fieldId);
 
                 return View(models);
             }
@@ -93,7 +93,7 @@ namespace PlayPal.Areas.Administration.Controllers
         {
             try
             {
-                bool exist = await _gameService.Exist(gameId);
+                bool exist = await _gameService.ExistAsync(gameId);
 
                 if (!exist)
                 {
@@ -102,13 +102,12 @@ namespace PlayPal.Areas.Administration.Controllers
                     return RedirectToAction("Games", new { fieldId = fieldId });
                 }
 
-                await _gameService.Delete(gameId);
+                await _gameService.DeleteAsync(gameId);
 
                 return RedirectToAction("Games", new { fieldId = fieldId });
             }
             catch (Exception ex)
             {
-
                 throw;
             }
         }
