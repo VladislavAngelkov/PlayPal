@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PlayPal.Data;
 
@@ -11,9 +12,10 @@ using PlayPal.Data;
 namespace PlayPal.Data.Migrations
 {
     [DbContext(typeof(PlayPalDbContext))]
-    partial class PlayPalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230725104453_FixingTeamAndGameEntities")]
+    partial class FixingTeamAndGameEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,21 +55,21 @@ namespace PlayPal.Data.Migrations
                         new
                         {
                             Id = new Guid("f5356275-13f4-4d7c-8172-bbf054707e2f"),
-                            ConcurrencyStamp = "6635b683-6cb2-4528-b13f-4a6af64f2014",
+                            ConcurrencyStamp = "f2cacb37-e89d-423f-8da9-870851831d08",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = new Guid("c3caf211-8a76-4415-a74a-6b7f0a0b9d50"),
-                            ConcurrencyStamp = "73483d44-fa76-4b9a-8257-01ad5b338bf7",
+                            ConcurrencyStamp = "e1a7e6b4-502f-4426-b04c-a885823f7822",
                             Name = "FieldOwner",
                             NormalizedName = "FIELDOWNER"
                         },
                         new
                         {
                             Id = new Guid("b333df2f-222c-4768-a9f5-0368b93aea47"),
-                            ConcurrencyStamp = "b1178909-b35e-435e-8f5e-ae59f1d77d74",
+                            ConcurrencyStamp = "de9df4ee-e45a-4193-9cb6-24119043e489",
                             Name = "Player",
                             NormalizedName = "PLAYER"
                         });
@@ -732,16 +734,16 @@ namespace PlayPal.Data.Migrations
                         {
                             Id = new Guid("9a641cdf-8c28-485f-b22a-3603c6df7a3d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "09db1354-cb4c-4664-b284-48dd2236caba",
+                            ConcurrencyStamp = "f478b69b-1cac-49b5-8dd0-b9a7a7ed280b",
                             Email = "Administrator@test.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMINISTRATOR@TEST.COM",
                             NormalizedUserName = "ADMINISTRATOR@TEST.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPhtJhlSK3WESfY6EGtL6rxD9mvPtIZb/QepUerqOONb3aTVraIi4KPLTvgDzExMmQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEG7H/t2hxvGpwXr/FAteD++V7rdlkg7JjuICXazm6BryhPjauUFuF9JOJ4pO384bgA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8b724249-6030-42c2-88c5-79de2eed88dc",
+                            SecurityStamp = "fa54178f-57a9-4f62-b6f3-940886f3a0ef",
                             TwoFactorEnabled = false,
                             UserName = "Administrator@test.com"
                         },
@@ -749,16 +751,16 @@ namespace PlayPal.Data.Migrations
                         {
                             Id = new Guid("84b6df4e-b349-495e-a9e1-8541de1f2e2d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8999b8dd-9175-4f54-9f6d-9c8e25c18090",
+                            ConcurrencyStamp = "3775fe40-2a85-498e-b471-5d601e4eccd1",
                             Email = "FieldOwner@test.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "FIELDOWNER@TEST.COM",
                             NormalizedUserName = "FIELDOWNER@TEST.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJ4M5hELEoitwDCMl+uaR3OJL2uzG33VfQFWdh0PG8GybEElnX2JJ8pp4kNkYvUSaA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMFdBbVWGhk5S551UYGxqKVOwE1Uem+o2aG5OhT3v/Qyo+dRPAHLlLUXHR0Y7eItCw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c7af1883-16e8-4043-8954-fa81ea94a2d9",
+                            SecurityStamp = "e3ad30ad-7245-416b-b6c8-5bbc2fa5539f",
                             TwoFactorEnabled = false,
                             UserName = "FieldOwner@test.com"
                         },
@@ -766,16 +768,16 @@ namespace PlayPal.Data.Migrations
                         {
                             Id = new Guid("ec70c161-fc76-4b29-b3dc-03fdd605bf0d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "632326d7-0d7b-4032-9d00-5e44360fd44d",
+                            ConcurrencyStamp = "0ccaa114-c310-4bde-80bd-4e6459ce4fb1",
                             Email = "Player@test.com",
                             EmailConfirmed = false,
                             IsDeleted = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "PLAYER@TEST.COM",
                             NormalizedUserName = "PLAYER@TEST.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDfTFQaVDq54+9bhHxvzllSGGotzygveOt5PW8hAVinVDNX/YHzqLKlcCaKF43glrw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOtjnJXlngaE3rW2GbtuvXHywtaDGIJPWlRJlzpHh1Oef9QpjQ1qelhiA/q3XZGFwA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0e0d2585-de0c-49f4-ad7a-871e7aac95ac",
+                            SecurityStamp = "9c9e775e-b50b-4302-9f35-abb3a8335384",
                             TwoFactorEnabled = false,
                             UserName = "Player@test.com"
                         });
@@ -856,10 +858,12 @@ namespace PlayPal.Data.Migrations
                         .HasComment("The indentifier of the team");
 
                     b.Property<Guid?>("AwayGameId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier")
                         .HasComment("The identifier of the away game, in which the team played");
 
                     b.Property<Guid?>("HomeGameId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier")
                         .HasComment("The identifier of the home game, in which the team played");
 
@@ -870,12 +874,10 @@ namespace PlayPal.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AwayGameId")
-                        .IsUnique()
-                        .HasFilter("[AwayGameId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("HomeGameId")
-                        .IsUnique()
-                        .HasFilter("[HomeGameId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Teams");
                 });
@@ -1114,12 +1116,14 @@ namespace PlayPal.Data.Migrations
                     b.HasOne("PlayPal.Data.Models.Game", "AwayGame")
                         .WithOne("AwayTeam")
                         .HasForeignKey("PlayPal.Data.Models.Team", "AwayGameId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("PlayPal.Data.Models.Game", "HomeGame")
                         .WithOne("HomeTeam")
                         .HasForeignKey("PlayPal.Data.Models.Team", "HomeGameId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("AwayGame");
 

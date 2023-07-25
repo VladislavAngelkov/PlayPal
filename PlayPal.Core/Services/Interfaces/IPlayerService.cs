@@ -15,5 +15,7 @@ namespace PlayPal.Core.Services.Interfaces
         public Task<ICollection<PlayerViewModel>> SearchPlayer(string name, string email, string city);
 
         public Task UpdatePlayer(EditPlayerProfileInputModel model, Guid userId);
+
+        public Task<bool> CheckAvailabilityAsync(Guid playerId, DateTime startingTime, DateTime endingTime);
     }
 }

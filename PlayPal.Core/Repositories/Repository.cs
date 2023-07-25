@@ -74,13 +74,14 @@ namespace PlayPal.Core.Repositories
         public IQueryable<T> AllReadonly<T>() where T : IDeletable
         {
             return this.DbSet<T>()
-                .Where(e => e.IsDeleted)
+                .Where(e => e.IsDeleted==false)
                 .AsQueryable()
                 .AsNoTracking();
         }
         public IQueryable<T> AllReadonly<T>(Expression<Func<T, bool>> search) where T : IDeletable
         {
             return this.DbSet<T>()
+                .Where(e => e.IsDeleted==false)
                 .Where(search)
                 .AsQueryable()
                 .AsNoTracking();
@@ -143,8 +144,11 @@ namespace PlayPal.Core.Repositories
         /// <param name="entity">Entity for record to be updated</param>
         public async Task Update<T>(T entity) where T : IDeletable
         {
-            this.DbSet<T>().Update(entity);
-            await SaveChangesAsync();
+            if (!entity.IsDeleted)
+            {
+                this.DbSet<T>().Update(entity);
+                await SaveChangesAsync();
+            }
         }
 
         /// <summary>
@@ -183,7 +187,7 @@ namespace PlayPal.Core.Repositories
             DeleteRange<T>(entities);
         }
 
-        public async Task HardDeleteAsync<T>(object id) 
+        public async Task HardDeleteAsync<T>(Guid id) 
             where T : class
         {
             T? entity = await DbSet<T>().FindAsync(id);

@@ -1,0 +1,58 @@
+﻿@model GameInputModel
+@using PlayPal.Data.Models.Enums
+
+@{
+    TempData["Title"] = "Create Game";
+}
+
+<div class="text-center">
+    <h2>
+        @TempData["Title"]
+    </h2>
+    <p style="color:orange">
+        The selected fields are located in your city. If you want to choose field in another city you have to change your current city in your profile.
+    </p>
+</div>
+
+<div class="row align-content-center">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-6">
+        <form method="post" asp-area="" asp-controller="Game" asp-action="CreateGame">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Id" type="hidden" value=@Model.Id />
+            <input asp-for="CreatorId" type="hidden" value=@Model.CreatorId />
+            <div class="form-group">
+                <label asp-for="@Model.FieldId" class="form-label mt-4 active">Select Field</label>
+                <select asp-for="@Model.FieldId" class="form-select" id="exampleSelect1">
+                    @foreach (var field in Model.Fields)
+                    {
+                        <option value="@field.Id">@field.Name</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for=@Model.StartingTime class="form-label mt-4 active">Starting time:  </label>
+                <input type="datetime-local" value="@DateTime.Now" asp-for=@Model.StartingTime />
+                <span asp-validation-for="@Model.StartingTime" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for=@Model.EndingTime class="form-label mt-4 active">Ending time:  </label>
+                <input type="datetime-local" value="@DateTime.Now" asp-for=@Model.EndingTime />
+                <span asp-validation-for="@Model.EndingTime" class="text-danger"></span>
+            </div>
+            <br />
+            <button type="submit" class="btn btn-success" style="width:100%">Create</button>
+        </form>
+    </div>
+    <div class="col-md-3">
+    </div>
+</div>
+<script>
+    $('#datetimepicker').data("DateTimePicker").FUNCTION()
+</script>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

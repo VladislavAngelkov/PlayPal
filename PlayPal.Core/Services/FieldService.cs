@@ -70,6 +70,21 @@ namespace PlayPal.Core.Services
             return models;
         }
 
+        public async Task<bool> CheckAvailabilityAsync(Guid fieldId, DateTime startingTime, DateTime endingTime)
+        {
+            var field = await _repository.GetByIdAsync<Field>(fieldId);
+
+            if (field == null)
+            {
+                return false;
+            }
+
+            bool isAvailable = !field.Games.Any(g => (g.EndingTime > startingTime && g.EndingTime < endingTime) || 
+            (g.StartingTime > startingTime && g.StartingTime < endingTime));
+
+            return isAvailable;
+        }
+
         public async Task DeleteAsync(Guid fieldId)
         {
             await _repository.DeleteAsync<Field>(fieldId);
@@ -94,5 +109,20 @@ namespace PlayPal.Core.Services
             return field;
         }
 
+        public async Task<ICollection<FieldViewModel>> GetFieldsByCityAsync(string city)
+        {
+            var models = await _repository.All<Field>()
+                .Where(c => c.City == city)
+                .Select(c => new FieldViewModel()
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    City = c.City,
+                    Address = c.Address,
+                })
+                .ToListAsync();
+
+            return models;
+        }
     }
 }

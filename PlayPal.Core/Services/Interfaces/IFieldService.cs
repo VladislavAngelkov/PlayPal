@@ -17,5 +17,9 @@ namespace PlayPal.Core.Services.Interfaces
 
         public Task<Field> GetFieldAsync(Guid fieldId);
 
+        public Task<ICollection<FieldViewModel>> GetFieldsByCityAsync(string city);
+
+        public Task<bool> CheckAvailabilityAsync(Guid fieldId, DateTime startingTime, DateTime endingTime);
+
     }
 }

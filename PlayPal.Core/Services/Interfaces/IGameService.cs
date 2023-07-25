@@ -1,4 +1,5 @@
-﻿using PlayPal.Core.Models.ViewModels;
+﻿using PlayPal.Core.Models.InputModels;
+using PlayPal.Core.Models.ViewModels;
 
 namespace PlayPal.Core.Services.Interfaces
 {
@@ -9,5 +10,9 @@ namespace PlayPal.Core.Services.Interfaces
         public Task<bool> ExistAsync(Guid gameId);
 
         public Task<FieldGameViewModel> GamesAsync(Guid fieldId);
+
+        public Task CreateGameAsync(GameInputModel model);
+
+        public Task<ICollection<GameViewModel>> GetPlayerGamesAsync(Guid playerId);
     }
 }

@@ -2,6 +2,7 @@
 using PlayPal.Data.Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PlayPal.Data.Models
 {
@@ -9,6 +10,7 @@ namespace PlayPal.Data.Models
     {
         public Team()
         {
+            Id = Guid.NewGuid();
             Players = new HashSet<PlayerTeam>();
         }
 
@@ -29,7 +31,8 @@ namespace PlayPal.Data.Models
         /// </summary>
         [Comment("The identifier of the home game, in which the team played")]
         [ForeignKey(nameof(HomeGame))]
-        public Guid? HomeGameID { get; set; }
+        [AllowNull]
+        public Guid? HomeGameId { get; set; }
 
         /// <summary>
         /// The home game, in which the team played
@@ -42,7 +45,7 @@ namespace PlayPal.Data.Models
         /// </summary>
         [Comment("The identifier of the away game, in which the team played")]
         [ForeignKey(nameof(AwayGame))]
-        public Guid? AwayGameID { get; set; }
+        public Guid? AwayGameId { get; set; }
 
         /// <summary>
         /// The away game, in which the team played

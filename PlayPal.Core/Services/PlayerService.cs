@@ -28,6 +28,18 @@ namespace PlayPal.Core.Services
             _userManager = userManager;
         }
 
+        public async Task<bool> CheckAvailabilityAsync(Guid playerId, DateTime startingTime, DateTime endingTime)
+        {
+            var playerGames = await _repository.AllReadonly<Game>()
+                .Where(g => (g.EndingTime > DateTime.UtcNow) &&
+                (g.PendingPlayers.Any(p => p.PlayerId == playerId) || g.HomeTeam.Players.Any(p => p.PlayerId == playerId) || g.AwayTeam.Players.Any(p => p.PlayerId == playerId)))
+                .ToListAsync();
+
+            bool isAvailable = !playerGames.Any(g => (g.StartingTime > startingTime && g.StartingTime < endingTime) || (g.EndingTime > startingTime && g.EndingTime < endingTime) || (g.StartingTime < startingTime && g.EndingTime > endingTime));
+
+            return isAvailable;
+        }
+
         public async Task CreatePlayerAsync(RegisterUserInputModel model)
         {
             var player = new Player()
@@ -106,7 +118,17 @@ namespace PlayPal.Core.Services
 
             var newNameClaim = new Claim(PlayPalClaimTypes.Name, newName);
 
+            var oldCityClaim = claims.FirstOrDefault(c => c.Type == PlayPalClaimTypes.City); 
+            
+            await _userManager.RemoveClaimAsync(user, oldCityClaim);
+
+            string newCity = model.Name;
+
+            var newCityClaim = new Claim(PlayPalClaimTypes.Name, newName);
+
             await _userManager.AddClaimAsync(user, newNameClaim);
+
+            await _userManager.AddClaimAsync(user, newCityClaim);
 
             await _repository.Update(player);
         }

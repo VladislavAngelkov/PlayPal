@@ -33,12 +33,16 @@ namespace PlayPal.Data.Models
         /// </summary>
         public virtual Player Creator { get; set; } = null!;
 
+
+
         /// <summary>
         /// The home team
         /// </summary>
         [InverseProperty("HomeGame")]
         public virtual Team HomeTeam { get; set; } = null!;
 
+
+        
         /// <summary>
         /// The away team
         /// </summary>

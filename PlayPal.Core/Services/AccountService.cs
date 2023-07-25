@@ -9,7 +9,6 @@ namespace PlayPal.Core.Services
 {
     public class AccountService : IAccountService
     {
-        private readonly SignInManager<PlayPalUser> _signInManager;
         private readonly UserManager<PlayPalUser> _userManager;
         private readonly IUserStore<PlayPalUser> _userStore;
         private readonly IUserEmailStore<PlayPalUser> _emailStore;
@@ -20,7 +19,6 @@ namespace PlayPal.Core.Services
         public AccountService(
             UserManager<PlayPalUser> userManager,
             IUserStore<PlayPalUser> userStore,
-            SignInManager<PlayPalUser> signInManager,
             IPlayerService playerService,
             IAdministratorService administratorService,
             IFieldOwnerService fieldOwnerService)
@@ -28,7 +26,6 @@ namespace PlayPal.Core.Services
             _userManager = userManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
-            _signInManager = signInManager;
             _playerService = playerService;
             _administratorService = administratorService;
             _fieldOwnerService = fieldOwnerService;

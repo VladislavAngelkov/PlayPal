@@ -17,7 +17,7 @@ namespace PlayPal.Core.Models.InputModels
 
         public string Reason { get; set; } = null!;
 
-        [BanDateTime]
+        [DateTime]
         public DateTime BannedTo { get; set; }
     }
 }
