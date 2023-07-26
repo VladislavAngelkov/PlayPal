@@ -1,5 +1,7 @@
 ﻿@model PlayerProfileViewModel
 @using PlayPal.Common.StringFormats
+@using PlayPal.Extensions
+@using PlayPal.Common.IdentityConstants
 
 <link href="~/css/profile.css" rel="stylesheet" />
 
@@ -33,9 +35,19 @@
             <div class="d-flex flex-row justify-content-center align-items-center mt-3">
                 <span class="number">Goals: <span class="number" style="color:coral">@Model.Goals</span></span>
             </div>
-             <div class=" d-flex mt-2">
-                <button type="" class="btn1 btn-dark" asp-controller="Player" asp-action="EditProfile" onclick="location.href='@Url.Action("EditProfile", "Player")'">Edit Profile</button>
-            </div>
+             @if (User.IsInRole(PlayPalRoleNames.Player) &&
+             (Guid)User.PlayerId()! == Model.Id)
+            {
+                <div class=" d-flex mt-2">
+                    <button type="" class="btn1 btn-dark" asp-controller="Player" asp-action="EditProfile" onclick="location.href='@Url.Action("EditProfile", "Player")'">Edit Profile</button>
+                </div>
+            }
+            else
+            {
+                <div class="d-flex mt-2">
+                    <a class="btn1 btn-dark text-decoration-none text-center text-bg-primary" asp-controller="Message" asp-action="Send" asp-route-userId="@Model.UserId">Message</a>
+                </div>
+            }
             
             
         </div>

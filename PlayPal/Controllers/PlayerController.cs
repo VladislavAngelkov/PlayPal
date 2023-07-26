@@ -35,13 +35,16 @@ namespace PlayPal.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ViewProfile()
+        public async Task<IActionResult> ViewProfile(Guid? playerId = null)
         {
-            Guid playerId = (Guid)User.PlayerId()!;
+            if (playerId == null)
+            {
+                playerId = (Guid)User.PlayerId()!;
+            }
 
             try
             {
-                var player = await _playerService.GetPlayerAsync(playerId);
+                var player = await _playerService.GetPlayerAsync((Guid)playerId);
 
                 if (player == null)
                 {
@@ -50,9 +53,12 @@ namespace PlayPal.Controllers
 
                 var position = await _positionService.GetPositionByIdAsync(player.PositionId);
 
+                var userId = _userManager.Users.FirstOrDefault(u => u.PlayerId == playerId)!.Id;
+
                 var model = new PlayerProfileViewModel()
                 {
-                    Id = playerId,
+                    Id = (Guid)playerId,
+                    UserId = userId,
                     Name = player.Name,
                     CurrentCity = player.CurrentCity,
                     Position = position.Name,

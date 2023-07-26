@@ -1,0 +1,103 @@
+﻿@model GameDetailViewModel
+@using PlayPal.Common.StringFormats
+
+@{
+    TempData["Title"] = "Game Details";
+}
+
+<div class="text-center">
+    <h2>
+        @TempData["Title"]
+    </h2>
+</div>
+
+<div class="row align-content-center">
+
+    <div style="color:white">
+        <h4>
+            Creator:
+            <a asp-area="" asp-controller="Player" asp-action="ViewProfile" asp-route-playerId="@Model.CreatorId">
+                @Model.Creator
+            </a>
+        </h4>
+    </div>
+    <div>
+        <h4>
+            Field: @Model.Field
+        </h4>
+    </div>
+    <div>
+        <h4>
+            Starting time: @Model.StartingTime.ToString(DateTimeFormats.GameStatEnd)
+        </h4>
+    </div>
+    <div>
+        <h4>
+            Ending time: @Model.EndingTime.ToString(DateTimeFormats.GameStatEnd)
+        </h4>
+    </div>
+   
+    <br />
+    <br />
+
+    <div class="row" style="background-color:orange">
+        <div class="col-4 text-center">
+            <h3>
+                Pending Players
+            </h3>
+        </div>
+        <div class="col-4 text-center">
+            <h3>
+                Home Team
+            </h3>
+        </div>
+        <div class="col-4 text-center">
+            <h3>
+                Away Team
+            </h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="row col-4 text-center">
+            @foreach (var pendingPlayer in Model.PendingPlayers)
+            {
+                <div class="text-center">
+                    <a asp-area="" asp-controller="Player" asp-action="ViewProfile" asp-route-playerId="@pendingPlayer.Id">
+                        <h5>
+                            @pendingPlayer.Name
+                        </h5>
+                    </a>
+                </div>
+            }
+        </div>
+        <div class="row col-4 text-center">
+            @foreach (var homeTeamPlayer in Model.HomeTeam)
+            {
+                <div class="text-center">
+                    <a asp-area="" asp-controller="Player" asp-action="ViewProfile" asp-route-playerId="@homeTeamPlayer.Id">
+                        <h5>
+                            @homeTeamPlayer.Name
+                        </h5>
+                    </a>
+                </div>
+            }
+        </div>
+        <div class="row col-4 text-center">
+            @foreach (var awayTeamPlayer in Model.AwayTeam)
+            {
+                <div class="text-center">
+                    <a asp-area="" asp-controller="Player" asp-action="ViewProfile" asp-route-playerId="@awayTeamPlayer.Id">
+                        <h5>
+                            @awayTeamPlayer.Name
+                        </h5>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+    
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -37,5 +37,4 @@ namespace PlayPal.Data
             base.OnModelCreating(builder);
         }
     }
-    
 }

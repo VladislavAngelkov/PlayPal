@@ -8,6 +8,6 @@
 
         public const string FieldNotOwnedByUser = "Selected field is not managed by you!";
 
-        
+        public const string UserNotACreator = "You are not creator of this game. You are not allowed to manage the game!";
     }
 }

@@ -1,5 +1,6 @@
 ﻿@model ICollection<GameViewModel>
 @using PlayPal.Common.StringFormats
+@using PlayPal.Extensions
 
 @{
     TempData["Title"] = "My Games";
@@ -16,11 +17,14 @@
         <div class="col-2">
             Field
         </div>
-        <div class="col-3">
+        <div class="col-2">
             Starting time
         </div>
-        <div class="col-3">
+        <div class="col-2">
             Ending time
+        </div>
+        <div class="col-2">
+            Creator
         </div>
         <div class="col-2">
         </div>
@@ -31,26 +35,45 @@
     @foreach (var game in Model)
     {
         <div class="row">
-            <div class="col-2 mt-2 active">
+            <div class="col-2 mt-2" style="color:white">
                 @game.FieldName
             </div>
-            <div class="col-3 mt-2 active">
+            <div class="col-2 mt-2" style="color:white">
                 @game.StartingTime.ToString(DateTimeFormats.GameStatEnd)
             </div>
-            <div class="col-3 mt-2 active">
+            <div class="col-2 mt-2" style="color:white">
                 @game.EndingTime.ToString(DateTimeFormats.GameStatEnd)
             </div>
-            <div class="col-2 mt-1 mb-1 active">
-                <a class="btn btn-info" asp-area="" asp-controller="Game" asp-action="Details" asp-route-gameId="@game.Id" style="width:90%">
-                    View Game Details
-                </a>
+            <div class="col-2 mt-2" style="color:white">
+                @game.Creator
             </div>
-            <div class="col-2 mt-1 mb-1 active">
-                <form asp-area="" asp-controller="Game" asp-action="LeaveGame" method="post">
-                    <input type="hidden" value="@game.Id" name="gameId" />
-                    <button class="btn btn-danger" type="submit" style="width:90%">Leave Game</button>
-                </form>
-            </div>
+            @if ((Guid)User.PlayerId()! != game.CreatorId)
+            {
+                <div class="col-2 mt-1 mb-1" style="color:white">
+                    <a class="btn btn-outline-info" asp-area="" asp-controller="Game" asp-action="Details" asp-route-gameId="@game.Id" style="width:90%">
+                        View Game Details
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="col-2 mt-1 mb-1" style="color:white">
+                    <a class="btn btn-outline-success" asp-area="" asp-controller="Game" asp-action="Manage" asp-route-gameId="@game.Id" style="width:90%">
+                        Manage Game
+                    </a>
+                </div>
+            }
+            @{
+                if ((Guid)User.PlayerId()! != game.CreatorId)
+                {
+                    <div class="col-2 mt-1 mb-1" style="color:white">
+                        <form asp-area="" asp-controller="Game" asp-action="LeaveGame" method="post">
+                            <input type="hidden" value="@game.Id" name="gameId" />
+                            <button class="btn btn-outline-danger" type="submit" style="width:90%">Leave Game</button>
+                        </form>
+                    </div>
+                }
+            }
             <hr />
         </div>
     }

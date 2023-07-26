@@ -25,11 +25,43 @@ namespace PlayPal.Controllers
             _fieldService = fieldService;
             _playerService = playerService;
         }
-            
-        
-        public IActionResult JoinGame()
+
+        [HttpGet]
+        public async Task<IActionResult> JoinGame()
         {
-            return View();
+            try
+            {
+                var city = User.FindFirstValue(PlayPalClaimTypes.City);
+
+                var playerId = (Guid)User.PlayerId()!;
+
+                var models = await _gameService.GetGamesByCityAsync(city, playerId);
+
+                return View(models);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> JoinGame(Guid gameId)
+        {
+            try
+            {
+                var playerId = (Guid)User.PlayerId()!;
+
+                await _gameService.JoinPlayerToGame(playerId, gameId);
+
+                return RedirectToAction("MyGames");
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
         [HttpGet]
@@ -75,7 +107,7 @@ namespace PlayPal.Controllers
                 }
 
                 bool playerIsAvailable = await _playerService.CheckAvailabilityAsync(model.CreatorId, model.StartingTime, model.EndingTime);
-                
+
                 if (!playerIsAvailable)
                 {
                     ModelState.AddModelError("", ErrorMessages.PlayerIsNotAvailable);
@@ -112,6 +144,130 @@ namespace PlayPal.Controllers
                 var models = await _gameService.GetPlayerGamesAsync(playerId);
 
                 return View(models);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid gameId)
+        {
+            var model = await _gameService.GetGameModelAsync(gameId);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LeaveGame(Guid gameId)
+        {
+            try
+            {
+                Guid playerId = (Guid)User.PlayerId()!;
+
+                await _gameService.LeaveGame(gameId, (Guid)playerId);
+
+                return RedirectToAction("MyGames");
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Manage(Guid gameId)
+        {
+            var model = await _gameService.GetGameModelAsync(gameId);
+
+            var playerId = (Guid)User.PlayerId()!;
+
+            if (model.CreatorId != playerId)
+            {
+                TempData[ToastrMessageTypes.Warning] = WarningMessages.UserNotACreator;
+
+                return RedirectToAction("Details", gameId);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddToHomeTeam(Guid gameId, Guid playerId)
+        {
+            try
+            {
+                await _gameService.AddToHomeTeam(gameId, playerId);
+
+                return RedirectToAction("Manage", new { gameId = gameId });
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddToAwayTeam(Guid gameId, Guid playerId)
+        {
+            try
+            {
+                await _gameService.AddToAwayTeam(gameId, playerId);
+
+                return RedirectToAction("Manage", new { gameId = gameId });
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeTeam(Guid gameId, Guid playerId)
+        {
+            try
+            {
+                var game = await _gameService.GetGameModelAsync(gameId);
+
+                if (game == null)
+                {
+                    return RedirectToAction("Error", "Home");
+                }
+
+                if (game.HomeTeam.Any(p => p.Id == playerId))
+                {
+                    await _gameService.AddToAwayTeam(gameId, playerId);
+                }
+
+                if (game.AwayTeam.Any(p => p.Id == playerId))
+                {
+                    await _gameService.AddToHomeTeam(gameId, playerId);
+                }
+
+                return RedirectToAction("Manage", new { gameId = gameId });
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemovePlayer(Guid gameId, Guid playerId)
+        {
+            try
+            {
+
+                await _gameService.LeaveGame(gameId, playerId);
+
+                return RedirectToAction("Manage", new { gameId = gameId });
             }
             catch (Exception ex)
             {

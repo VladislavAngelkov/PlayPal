@@ -11,7 +11,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<PlayPalDbContext>(options =>
-    options.UseSqlServer(connectionString));
+{
+    options
+    //.UseLazyLoadingProxies()
+    .UseSqlServer(connectionString);
+});
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<PlayPalUser>(options =>

@@ -77,5 +77,8 @@ namespace PlayPal.Core.Repositories.Interfaces
         Task<int> SaveChangesAsync();
 
         Task HardDeleteAsync<T>(Guid id) where T : class;
+
+        void HardDeleteAsync<T>(Func<T, bool> deleteCondition)
+            where T : class;
     }
 }

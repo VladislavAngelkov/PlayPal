@@ -171,7 +171,7 @@ namespace PlayPal.Core.Repositories
             foreach (var entity in entities)
             {
                 entity.IsDeleted = true;
-                Update<T>(entity);
+                await Update<T>(entity);
             }
             await SaveChangesAsync();
         }
@@ -196,6 +196,16 @@ namespace PlayPal.Core.Repositories
             {
                 DbSet<T>().Remove(entity);
             }
+        }
+
+        public void HardDeleteAsync<T>(Func<T, bool> deleteCondition)
+            where T : class
+        {
+            ICollection<T> entities = DbSet<T>()
+                .Where(deleteCondition)
+                .ToList();
+           
+                DbSet<T>().RemoveRange(entities);
         }
     }
 }

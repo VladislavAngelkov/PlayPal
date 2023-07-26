@@ -4,6 +4,8 @@
     {
         public Guid Id { get; set; }
 
+        public Guid CreatorId { get; set; }
+
         public string Creator { get; set; } = null!;
 
         public string FieldName { get; set; } = null!;

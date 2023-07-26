@@ -101,7 +101,7 @@ namespace PlayPal.Areas.FieldManagment.Controllers
                     return RedirectToAction("Mine");
                 }
 
-                var model = await _gameService.GamesAsync(fieldId);
+                var model = await _gameService.GetGamesByFieldAsync(fieldId);
 
                 TempData["Field"] = field.Name;
 

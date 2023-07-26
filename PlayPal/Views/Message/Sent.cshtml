@@ -1,7 +1,7 @@
 ﻿@model ICollection<MessageViewModel>
 @using PlayPal.Common.IdentityConstants
 @{
-    TempData["Title"] = "Old Messages";
+    TempData["Title"] = "Sent Messages";
 
     if (User.IsInRole(PlayPalRoleNames.Administrator) ||
     User.IsInRole(PlayPalRoleNames.FieldOwner))

@@ -1,0 +1,145 @@
+﻿@model GameDetailViewModel
+
+
+
+<div class="container-fluid row">
+    <div class="row col-4" style="margin-right:10px">
+        <div class="text-center mb-5">
+            <h5>
+                Pending Players
+            </h5>
+        </div>
+        <div class="row">
+            <div class="col-3" style="color:white">
+                Name
+            </div>
+            <div class="col-3" style="color:white">
+                Add to Home Team
+            </div>
+            <div class="col-3" style="color:white">
+                Add to Away Team
+            </div>
+            <div class="col-3" style="color:white">
+                Remove
+            </div>
+            <hr />
+            @foreach (var player in Model.PendingPlayers)
+            {
+                <div class="col-3 mt-2 mb-2" style="color:white">
+                    @player.Name
+                </div>
+                <div class="col-3 mt-2 mb-2">
+                    <form asp-area="" asp-controller="Game" asp-action="AddToHomeTeam">
+                        <input type="hidden" value="@player.Id" name="playerId"/>
+                        <input type="hidden" value="@Model.Id" name="gameId" />
+                        <button type="submit" class="btn btn-outline-success">Home Team</button>
+                    </form>
+                </div>
+                <div class="col-3 mt-2 mb-2">
+                    <form asp-area="" asp-controller="Game" asp-action="AddToAwayTeam">
+                        <input type="hidden" value="@player.Id" name="playerId" />
+                        <input type="hidden" value="@Model.Id" name="gameId" />
+                        <button type="submit" class="btn btn-outline-success">Away Team</button>
+                    </form>
+                </div>
+                <div class="col-3 mt-2 mb-2">
+                    <form asp-area="" asp-controller="Game" asp-action="RemovePlayer">
+                        <input type="hidden" value="@player.Id" name="playerId" />
+                        <input type="hidden" value="@Model.Id" name="gameId" />
+                        <button type="submit" class="btn btn-outline-danger">Remove</button>
+                    </form>
+                </div>
+                <hr />
+            }
+        </div>
+    </div>
+
+    <div class="row col-4" style="margin-right:10px">
+        <div class="text-center mb-5">
+            <h5>
+                Home Team
+            </h5>
+        </div>
+        <div class="row">
+            <div class="col-4" style="color:white">
+                Name
+            </div>
+            <div class="col-4" style="color:white">
+                Change Team
+            </div>
+            <div class="col-4" style="color:white">
+                Remove
+            </div>
+            <hr />
+            @foreach (var player in Model.HomeTeam)
+            {
+                <div class="col-4 mt-2 mb-2" style="color:white">
+                    @player.Name
+                </div>
+                <div class="col-4 mt-2 mb-2">
+                    <form asp-area="" asp-controller="Game" asp-action="ChangeTeam">
+                        <input type="hidden" value="@player.Id" name="playerId" />
+                        <input type="hidden" value="@Model.Id" name="gameId" />
+                        <button type="submit" class="btn btn-outline-warning">Change Team</button>
+                    </form>
+                </div>
+                @if (player.Id != Model.CreatorId)
+                {
+                    <div class="col-4 mt-2 mb-2">
+                        <form asp-area="" asp-controller="Game" asp-action="RemovePlayer">
+                            <input type="hidden" value="@player.Id" name="playerId" />
+                            <input type="hidden" value="@Model.Id" name="gameId" />
+                            <button type="submit" class="btn btn-outline-danger">Remove</button>
+                        </form>
+                    </div>
+                }
+                <hr />
+            }
+        </div>
+    </div>
+
+    <div class="row col-4" style="margin-right:10px">
+        <div class="text-center mb-5">
+            <h5>
+                Away Team
+            </h5>
+        </div>
+        <div class="row">
+            <div class="col-4" style="color:white">
+                Name
+            </div>
+            <div class="col-4" style="color:white">
+                Change Team
+            </div>
+            <div class="col-4" style="color:white">
+                Remove
+            </div>
+            <hr />
+            @foreach (var player in Model.AwayTeam)
+            {
+                <div class="col-4 mt-2 mb-2" style="color:white">
+                    @player.Name
+                </div>
+                <div class="col-4 mt-2 mb-2">
+                    <form asp-area="" asp-controller="Game" asp-action="ChangeTeam">
+                        <input type="hidden" value="@player.Id" name="playerId" />
+                        <input type="hidden" value="@Model.Id" name="gameId" />
+                        <button type="submit" class="btn btn-outline-warning">Change Team</button>
+                    </form>
+                </div>
+                @if (player.Id != Model.CreatorId)
+                {
+                    <div class="col-4 mt-2 mb-2">
+                        <form asp-area="" asp-controller="Game" asp-action="RemovePlayer">
+                            <input type="hidden" value="@player.Id" name="playerId" />
+                            <input type="hidden" value="@Model.Id" name="gameId" />
+                            <button type="submit" class="btn btn-outline-danger">Remove</button>
+                        </form>
+                    </div>
+                }
+                <hr />
+            }
+        </div>
+    </div>
+
+</div>

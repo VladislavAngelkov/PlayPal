@@ -77,7 +77,7 @@ namespace PlayPal.Areas.Administration.Controllers
                     return RedirectToAction("All");
                 }
 
-                var models = await _gameService.GamesAsync(fieldId);
+                var models = await _gameService.GetGamesByFieldAsync(fieldId);
 
                 return View(models);
             }
