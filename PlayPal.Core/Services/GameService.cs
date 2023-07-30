@@ -30,8 +30,8 @@ namespace PlayPal.Core.Services
                 Id = model.Id,
                 FieldId = model.FieldId,
                 CreatorId = model.CreatorId,
-                StartingTime = model.StartingTime,
-                EndingTime = model.EndingTime
+                StartingTime = model.StartingTime.ToUniversalTime(),
+                EndingTime = model.EndingTime.ToUniversalTime()
             };
 
             var homeTeam = new Team()
@@ -206,9 +206,6 @@ namespace PlayPal.Core.Services
             player.PendingGames.Add(pendingPlayerGame);
             game.PendingPlayers.Add(pendingPlayerGame);
 
-            //await _repository.Update(player);
-            //await _repository.Update(game);   
-
             await _repository.SaveChangesAsync();
         }
 
@@ -220,7 +217,7 @@ namespace PlayPal.Core.Services
                 .Include(g => g.AwayTeam)
                 .FirstOrDefaultAsync();
 
-            if (game == null)
+            if (game == null || game.StartingTime<DateTime.UtcNow)
             {
                 return;
             }
@@ -230,50 +227,6 @@ namespace PlayPal.Core.Services
             _repository.HardDelete<PlayerTeam>(t => t.TeamId == game.HomeTeam.Id && t.PlayerId == playerId);
 
             _repository.HardDelete<PlayerTeam>(t => t.TeamId == game.AwayTeam.Id && t.PlayerId == playerId);
-
-            await _repository.SaveChangesAsync();
-
-
-            //var game = await _repository.All<Game>(g => g.Id == gameId)
-            //    .Include(g => g.PendingPlayers)
-            //    .Include(g => g.HomeTeam)
-            //    .ThenInclude(ht => ht.Players)
-            //    .Include(g => g.AwayTeam)
-            //    .ThenInclude(at => at.Players)
-            //    .FirstOrDefaultAsync();
-
-            //if (game == null)
-            //{
-            //    return;
-            //}
-
-            //var player = await _repository.GetByIdAsync<Player>(playerId);
-
-            //if (game.PendingPlayers.Any(p => p.PlayerId == player.Id))
-            //{
-            //    _repository.HardDeleteAsync<PendingPlayerGame>(g => g.GameId == game.Id && g.PlayerId == player.Id);
-
-            //    var pendingPlayerGame = game.PendingPlayers.FirstOrDefault(p => p.PlayerId == player.Id);
-            //    game.PendingPlayers.Remove(pendingPlayerGame!);
-
-            //    player.PendingGames.Remove(pendingPlayerGame!);
-            //}
-            //else if (game.HomeTeam.Players.Any(p => p.PlayerId == player.Id))
-            //{
-            //    var playerTeam = game.HomeTeam.Players.FirstOrDefault(p => p.PlayerId == player.Id);
-            //    game.HomeTeam.Players.Remove(playerTeam!);
-
-            //    var playerTeam = player.Teams.FirstOrDefault(pt => pt.TeamId == game.HomeTeam.Id);
-            //    player.Teams.Remove(playerTeam!);
-            //}
-            //else if (game.AwayTeam.Players.Any(p => p.PlayerId == player.Id))
-            //{
-            //    var pendingPlayerGame = game.AwayTeam.Players.FirstOrDefault(p => p.PlayerId == player.Id);
-            //    game.AwayTeam.Players.Remove(pendingPlayerGame!);
-
-            //    var playerTeam = player.Teams.FirstOrDefault(pt => pt.TeamId == game.AwayTeam.Id);
-            //    player.Teams.Remove(playerTeam!);
-            //}
 
             await _repository.SaveChangesAsync();
         }
@@ -355,7 +308,7 @@ namespace PlayPal.Core.Services
         {
             var models = await _repository.All<Game>()
                .Where(g => (g.EndingTime < DateTime.UtcNow) && !g.IsDeleted &&
-               (g.PendingPlayers.Any(p => p.PlayerId == playerId) || g.HomeTeam.Players.Any(p => p.PlayerId == playerId) || g.AwayTeam.Players.Any(p => p.PlayerId == playerId)))
+               (g.HomeTeam.Players.Any(p => p.PlayerId == playerId) || g.AwayTeam.Players.Any(p => p.PlayerId == playerId)))
                .Include(g => g.Field)
                .Include(g => g.HomeTeam)
                .ThenInclude(ht => ht.Players)
@@ -368,6 +321,7 @@ namespace PlayPal.Core.Services
                    StartingTime = g.StartingTime,
                    EndingTime = g.EndingTime,
                    CreatorId = g.CreatorId,
+                   IsProcessed = g.IsProcessed,
                    HomeTeamPlayerIds = g.HomeTeam.Players
                     .Select(p => p.PlayerId)
                     .ToList(),
@@ -432,6 +386,14 @@ namespace PlayPal.Core.Services
         public async Task ProcessGame(Guid gameId)
         {
             var game = await _repository.All<Game>()
+                .Include(g => g.HomeTeam)
+                .ThenInclude(ht => ht.Players)
+                .ThenInclude(p => p.Player)
+                .ThenInclude(p => p.Goals)
+                .Include(g => g.AwayTeam)
+                .ThenInclude(at => at.Players)
+                .ThenInclude(p => p.Player)
+                .ThenInclude(p => p.Goals)
                 .Where(g => g.Id == gameId)
                 .FirstAsync();
 
@@ -449,6 +411,10 @@ namespace PlayPal.Core.Services
 
             game.HomeTeamGoalCount = homeTeamGoals;
             game.AwayTeamGoalCount = awayTeamGoals;
+
+            _repository.HardDelete<PendingPlayerGame>(g => g.GameId == gameId);
+
+            await _repository.SaveChangesAsync();
 
             await _repository.Update(game);
         }

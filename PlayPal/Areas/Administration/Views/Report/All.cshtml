@@ -42,8 +42,8 @@
                 </form>
             </div>
             <div class="col-2 mt-1 mb-1">
-                <form asp-area="Administration" asp-controller="Ban" asp-action="Ban" method="post">
-                    <input type="hidden" value="@report.ReportedPlayer" name="playerEmail" />
+                <form asp-area="Administration" asp-controller="Ban" asp-action="Ban" method="get">
+                    <input type="hidden" value="@report.Id" name="reportId" />
                     <button class="btn btn-success" type="submit" style="width:100%">Ban</button>
                 </form>
             </div>

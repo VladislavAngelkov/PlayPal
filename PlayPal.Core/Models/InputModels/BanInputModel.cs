@@ -19,5 +19,7 @@ namespace PlayPal.Core.Models.InputModels
 
         [DateTime]
         public DateTime BannedTo { get; set; }
+
+        public Guid ReportId { get; set; }
     }
 }

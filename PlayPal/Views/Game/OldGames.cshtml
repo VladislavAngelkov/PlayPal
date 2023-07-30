@@ -40,21 +40,29 @@
                 @game.Field
             </div>
             <div class="col-2 mt-2" style="color:white">
-                @game.StartingTime.ToString(DateTimeFormats.GameStatEnd)
+                @game.StartingTime.ToLocalTime().ToString(DateTimeFormats.GameStatEnd)
             </div>
             <div class="col-2 mt-2" style="color:white">
-                @game.EndingTime.ToString(DateTimeFormats.GameStatEnd)
+                @game.EndingTime.ToLocalTime().ToString(DateTimeFormats.GameStatEnd)
             </div>
             <div class="col-3 mt-2" style="color:white">
                 @game.HomeTeamGoals : @game.AwayTeamGoals
             </div>
-            @if ((Guid)User.PlayerId()! == game.CreatorId &&
-           game.EndingTime < DateTime.UtcNow &&
-           (DateTime.UtcNow - game.EndingTime) < new TimeSpan(7, 0, 0, 0))
+            @if (game.EndingTime < DateTime.UtcNow &&
+           (DateTime.UtcNow - game.EndingTime) < new TimeSpan(7, 0, 0, 0) && (Guid)User.PlayerId()! == game.CreatorId && !game.IsProcessed)
+            {
+                    <div class="col-2 mt-1 mb-1" style="color:white">
+                        <a asp-area="" asp-controller="Game" asp-action="ProcessGame" asp-route-gameId="@game.Id" class="btn btn-outline-success" style="width:90%">
+                            Process Game
+                        </a>
+                    </div>
+                
+            }
+            else
             {
                 <div class="col-2 mt-1 mb-1" style="color:white">
-                    <a asp-area="" asp-controller="Game" asp-action="ProcessGame" asp-route-gameId="@game.Id" class="btn btn-outline-success" style="width:90%">
-                        Process Game
+                    <a asp-area="" asp-controller="Game" asp-action="ViewOldGame" asp-route-gameId="@game.Id" class="btn btn-outline-success" style="width:90%">
+                        View Game Details
                     </a>
                 </div>
             }

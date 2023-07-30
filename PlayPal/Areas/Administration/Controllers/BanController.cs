@@ -4,6 +4,7 @@ using PlayPal.Common.IdentityConstants;
 using PlayPal.Controllers;
 using PlayPal.Core.Models.InputModels;
 using PlayPal.Core.Services.Interfaces;
+using PlayPal.Extensions;
 using System.Security.Cryptography.X509Certificates;
 
 namespace PlayPal.Areas.Administration.Controllers
@@ -13,10 +14,14 @@ namespace PlayPal.Areas.Administration.Controllers
     public class BanController : PlayPalBaseController
     {
         private readonly IBanService _banService;
+        private readonly IReportService _reportService;
 
-        public BanController(IBanService banService)
+        public BanController(
+            IBanService banService,
+            IReportService reportService)
         {
             _banService = banService;
+            _reportService = reportService;
         }
 
         [HttpGet]
@@ -34,20 +39,17 @@ namespace PlayPal.Areas.Administration.Controllers
         }
 
         [HttpGet]
-        public IActionResult Ban(Guid playerId)
+        public async Task<IActionResult> Ban(Guid reportId)
         {
-            var model = new BanInputModel()
-            {
-                AdministratorId = Guid.Parse(User.Claims
-                .First(c => c.Type == PlayPalClaimTypes.AdministratorId).Value),
-                PlayerId = playerId
-            };
+            var model = await _banService.GetBanInputModel(reportId);
+
+            model.AdministratorId = (Guid)User.AdministratorId()!;
 
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Ban(BanInputModel model, string? returnUrl= null)
+        public async Task<IActionResult> Ban(BanInputModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -56,16 +58,11 @@ namespace PlayPal.Areas.Administration.Controllers
 
             try
             {
-                model.BannedTo = model.BannedTo.ToUniversalTime();
-
                 await _banService.BanPlayer(model);
 
-                if (returnUrl != null)
-                {
-                    return LocalRedirect(returnUrl);
-                }
+                await _reportService.CheckReport(model.ReportId);
 
-                return RedirectToAction("All", "Report", new {Area = "Administration" });
+                return RedirectToAction("All", "Report", new {Area = "Administration"});
             }
             catch (Exception)
             {

@@ -46,8 +46,10 @@ namespace PlayPal.Areas.Administration.Controllers
                 {
                     await _reportService.CheckReport(reportId);
                 }
-
-                TempData[ToastrMessageTypes.Error] = ErrorMessages.ReportDoesNotExist;
+                else
+                {
+                    TempData[ToastrMessageTypes.Error] = ErrorMessages.ReportDoesNotExist;
+                }
 
                 return RedirectToAction("All");
             }

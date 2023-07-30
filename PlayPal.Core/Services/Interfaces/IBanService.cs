@@ -12,6 +12,7 @@ namespace PlayPal.Core.Services.Interfaces
         public Task RemoveBan(Guid id);
 
         public Task<ICollection<BanViewModel>> GetAll();
-        
+
+        public Task<BanInputModel> GetBanInputModel(Guid reportId);
     }
 }

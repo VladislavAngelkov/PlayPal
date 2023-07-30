@@ -18,12 +18,14 @@ namespace PlayPal.Core.Services
 
         public async Task<ICollection<ReportViewModel>> All()
         {
-            var models = await _repository.All<Report>(r => r.IsChecked == false)
+            var models = await _repository.All<Report>(r => !r.IsChecked && !r.IsDeleted)
                 .Include(r => r.ReportedPlayer.User)
                 .Include(r => r.ReportingPlayer.User)
                 .Select(r => new ReportViewModel()
                 {
                     Id = r.Id,
+                    ReportedPlayerId = r.ReportedPlayerId,
+                    ReportingPlayerId = r.ReportingPlayerId,
                     ReportedPlayer = r.ReportedPlayer.User!.Email,
                     ReportingPlayer = r.ReportingPlayer.User!.Email,
                     Reason = r.Reason.ToString()
@@ -47,8 +49,21 @@ namespace PlayPal.Core.Services
             return _repository.All<Report>().Any(r => r.Id == reportId);
         }
 
+        public bool IsAlreadyReported(Guid reportingId, Guid reportedId)
+        {
+            return _repository.All<Report>()
+                .Any(r => r.ReportingPlayerId == reportingId &&
+                r.ReportedPlayerId == reportedId &&
+                !r.IsChecked);
+        }
+
         public async Task ReportPlayer(ReportInputModel model)
         {
+            if (IsAlreadyReported(model.ReportingPlayerId, model.ReportedPlayerId))
+            {
+                return;
+            }
+
             var report = new Report()
             {
                 Id = model.Id,

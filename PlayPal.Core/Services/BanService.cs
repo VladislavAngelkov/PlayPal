@@ -24,7 +24,7 @@ namespace PlayPal.Core.Services
                 Id = model.Id,
                 PlayerId = model.PlayerId,
                 AdministratorId = model.AdministratorId,
-                BannedTo = model.BannedTo,
+                BannedTo = model.BannedTo.ToUniversalTime(),
                 Reason = Enum.Parse<Reason>(model.Reason)
             };
 
@@ -94,6 +94,20 @@ namespace PlayPal.Core.Services
                 .ToListAsync();
 
             return bans;
+        }
+
+        public async Task<BanInputModel> GetBanInputModel(Guid reportId)
+        {
+            var report = await _repository.GetByIdAsync<Report>(reportId);
+
+            var model = new BanInputModel()
+            {
+                PlayerId = report.ReportedPlayerId,
+                Reason = report.Reason.ToString(),
+                ReportId = reportId
+            };
+
+            return model;
         }
     }
 }

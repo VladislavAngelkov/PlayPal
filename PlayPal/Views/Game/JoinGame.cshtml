@@ -39,10 +39,10 @@
                 @game.FieldName
             </div>
             <div class="col-2 mt-2" style="color:white">
-                @game.StartingTime.ToString(DateTimeFormats.GameStatEnd)
+                @game.StartingTime.ToLocalTime().ToString(DateTimeFormats.GameStatEnd)
             </div>
             <div class="col-2 mt-2" style="color:white">
-                @game.EndingTime.ToString(DateTimeFormats.GameStatEnd)
+                @game.EndingTime.ToLocalTime().ToString(DateTimeFormats.GameStatEnd)
             </div>
             <div class="col-2 mt-2" style="color:white">
                 @game.Creator

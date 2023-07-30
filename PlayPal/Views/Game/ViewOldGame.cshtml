@@ -57,14 +57,6 @@
         <div class="col-6">
         </div>
     </div>
-    @if (Model.CreatorId == (Guid)User.PlayerId()!)
-    {
-        <div class="col-6 mt-2">
-            <a asp-area="" asp-controller="Goal" asp-action="Add" asp-route-gameId="@Model.Id" class="btn btn-success" style="width:90%">
-                Add Goal
-            </a>
-        </div>
-    }
 </div>
 
 <br />
@@ -113,7 +105,7 @@
             <div class="col-6 mt-1 mb-1" style="color:white">
                 @if (player.Id != (Guid)User.PlayerId()!)
                 {
-                    <form asp-area="" asp-controller="Report" asp-action="Add" method="get">
+                    <form asp-area="" asp-controller="Report" asp-action="Add" method="post">
                         <input type="hidden" value="@player.Id" name="reportedId" />
                         <input type="hidden" value="@Context.Request.Path" name="returnUrl" />
                         <input type="hidden" value="@Model.Id" name="gameId" />
@@ -126,19 +118,4 @@
             <hr />
         </div>
     }
-
-    <div class="row">
-        @if (Model.CreatorId == (Guid)User.PlayerId()!)
-        {
-            <div class="row col-6">
-                <form method="post" asp-area="" asp-controller="Game" asp-action="FinishGame">
-                    <input type="hidden" value="@Model.Id" name="gameId" />
-                    <button type="submit" class="btn btn-success" style="width:90%">
-                        Finish
-                    </button>
-                </form>
-            </div>
-        }
-    </div>
-
 </div>

@@ -24,5 +24,7 @@
         public int? HomeTeamGoals { get; set; }
 
         public int? AwayTeamGoals { get; set; }
+
+        public bool IsProcessed { get; set; }
     }
 }

@@ -15,5 +15,8 @@ namespace PlayPal.Core.Models.InputModels
 
         [Required]
         public Reason Reason { get; set; }
+
+        [Required]
+        public string ReturnUrl { get; set; } = null!;
     }
 }

@@ -361,5 +361,21 @@ namespace PlayPal.Controllers
                 throw;
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ViewOldGame(Guid gameId)
+        {
+            try
+            {
+                var model = await _gameService.GetProcesGameViewModel(gameId);
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
     }
 }

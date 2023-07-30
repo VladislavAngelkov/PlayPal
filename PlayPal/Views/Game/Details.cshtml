@@ -28,12 +28,12 @@
     </div>
     <div>
         <h4>
-            Starting time: @Model.StartingTime.ToString(DateTimeFormats.GameStatEnd)
+            Starting time: @Model.StartingTime.ToLocalTime().ToString(DateTimeFormats.GameStatEnd)
         </h4>
     </div>
     <div>
         <h4>
-            Ending time: @Model.EndingTime.ToString(DateTimeFormats.GameStatEnd)
+            Ending time: @Model.EndingTime.ToLocalTime().ToString(DateTimeFormats.GameStatEnd)
         </h4>
     </div>
    
