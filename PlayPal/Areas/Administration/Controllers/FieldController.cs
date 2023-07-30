@@ -4,6 +4,7 @@ using PlayPal.Common.IdentityConstants;
 using PlayPal.Common.Notifications;
 using PlayPal.Controllers;
 using PlayPal.Core.Services.Interfaces;
+using PlayPal.Extensions;
 
 namespace PlayPal.Areas.Administration.Controllers
 {
@@ -102,7 +103,9 @@ namespace PlayPal.Areas.Administration.Controllers
                     return RedirectToAction("Games", new { fieldId = fieldId });
                 }
 
-                await _gameService.DeleteAsync(gameId);
+                Guid administratorId = (Guid)User.AdministratorId()!;
+
+                await _gameService.DeleteGameAsync(gameId, administratorId);
 
                 return RedirectToAction("Games", new { fieldId = fieldId });
             }

@@ -74,7 +74,11 @@ namespace PlayPal.Core.Services
 
         public async Task<Player> GetPlayerAsync(Guid id)
         {
-            var player = await _repository.GetByIdAsync<Player>(id);
+            var player = await _repository.All<Player>()
+                .Include(p => p.Goals)
+                .Include(p => p.Teams)
+                .Where(p => p.Id == id)
+                .FirstOrDefaultAsync();
 
             return player;
         }
@@ -122,9 +126,9 @@ namespace PlayPal.Core.Services
             
             await _userManager.RemoveClaimAsync(user, oldCityClaim);
 
-            string newCity = model.Name;
+            string newCity = model.CurrentCity;
 
-            var newCityClaim = new Claim(PlayPalClaimTypes.Name, newName);
+            var newCityClaim = new Claim(PlayPalClaimTypes.City, newCity);
 
             await _userManager.AddClaimAsync(user, newNameClaim);
 

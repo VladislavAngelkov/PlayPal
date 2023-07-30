@@ -198,7 +198,7 @@ namespace PlayPal.Core.Repositories
             }
         }
 
-        public void HardDeleteAsync<T>(Func<T, bool> deleteCondition)
+        public void HardDelete<T>(Func<T, bool> deleteCondition)
             where T : class
         {
             ICollection<T> entities = DbSet<T>()

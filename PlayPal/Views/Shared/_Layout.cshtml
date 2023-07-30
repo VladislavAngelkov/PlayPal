@@ -40,8 +40,12 @@
                             <li class="nav-item">
                                 <a class="nav-link active" asp-controller="Game" asp-action="CreateGame">Create game</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link active" asp-controller="Game" asp-action="MyGames">My Games</a>
+                            <li class="nav-item dropdown active">
+                                <a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Games</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" asp-area="" asp-controller="Game" asp-action="MyGames">MyGames</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Game" asp-action="OldGames">Old Games</a>
+                                </div>
                             </li>
                             <li class="nav-item dropdown active">
                                 <a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Messages</a>

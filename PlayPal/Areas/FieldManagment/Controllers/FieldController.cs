@@ -129,7 +129,7 @@ namespace PlayPal.Areas.FieldManagment.Controllers
                     return RedirectToAction("Mine");
                 }
 
-                Guid? fieldOwnerId = User.OwnerId()!;
+                Guid fieldOwnerId = (Guid)User.OwnerId()!;
 
                 var field = await _fieldService.GetFieldAsync(fieldId);
 
@@ -140,6 +140,13 @@ namespace PlayPal.Areas.FieldManagment.Controllers
                     return RedirectToAction("Mine");
                 }
 
+                var gamesModel = await _gameService.GetGamesByFieldAsync(fieldId);
+
+                foreach (var game in gamesModel.Games)
+                {
+                    await _gameService.DeleteGameAsync(game.Id, fieldOwnerId);
+                }
+                    
                 await _fieldService.DeleteAsync(fieldId);
 
                 return RedirectToAction("Mine");
@@ -165,16 +172,9 @@ namespace PlayPal.Areas.FieldManagment.Controllers
                     return RedirectToAction("Games", new { fieldId = fieldId });
                 }
 
-                Guid? fieldOwnerId = User.OwnerId()!;
+                Guid fieldOwnerId = (Guid)User.OwnerId()!;
 
-                if (fieldOwnerId != fieldId)
-                {
-                    TempData[ToastrMessageTypes.Warning] = WarningMessages.FieldNotOwnedByUser;
-
-                    return RedirectToAction("Mine");
-                }
-
-                await _gameService.DeleteAsync(gameId);
+                await _gameService.DeleteGameAsync(gameId, fieldOwnerId);
 
                 return RedirectToAction("Games", new { fieldId = fieldId });
             }

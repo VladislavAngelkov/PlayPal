@@ -11,6 +11,8 @@ namespace PlayPal.Core.Models.ViewModels
 
         public Guid Id { get; set; }
 
+        public string Name { get; set; } = null!;
+
         public ICollection<GameViewModel> Games { get; set; }
     }
 }

@@ -5,8 +5,6 @@ namespace PlayPal.Core.Services.Interfaces
 {
     public interface IGameService
     {
-        public Task DeleteAsync(Guid gameId);
-
         public Task<bool> ExistAsync(Guid gameId);
 
         public Task<FieldGameViewModel> GetGamesByFieldAsync(Guid fieldId);
@@ -27,5 +25,14 @@ namespace PlayPal.Core.Services.Interfaces
 
         public Task AddToAwayTeam(Guid gameId, Guid playerId);
 
+
+        public Task DeleteGameAsync
+            (Guid gameId, Guid playerId);
+
+        public Task<ICollection<OldGameViewModel>> GetOldGames(Guid playerId);
+
+        public Task<ProcessGameViewModel> GetProcesGameViewModel(Guid gameId);
+
+        public Task ProcessGame(Guid gameId);
     }
 }

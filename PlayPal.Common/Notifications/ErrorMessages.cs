@@ -23,5 +23,9 @@
         public const string StartingTime = "Starting time cannot be in the past!";
 
         public const string PlayerIsNotAvailable = "You have already joined in a geme for this period!";
+
+        public const string PlayerNotCreatorOfGame = "You are not the creator of this game!";
+
+        public const string GameIsAlreadyProcessed = "This game is already processed";
     }
 }

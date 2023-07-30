@@ -4,7 +4,6 @@ using PlayPal.Core.Models.ViewModels;
 using PlayPal.Core.Repositories.Interfaces;
 using PlayPal.Core.Services.Interfaces;
 using PlayPal.Data.Models;
-using System.Numerics;
 
 namespace PlayPal.Core.Services
 {
@@ -12,13 +11,16 @@ namespace PlayPal.Core.Services
     {
         private readonly IRepository _repository;
         private readonly ITeamService _teamService;
+        private readonly IGoalService _goalService;
 
         public GameService(
-            IRepository repository, 
-            ITeamService teamService)
+            IRepository repository,
+            ITeamService teamService,
+            IGoalService goalService)
         {
             _repository = repository;
             _teamService = teamService;
+            _goalService = goalService;
         }
 
         public async Task CreateGameAsync(GameInputModel model)
@@ -50,11 +52,6 @@ namespace PlayPal.Core.Services
             await AddToHomeTeam(game.Id, game.CreatorId);
         }
 
-        public async Task DeleteAsync(Guid gameId)
-        {
-            await _repository.DeleteAsync<Game>(gameId);
-        }
-
         public async Task<bool> ExistAsync(Guid gameId)
         {
             var game = await _repository.GetByIdAsync<Game>(gameId);
@@ -69,13 +66,19 @@ namespace PlayPal.Core.Services
 
         public async Task<FieldGameViewModel> GetGamesByFieldAsync(Guid fieldId)
         {
+            var field = await _repository.GetByIdAsync<Field>(fieldId);
+
+            var fieldName = field.Name;
+
             var games = await _repository.All<Game>()
                 .Where(g => g.FieldId == fieldId &&
                 g.EndingTime > DateTime.UtcNow)
                 .Include(g => g.Creator.User)
+                .Include(g => g.Field)
                 .Select(g => new GameViewModel()
                 {
                     Id = g.Id,
+                    FieldName = g.Field.Name,
                     Creator = g.Creator.User!.Email,
                     StartingTime = g.StartingTime,
                     EndingTime = g.EndingTime
@@ -85,6 +88,7 @@ namespace PlayPal.Core.Services
             var model = new FieldGameViewModel()
             {
                 Id = fieldId,
+                Name = fieldName,
                 Games = games
             };
 
@@ -159,7 +163,7 @@ namespace PlayPal.Core.Services
                     Creator = g.Creator.Name,
                 })
                 .ToListAsync();
-                
+
             return models;
         }
 
@@ -168,8 +172,8 @@ namespace PlayPal.Core.Services
             var models = await _repository.All<Game>()
                 .Where(g => g.Field.City.ToUpper() == city.ToUpper() &&
                 g.StartingTime > DateTime.UtcNow &&
-                !g.PendingPlayers.Any(p => p.PlayerId==playerId) &&
-                !g.HomeTeam.Players.Any(p => p.PlayerId== playerId) &&
+                !g.PendingPlayers.Any(p => p.PlayerId == playerId) &&
+                !g.HomeTeam.Players.Any(p => p.PlayerId == playerId) &&
                 !g.AwayTeam.Players.Any(p => p.PlayerId == playerId))
                 .Include(g => g.Field)
                 .Include(g => g.Creator)
@@ -183,7 +187,7 @@ namespace PlayPal.Core.Services
                     CreatorId = g.CreatorId,
                 })
                 .ToListAsync();
-                
+
             return models;
         }
 
@@ -221,11 +225,11 @@ namespace PlayPal.Core.Services
                 return;
             }
 
-            _repository.HardDeleteAsync<PendingPlayerGame>(g => g.GameId == gameId && g.PlayerId == playerId);
+            _repository.HardDelete<PendingPlayerGame>(g => g.GameId == gameId && g.PlayerId == playerId);
 
-            _repository.HardDeleteAsync<PlayerTeam>(t => t.TeamId == game.HomeTeam.Id && t.PlayerId == playerId);
+            _repository.HardDelete<PlayerTeam>(t => t.TeamId == game.HomeTeam.Id && t.PlayerId == playerId);
 
-            _repository.HardDeleteAsync<PlayerTeam>(t => t.TeamId == game.AwayTeam.Id && t.PlayerId == playerId);
+            _repository.HardDelete<PlayerTeam>(t => t.TeamId == game.AwayTeam.Id && t.PlayerId == playerId);
 
             await _repository.SaveChangesAsync();
 
@@ -310,6 +314,143 @@ namespace PlayPal.Core.Services
             await LeaveGame(gameId, playerId);
 
             await _teamService.AddPlayerToTeamAsync(playerId, teamId);
+        }
+
+        public async Task DeleteGameAsync(Guid gameId, Guid playerId)
+        {
+            var game = await _repository
+                .All<Game>(g => g.Id == gameId)
+                .Include(g => g.HomeTeam)
+                .Include(g => g.AwayTeam)
+                .Include(g => g.PendingPlayers)
+                .Include(g => g.Field)
+                .FirstOrDefaultAsync();
+
+            bool userIsAdmin = _repository.All<Administrator>().Any(a => a.Id == playerId);
+
+            if (game == null ||
+                (game.CreatorId != playerId && game.Field.OwnerId != playerId &&
+                !userIsAdmin))
+            {
+                return;
+            }
+
+            var homeTeam = game.HomeTeam;
+            var awayTeam = game.AwayTeam;
+
+            _repository.HardDelete<PendingPlayerGame>(ppg => ppg.GameId == gameId);
+
+            _repository.HardDelete<PlayerTeam>(pt => pt.TeamId == homeTeam.Id);
+
+            _repository.HardDelete<PlayerTeam>(pt => pt.TeamId == awayTeam.Id);
+
+            await _repository.DeleteAsync<Game>(gameId);
+            await _repository.DeleteAsync<Team>(homeTeam.Id);
+            await _repository.DeleteAsync<Team>(awayTeam.Id);
+
+            await _repository.SaveChangesAsync();
+        }
+
+        public async Task<ICollection<OldGameViewModel>> GetOldGames(Guid playerId)
+        {
+            var models = await _repository.All<Game>()
+               .Where(g => (g.EndingTime < DateTime.UtcNow) && !g.IsDeleted &&
+               (g.PendingPlayers.Any(p => p.PlayerId == playerId) || g.HomeTeam.Players.Any(p => p.PlayerId == playerId) || g.AwayTeam.Players.Any(p => p.PlayerId == playerId)))
+               .Include(g => g.Field)
+               .Include(g => g.HomeTeam)
+               .ThenInclude(ht => ht.Players)
+               .Include(g => g.AwayTeam)
+               .ThenInclude(at => at.Players)
+               .Select(g => new OldGameViewModel()
+               {
+                   Id = g.Id,
+                   Field = g.Field.Name,
+                   StartingTime = g.StartingTime,
+                   EndingTime = g.EndingTime,
+                   CreatorId = g.CreatorId,
+                   HomeTeamPlayerIds = g.HomeTeam.Players
+                    .Select(p => p.PlayerId)
+                    .ToList(),
+                   AwayTeamPlayerIds = g.AwayTeam.Players
+                    .Select(p => p.PlayerId)
+                    .ToList()
+               })
+               .ToListAsync();
+
+            foreach (var game in models)
+            {
+                game.HomeTeamGoals = await _goalService.GetHomeTeamGoalCount(game.Id);
+                game.AwayTeamGoals = await _goalService.GetAwayTeamGoalCount(game.Id);
+            }
+
+
+            return models;
+        }
+
+        public async Task<ProcessGameViewModel> GetProcesGameViewModel(Guid gameId)
+        {
+            var model = await _repository
+                .All<Game>()
+                .Where(g => g.Id == gameId)
+                .Include(g => g.Field)
+                .Include(g => g.HomeTeam)
+                .ThenInclude(ht => ht.Players)
+                .ThenInclude(p => p.Player)
+                .Include(g => g.AwayTeam)
+                .ThenInclude(at => at.Players)
+                .ThenInclude(p => p.Player)
+                 .Select(g => new ProcessGameViewModel()
+                 {
+                     Id = g.Id,
+                     CreatorId = g.CreatorId,
+                     Field = g.Field.Name,
+                     StartingTime = g.StartingTime,
+                     EndingTime = g.EndingTime,
+                     HomePlayers = g.HomeTeam.Players
+                    .Select(p => new PlayerViewModel()
+                    {
+                        Id = p.PlayerId,
+                        Name = p.Player.Name,
+                    })
+                    .ToList(),
+                     AwayPlayers = g.AwayTeam.Players
+                    .Select(p => new PlayerViewModel()
+                    {
+                        Id = p.PlayerId,
+                        Name = p.Player.Name,
+                    })
+                    .ToList(),
+                     HomeTeamGoals = g.HomeTeamGoalCount,
+                     AwayTeamGoals = g.AwayTeamGoalCount,
+                     IsProcessed = g.IsProcessed
+                 })
+                 .FirstOrDefaultAsync();
+
+            return model!;
+        }
+
+        public async Task ProcessGame(Guid gameId)
+        {
+            var game = await _repository.All<Game>()
+                .Where(g => g.Id == gameId)
+                .FirstAsync();
+
+            game.IsProcessed = true;
+
+            int homeTeamGoals = game
+                .HomeTeam
+                .Players
+                .Sum(p => p.Player.Goals.Where(g => g.GameId == gameId && !g.IsAutoGoal && !g.IsDeleted).Count()) + game.AwayTeam.Players.Sum(p => p.Player.Goals.Where(g => g.GameId == gameId && g.IsAutoGoal && !g.IsDeleted).Count());
+
+            int awayTeamGoals = game
+                .AwayTeam
+                .Players
+                .Sum(p => p.Player.Goals.Where(g => g.GameId == gameId && !g.IsAutoGoal && !g.IsDeleted).Count()) + game.HomeTeam.Players.Sum(p => p.Player.Goals.Where(g => g.GameId == gameId && g.IsAutoGoal && !g.IsDeleted).Count());
+
+            game.HomeTeamGoalCount = homeTeamGoals;
+            game.AwayTeamGoalCount = awayTeamGoals;
+
+            await _repository.Update(game);
         }
     }
 }

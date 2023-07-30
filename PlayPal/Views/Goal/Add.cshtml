@@ -1,0 +1,50 @@
+﻿@model GoalInputModel
+@using PlayPal.Data.Models.Enums
+
+@{
+    TempData["Title"] = "Add Goal";
+}
+
+<div class="text-center">
+    <h2>
+        @TempData["Title"]
+    </h2>
+</div>
+
+<div class="row align-content-center">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-6">
+        <form method="post" asp-area="" asp-controller="Goal" asp-action="Add">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="@Model.Id" type="hidden" value=@Model.Id />
+            <input asp-for="@Model.GameId" type="hidden" value=@Model.GameId />
+            <div class="form-group">
+                <label asp-for="@Model.PlayerId" class="form-label mt-4">Select Player</label>
+                <select asp-for="@Model.PlayerId" class="form-select" id="exampleSelect1">
+                    @foreach (var player in Model.Players)
+                    {
+                        <option value="@player.Id">@player.Name</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="@Model.IsAutoGoal" class="form-label mt-4">Select Goal type</label>
+                <select asp-for="@Model.IsAutoGoal" class="form-select" id="exampleSelect1">
+                    
+                        <option value="@false">Goal</option>
+                    <option value="@true">Autogoal</option>
+                    
+                </select>
+            </div>
+            <br />
+            <button  type="submit" class="btn btn-success" style="width:100%">Add</button>
+        </form>
+    </div>
+    <div class="col-md-3">
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

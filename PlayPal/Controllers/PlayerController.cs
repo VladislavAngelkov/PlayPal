@@ -63,7 +63,7 @@ namespace PlayPal.Controllers
                     CurrentCity = player.CurrentCity,
                     Position = position.Name,
                     Games = player.Teams.Count,
-                    Goals = player.Goals.Count
+                    Goals = player.Goals.Where(g => !g.IsAutoGoal).Count() - player.Goals.Where(g => g.IsAutoGoal).Count()
                 };
 
                 return View(model);

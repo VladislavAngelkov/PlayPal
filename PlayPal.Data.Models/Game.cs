@@ -33,21 +33,31 @@ namespace PlayPal.Data.Models
         /// </summary>
         public virtual Player Creator { get; set; } = null!;
 
-
-
         /// <summary>
         /// The home team
         /// </summary>
         [InverseProperty("HomeGame")]
         public virtual Team HomeTeam { get; set; } = null!;
 
-
+        /// <summary>
+        /// The goals scored for the home team
+        /// </summary>
+        [Comment("The goals scored for the home team")]
+        [Required]
+        public int HomeTeamGoalCount { get; set; }
         
         /// <summary>
         /// The away team
         /// </summary>
         [InverseProperty("AwayGame")]
         public virtual Team AwayTeam { get; set; } = null!;
+
+        /// <summary>
+        /// The goals scored for the away team
+        /// </summary>
+        [Comment("The goals scored for the away team")]
+        [Required]
+        public int AwayTeamGoalCount { get; set; }
 
         /// <summary>
         /// The identifier of the field, where the game is played
@@ -87,5 +97,12 @@ namespace PlayPal.Data.Models
         /// </summary>
         [Comment("List of players that are awaiting for team assignment")]
         public virtual ICollection<PendingPlayerGame> PendingPlayers { get; set; }
+
+        /// <summary>
+        /// Indecates if the game is processed by the creator after its over
+        /// </summary>
+        [Comment("Indecates if the game is processed by the creator after its over.")]
+        [Required]
+        public bool IsProcessed { get; set; }
     }
 }

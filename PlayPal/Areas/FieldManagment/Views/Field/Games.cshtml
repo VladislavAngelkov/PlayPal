@@ -40,7 +40,7 @@
                 @game.EndingTime.ToString(DateTimeFormats.GameStatEnd)
             </div>
             <div class="col-3">
-                <form asp-area="Administration" asp-controller="Field" asp-action="DeleteGame" method="post">
+                <form asp-area="FieldManagment" asp-controller="Field" asp-action="DeleteGame" method="post">
                     <input type="hidden" value="@game.Id" name="gameId" />
                     <input type="hidden" value="@Model.Id" name="fieldId" />
                     <button class="btn btn-danger" type="submit">Delete Game</button>

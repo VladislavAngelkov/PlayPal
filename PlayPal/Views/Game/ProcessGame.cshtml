@@ -1,0 +1,129 @@
+﻿@model ProcessGameViewModel
+@using PlayPal.Common.StringFormats
+@using PlayPal.Core.Models.ViewModels;
+@using PlayPal.Extensions
+
+@{
+    TempData["Title"] = "Process Game";
+}
+
+<div class="text-center">
+    <h2>
+        @TempData["Title"]
+    </h2>
+</div>
+<br />
+<div class="container-fluid">
+    <div class="row" style="background-color:darkorange; color:white">
+        <div class="col-3">
+            Field:
+        </div>
+        <div class="col-3">
+            @Model.Field
+        </div>
+        <div class="col-6">
+        </div>
+    </div>
+
+    <div class="row" style="background-color:darkorange; color:white">
+        <div class="col-3">
+            Starting Time:
+        </div>
+        <div class="col-3">
+            @Model.StartingTime.ToString(DateTimeFormats.GameStatEnd)
+        </div>
+        <div class="col-6">
+        </div>
+    </div>
+
+    <div class="row" style="background-color:darkorange; color:white">
+        <div class="col-3">
+            Ending Time:
+        </div>
+        <div class="col-3">
+            @Model.EndingTime.ToString(DateTimeFormats.GameStatEnd)
+        </div>
+        <div class="col-6">
+        </div>
+    </div>
+
+    <div class="row" style="background-color:darkorange; color:white">
+        <div class="col-3">
+            Result:
+        </div>
+        <div class="col-3">
+            @Model.HomeTeamGoals - @Model.AwayTeamGoals
+        </div>
+        <div class="col-6">
+        </div>
+    </div>
+    <div class="col-6 mt-2">
+        <a asp-area="" asp-controller="Goal" asp-action="Add" asp-route-gameId="@Model.Id" class="btn btn-success" style="width:90%">
+            Add Goal
+        </a>
+    </div>
+
+</div>
+
+<br />
+<h5>
+    Players:
+</h5>
+<br />
+<div class="container-fluid">
+    <div class="row" style="background-color:darkorange; color:white">
+        <div class="col-6">
+            Player
+        </div>
+        <div class="col-6 text-center">
+            Report
+        </div>
+    </div>
+
+    @foreach (var player in Model.HomePlayers)
+    {
+        <div class="row">
+            <div class="col-6 mt-2" style="color:white">
+                @player.Name
+            </div>
+            <div class="col-6 mt-1 mb-1" style="color:white">
+                @if (player.Id != (Guid)User.PlayerId()!)
+                {
+                    <a asp-area="" asp-controller="Report" asp-action="Add" asp-route-gameId="@player.Id" class="btn btn-outline-danger" style="width:90%">
+                        Report Player
+                    </a>
+                }
+            </div>
+            <hr />
+        </div>
+    }
+    @foreach (var player in Model.AwayPlayers)
+    {
+        <div class="row">
+            <div class="col-6 mt-2" style="color:white">
+                @player.Name
+            </div>
+            <div class="col-6 mt-1 mb-1" style="color:white">
+                @if (player.Id != (Guid)User.PlayerId()!)
+                {
+                    <a asp-area="" asp-controller="Report" asp-action="Add" asp-route-gameId="@player.Id" class="btn btn-outline-danger" style="width:90%">
+                        Report Player
+                    </a>
+                }
+            </div>
+            <hr />
+        </div>
+    }
+
+    <div class="row">
+        <div class="row col-6">
+            <form method="post" asp-area="" asp-controller="Game" asp-action="Finish">
+                <input type="hidden" value="@Model.Id" name="gameId" />
+                <button type="submit" class="btn btn-success" style="width:90%">
+                    Finish
+                </button>
+            </form>
+        </div>
+    </div>
+
+</div>

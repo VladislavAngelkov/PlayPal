@@ -36,5 +36,12 @@ namespace PlayPal.Data.Models
         /// The game in which the goal was scored
         /// </summary>
         public virtual Game Game { get; set; } = null!;
+
+        /// <summary>
+        /// Indicates if the goals is autogoal
+        /// </summary>
+        [Comment("Indicates if the goals is autogoal")]
+        [Required]
+        public bool IsAutoGoal { get; set; }
     }
 }

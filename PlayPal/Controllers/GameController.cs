@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using PlayPal.Common.IdentityConstants;
 using PlayPal.Common.Notifications;
 using PlayPal.Core.Models.InputModels;
+using PlayPal.Core.Models.ViewModels;
 using PlayPal.Core.Services.Interfaces;
 using PlayPal.Extensions;
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 
 namespace PlayPal.Controllers
 {
@@ -139,7 +141,7 @@ namespace PlayPal.Controllers
         {
             try
             {
-                Guid playerId = (Guid)User.PlayerId();
+                Guid playerId = (Guid)User.PlayerId()!;
 
                 var models = await _gameService.GetPlayerGamesAsync(playerId);
 
@@ -268,6 +270,90 @@ namespace PlayPal.Controllers
                 await _gameService.LeaveGame(gameId, playerId);
 
                 return RedirectToAction("Manage", new { gameId = gameId });
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteGame(Guid gameId)
+        {
+            try
+            {
+                Guid playerId = (Guid)User.PlayerId()!;
+
+                await _gameService.DeleteGameAsync(gameId, playerId);
+
+                return RedirectToAction("MyGames");
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> OldGames()
+        {
+            var playerId = (Guid)User.PlayerId()!;
+
+            try
+            {
+                var models = await _gameService.GetOldGames(playerId);
+
+                return View(models);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ProcessGame(Guid gameId)
+        {
+            try
+            {
+                Guid playerId = (Guid)User.PlayerId()!;
+
+                var model = await _gameService.GetProcesGameViewModel(gameId);
+
+                if (model.CreatorId != playerId)
+                {
+                    TempData[ToastrMessageTypes.Error] = ErrorMessages.PlayerNotCreatorOfGame;
+
+                    return RedirectToAction("OldGames");
+                }
+
+                if (model.IsProcessed)
+                {
+                    TempData[ToastrMessageTypes.Error] = ErrorMessages.GameIsAlreadyProcessed;
+
+                    return RedirectToAction("OldGames");
+                }
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> FinishGame(Guid gameId)
+        {
+            try
+            {
+                await _gameService.ProcessGame(gameId);
+
+                return RedirectToAction("OldGames");
             }
             catch (Exception ex)
             {
