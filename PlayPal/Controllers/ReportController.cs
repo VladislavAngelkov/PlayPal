@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using PlayPal.Common.IdentityConstants;
 using PlayPal.Core.Models.InputModels;
 using PlayPal.Core.Services.Interfaces;
-using PlayPal.Data.Models;
 using PlayPal.Extensions;
 
 namespace PlayPal.Controllers
@@ -34,7 +33,6 @@ namespace PlayPal.Controllers
             return View(model);
         }
 
-
         [HttpPost]
         public IActionResult Add(ReportInputModel model)
         {
@@ -43,9 +41,16 @@ namespace PlayPal.Controllers
                 return View(model);
             }
 
-            _reportService.ReportPlayer(model);
-
-            return LocalRedirect(model.ReturnUrl);
+            try
+            {
+                _reportService.ReportPlayer(model);
+                
+                return LocalRedirect(model.ReturnUrl);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Error", "Home");
+            }
         }
     }
 }

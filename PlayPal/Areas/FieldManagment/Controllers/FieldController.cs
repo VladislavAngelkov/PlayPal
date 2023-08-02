@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PlayPal.Common;
 using PlayPal.Common.IdentityConstants;
 using PlayPal.Common.Notifications;
 using PlayPal.Controllers;
 using PlayPal.Core.Models.InputModels;
-using PlayPal.Core.Models.ViewModels;
-using PlayPal.Core.Services;
 using PlayPal.Core.Services.Interfaces;
-using PlayPal.Data.Models;
 using PlayPal.Extensions;
 
 namespace PlayPal.Areas.FieldManagment.Controllers
@@ -30,16 +28,18 @@ namespace PlayPal.Areas.FieldManagment.Controllers
         [HttpGet]
         public async Task<IActionResult> Mine()
         {
-            var ownerId = User.OwnerId();
+            Guid ownerId = (Guid)User.OwnerId()!;
 
-            if (ownerId == null)
+            try
             {
-                return View(new List<FieldViewModel>());
+                var models = await _fieldService.AllAsync(ownerId);
+
+                return View(models);
             }
-
-            var models = await _fieldService.AllAsync((Guid)ownerId);
-
-            return View(models);
+            catch (Exception)
+            {
+                return RedirectToAction("Error", "Home", new { Area = "" });
+            }
         }
 
         [HttpGet]
@@ -60,18 +60,17 @@ namespace PlayPal.Areas.FieldManagment.Controllers
 
             try
             {
-                var ownerId = User.OwnerId();
+                var ownerId = (Guid)User.OwnerId()!;
 
-                model.OwnerId = (Guid)ownerId!;
+                model.OwnerId = ownerId!;
 
                 await _fieldService.AddAsync(model);
 
                 return RedirectToAction("Mine");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
-                throw;
+                return RedirectToAction("Error", "Home", new { Area = "" });
             }
         }
 
@@ -90,7 +89,7 @@ namespace PlayPal.Areas.FieldManagment.Controllers
                     return RedirectToAction("Mine");
                 }
 
-                Guid? fieldOwnerId = User.OwnerId()!;
+                Guid fieldOwnerId = (Guid)User.OwnerId()!;
 
                 var field = await _fieldService.GetFieldAsync(fieldId);
 
@@ -109,8 +108,7 @@ namespace PlayPal.Areas.FieldManagment.Controllers
             }
             catch (Exception)
             {
-
-                throw;
+                return RedirectToAction("Error", "Home", new { Area = "" });
             }
         }
 
@@ -151,10 +149,9 @@ namespace PlayPal.Areas.FieldManagment.Controllers
 
                 return RedirectToAction("Mine");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
-                throw;
+                return RedirectToAction("Error", "Home", new { Area = "" });
             }
         }
 
@@ -178,10 +175,9 @@ namespace PlayPal.Areas.FieldManagment.Controllers
 
                 return RedirectToAction("Games", new { fieldId = fieldId });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
-                throw;
+                return RedirectToAction("Error", "Home", new { Area = "" });
             }
         }
     }

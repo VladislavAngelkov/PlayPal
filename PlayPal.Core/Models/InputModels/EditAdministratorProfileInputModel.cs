@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 using PlayPal.Common.ValidationConstants;
+using PlayPal.Core.Attributes;
 
 namespace PlayPal.Core.Models.InputModels
 {
@@ -25,8 +26,9 @@ namespace PlayPal.Core.Models.InputModels
         [Required]
         public string Email { get; set; } = null!;
 
+        [PictureValidation]
         public IFormFile? ProfilePicture { get; set; }
-
+  
         public string ProfilePictureUrl { get; set; }
     }
 }

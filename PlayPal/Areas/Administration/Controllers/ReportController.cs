@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PlayPal.Common;
 using PlayPal.Common.IdentityConstants;
 using PlayPal.Common.Notifications;
 using PlayPal.Controllers;
@@ -28,9 +29,9 @@ namespace PlayPal.Areas.Administration.Controllers
 
                 return View(models);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return RedirectToAction("Error", "Home");
+                return RedirectToAction("Error", "Home", new { Area = "" });
             }
         }
 
@@ -55,8 +56,7 @@ namespace PlayPal.Areas.Administration.Controllers
             }
             catch (Exception ex)
             {
-
-               return RedirectToAction("Error", "Home");
+                return RedirectToAction("Error", "Home", new { Area = "" });
             }
         }
 
@@ -77,9 +77,8 @@ namespace PlayPal.Areas.Administration.Controllers
             }
             catch (Exception)
             {
-                return RedirectToAction("Error", "Home");
+                return RedirectToAction("Error", "Home", new { Area = "" });
             }
         }
-        
     }
 }

@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using PlayPal.Core.Models.InputModels;
 using PlayPal.Core.Services.Interfaces;
 using PlayPal.Data.Models;
-using PlayPal.Models;
-using System.Diagnostics;
 
 namespace PlayPal.Controllers
 {
@@ -42,10 +40,9 @@ namespace PlayPal.Controllers
         }
 
         [AllowAnonymous]
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View();
         }
     }
 }

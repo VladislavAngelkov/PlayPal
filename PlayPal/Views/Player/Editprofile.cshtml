@@ -11,60 +11,67 @@
     </h1>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <br />
-        <div>
-            <img src="@Model.ProfilePictureUrl" class="avatar" title="Change profile picture" style="width: 300px; height: 300px; object-fit: cover; border-radius: 50%;" />
+<div>
+    <form method="post" enctype="multipart/form-data" asp-area="" asp-controller="Player" asp-action="EditProfile">
+        <div class="row">
+            <div class="col-md-4">
+                <br />
+                <div>
+                    <img src="@Model.ProfilePictureUrl" class="avatar" style="width: 300px; height: 300px; object-fit: cover; border-radius: 50%; background-color:coral; padding:5px;" />
+                </div>
+                <br />
+                <div class="form-group">
+                    <label asp-for="@Model.ProfilePicture" class="form-label mt-4">Choose Profile Picture</label>
+                    <input asp-for="@Model.ProfilePicture" type="file" class="btn btn-success mt-2" style="width:300px;" />
+                </div>
+            </div>
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-6">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input asp-for="@Model.Id" type="hidden" value=@Model.Id />
+                <input asp-for="@Model.Email" type="hidden" value=@Model.Email />
+                <input asp-for="@Model.ProfilePictureUrl" type="hidden" value=@Model.ProfilePictureUrl />
+                <div class="form-group">
+                    <label asp-for=@Model.Name class="form-label mt-4">Name</label>
+                    <input asp-for="@Model.Name" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="@Model.Name" value="@Model.Name">
+                    <span asp-validation-for="@Model.Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="@Model.CurrentCity" class="form-label mt-4">City</label>
+                    <input asp-for="@Model.CurrentCity" type="text" class="form-control" id="exampleInputPassword1" placeholder="@Model.CurrentCity" value="@Model.CurrentCity">
+                    <span asp-validation-for="@Model.CurrentCity" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="@Model.Position" class="form-label mt-4">Select Title</label>
+                    <select asp-for="@Model.Position" class="form-select" id="exampleSelect1">
+                        @foreach (var pos in Model.Positions)
+                        {
+                            <option value="@pos.Id">@pos.Name</option>
+                        }
+                    </select>
+                </div>
+
+                <br />
+                <div class="form-group">
+                    <label asp-for="@Model.Password" class="form-label mt-4">Password</label>
+                    <input asp-for="@Model.Password" type="password" class="form-control" id="exampleInputPassword1" placeholder="@Model.Password">
+                    <span asp-validation-for="@Model.Password" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-success mt-2" style="width:100%">Save Changes</button>
+            </div>
         </div>
-        <br />
-        <a asp-controller="Account" asp-action="ChangePassword" class="btn btn-success mt-2" style="width:300px;">Change Profile Picture</a>
-    </div>
-    <div class="col-md-2">
+    </form>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-6">
     </div>
     <div class="col-md-6">
-        <form method="post" enctype="multipart/form-data" asp-area="" asp-controller="Player" asp-action="EditProfile">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input asp-for="@Model.Id" type="hidden" value=@Model.Id />
-            <input asp-for="@Model.Email" type="hidden" value=@Model.Email />
-            <input asp-for="@Model.ProfilePictureUrl" type="hidden" value=@Model.ProfilePictureUrl />
-            <div class="form-group">
-                <label asp-for=@Model.Name class="form-label mt-4">Name</label>
-                <input asp-for="@Model.Name" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="@Model.Name" value="@Model.Name">
-                <span asp-validation-for="@Model.Name" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="@Model.CurrentCity" class="form-label mt-4">City</label>
-                <input asp-for="@Model.CurrentCity" type="text" class="form-control" id="exampleInputPassword1" placeholder="@Model.CurrentCity" value="@Model.CurrentCity">
-                <span asp-validation-for="@Model.CurrentCity" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="@Model.Position" class="form-label mt-4">Select Title</label>
-                <select asp-for="@Model.Position" class="form-select" id="exampleSelect1">
-                    @foreach (var pos in Model.Positions)
-                    {
-                        <option value="@pos.Id">@pos.Name</option>
-                    }
-                </select>
-            </div>
-            <div class="form-group">
-                <label asp-for="@Model.ProfilePicture" class="form-label mt-4">Choose Profile Picture</label>
-                <input asp-for="@Model.ProfilePicture" class="form-control" type="file" id="formFile" />
-            </div>
-
-            <br />
-            <div class="form-group">
-                <label asp-for="@Model.Password" class="form-label mt-4">Password</label>
-                <input asp-for="@Model.Password" type="password" class="form-control" id="exampleInputPassword1" placeholder="@Model.Password">
-                <span asp-validation-for="@Model.Password" class="text-danger"></span>
-            </div>
-            
-            <button type="submit" class="btn btn-success mt-2" style="width:100%">Save Changes</button>
-        </form>
-        <br />
-        <a asp-controller="Account" asp-action="ChangePassword" class="btn btn-danger mt-2" style="width:100%">Change Password</a>
+        <a asp-area="" asp-controller="Account" asp-action="ChangePassword" class="btn btn-danger mt-2" style="width:100%">Change Password</a>
     </div>
 </div>
 

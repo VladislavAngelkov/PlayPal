@@ -39,10 +39,10 @@ namespace PlayPal.Controllers
 
                 return View(models);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
-                throw;
+                return RedirectToAction("Error", "Home");
             }
         }
 
@@ -57,10 +57,10 @@ namespace PlayPal.Controllers
 
                 return RedirectToAction("MyGames");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
-                throw;
+                return RedirectToAction("Error", "Home");
             }
         }
 
@@ -78,10 +78,10 @@ namespace PlayPal.Controllers
 
                 return View(model);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
-                throw;
+                return RedirectToAction("Error", "Home");
             }
         }
 
@@ -127,10 +127,10 @@ namespace PlayPal.Controllers
 
                 return RedirectToAction("MyGames");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
-                throw;
+                return RedirectToAction("Error", "Home");
             }
         }
 
@@ -145,10 +145,10 @@ namespace PlayPal.Controllers
 
                 return View(models);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
-                throw;
+                return RedirectToAction("Error", "Home");
             }
         }
 
@@ -171,10 +171,9 @@ namespace PlayPal.Controllers
 
                 return RedirectToAction("MyGames");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
-                throw;
+                return RedirectToAction("Error", "Home");
             }
         }
 
@@ -204,10 +203,9 @@ namespace PlayPal.Controllers
 
                 return RedirectToAction("Manage", new { gameId = gameId });
             }
-            catch (Exception ex)
-            {
-
-                throw;
+            catch (Exception) 
+            { 
+                return RedirectToAction("Error", "Home"); 
             }
 
         }
@@ -221,10 +219,9 @@ namespace PlayPal.Controllers
 
                 return RedirectToAction("Manage", new { gameId = gameId });
             }
-            catch (Exception ex)
-            {
-
-                throw;
+            catch (Exception) 
+            { 
+                return RedirectToAction("Error", "Home"); 
             }
         }
 
@@ -252,10 +249,10 @@ namespace PlayPal.Controllers
 
                 return RedirectToAction("Manage", new { gameId = gameId });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
-                throw;
+                return RedirectToAction("Error", "Home");
             }
         }
 
@@ -269,10 +266,9 @@ namespace PlayPal.Controllers
 
                 return RedirectToAction("Manage", new { gameId = gameId });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
-                throw;
+                return RedirectToAction("Error", "Home");
             }
         }
 
@@ -287,10 +283,9 @@ namespace PlayPal.Controllers
 
                 return RedirectToAction("MyGames");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
-                throw;
+                return RedirectToAction("Error", "Home");
             }
         }
 
@@ -305,10 +300,9 @@ namespace PlayPal.Controllers
 
                 return View(models);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
-                throw;
+                return RedirectToAction("Error", "Home");
             }
         }
 
@@ -337,10 +331,9 @@ namespace PlayPal.Controllers
 
                 return View(model);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
-                throw;
+                return RedirectToAction("Error", "Home");
             }
         }
 
@@ -353,10 +346,9 @@ namespace PlayPal.Controllers
 
                 return RedirectToAction("OldGames");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
-                throw;
+                return RedirectToAction("Error", "Home");
             }
         }
 
@@ -369,10 +361,9 @@ namespace PlayPal.Controllers
 
                 return View(model);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
-                throw;
+                return RedirectToAction("Error", "Home");
             }
         }
     }

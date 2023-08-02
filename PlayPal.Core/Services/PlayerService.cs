@@ -160,7 +160,7 @@ namespace PlayPal.Core.Services
             }
             else
             {
-                model.ProfilePictureUrl = "~/img/profile_pic.jpg";
+                model.ProfilePictureUrl = ApplicationConstants.DefaultProfilePicUrl;
             }
 
             return model;

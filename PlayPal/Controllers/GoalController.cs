@@ -33,11 +33,7 @@ namespace PlayPal.Controllers
 
                 return RedirectToAction("ProcessGame", "Game", new { gameId = model.GameId });
             }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
+            catch (Exception) { return RedirectToAction("Error", "Home"); }
         }
     }
 }

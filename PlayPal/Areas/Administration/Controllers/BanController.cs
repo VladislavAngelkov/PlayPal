@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PlayPal.Common;
 using PlayPal.Common.IdentityConstants;
 using PlayPal.Controllers;
 using PlayPal.Core.Models.InputModels;
 using PlayPal.Core.Services.Interfaces;
 using PlayPal.Extensions;
-using System.Security.Cryptography.X509Certificates;
 
 namespace PlayPal.Areas.Administration.Controllers
 {
@@ -32,20 +32,27 @@ namespace PlayPal.Areas.Administration.Controllers
                 var models = await _banService.GetAll();
                 return View(models);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return RedirectToAction("Error", "Home");
+                return RedirectToAction("Error", "Home", new { Area = "" });
             }
         }
 
         [HttpGet]
         public async Task<IActionResult> Ban(Guid reportId)
         {
-            var model = await _banService.GetBanInputModel(reportId);
+            try
+            {
+                var model = await _banService.GetBanInputModel(reportId);
 
-            model.AdministratorId = (Guid)User.AdministratorId()!;
+                model.AdministratorId = (Guid)User.AdministratorId()!;
 
-            return View(model);
+                return View(model);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Error", "Home", new { Area = "" });
+            }
         }
 
         [HttpPost]
@@ -66,8 +73,7 @@ namespace PlayPal.Areas.Administration.Controllers
             }
             catch (Exception)
             {
-
-                return RedirectToAction("Error", "Home");
+                return RedirectToAction("Error", "Home", new { Area = "" });
             }
         }
 
@@ -80,9 +86,9 @@ namespace PlayPal.Areas.Administration.Controllers
 
                 return RedirectToAction("All");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return RedirectToAction("Error", "Home");
+                return RedirectToAction("Error", "Home", new { Area = "" });
             }
         }
     }

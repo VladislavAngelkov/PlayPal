@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using PlayPal.Common;
 using PlayPal.Common.IdentityConstants;
 using PlayPal.Common.Notifications;
 using PlayPal.Controllers;
 using PlayPal.Core.Models.InputModels;
-using PlayPal.Core.Models.ViewModels;
-using PlayPal.Core.Services;
 using PlayPal.Core.Services.Interfaces;
 using PlayPal.Data.Models;
 using PlayPal.Extensions;
@@ -44,10 +43,11 @@ namespace PlayPal.Areas.FieldManagment.Controllers
 
                 return View(model);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
+                ViewData["Layout"] = ApplicationConstants.FieldManagmentLayoutPath;
 
-                throw;
+                return RedirectToAction("Error", "Home", new { Area = "" });
             }
         }
 
@@ -63,9 +63,11 @@ namespace PlayPal.Areas.FieldManagment.Controllers
 
                 return View(model);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw;
+                ViewData["Layout"] = ApplicationConstants.FieldManagmentLayoutPath;
+
+                return RedirectToAction("Error", "Home", new { Area = "" });
             }
         }
 
@@ -102,13 +104,12 @@ namespace PlayPal.Areas.FieldManagment.Controllers
 
                     return View(model);
                 }
-
-
             }
-            catch (Exception ex)
+            catch (Exception)
             {
+                ViewData["Layout"] = ApplicationConstants.FieldManagmentLayoutPath;
 
-                throw;
+                return RedirectToAction("Error", "Home", new { Area = "" });
             }
         }
     }

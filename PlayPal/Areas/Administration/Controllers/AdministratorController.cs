@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using PlayPal.Common;
 using PlayPal.Common.IdentityConstants;
 using PlayPal.Common.Notifications;
 using PlayPal.Controllers;
@@ -31,7 +32,7 @@ namespace PlayPal.Areas.Administration.Controllers
         {
             if (User.HasClaim(c => c.Type == PlayPalClaimTypes.AdministratorId))
             {
-                return RedirectToAction("Promote");
+                return RedirectToAction("All", "Report");
             }
 
             return View();
@@ -41,23 +42,37 @@ namespace PlayPal.Areas.Administration.Controllers
         [Authorize(Policy = PlayPalPolicyNames.Adminstration)]
         public async Task<IActionResult> Promote()
         {
-            var appliedForAdministratorUsers = await _administratorService.GetAdministratorRequestsAsync();
+            try
+            {
+                var appliedForAdministratorUsers = await _administratorService.GetAdministratorRequestsAsync();
 
-            return View(appliedForAdministratorUsers);
+                return View(appliedForAdministratorUsers);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Error", "Home", new { Area = "" });
+            }
         }
 
         [HttpPost]
         [Authorize(Policy = PlayPalPolicyNames.Adminstration)]
         public async Task<IActionResult> Promote(string email, Guid administratorId)
         {
-            var appliedForAdministratorUsers = await _administratorService.GetAdministratorRequestsAsync();
-
-            if (appliedForAdministratorUsers.Any(u => u.Email == email  && u.AdministratorId  == administratorId))
+            try
             {
-                await _administratorService.PromoteUserToAdministrator(email, administratorId);
-            }
+                var appliedForAdministratorUsers = await _administratorService.GetAdministratorRequestsAsync();
 
-            return RedirectToAction("Promote");
+                if (appliedForAdministratorUsers.Any(u => u.Email == email && u.AdministratorId == administratorId))
+                {
+                    await _administratorService.PromoteUserToAdministrator(email, administratorId);
+                }
+
+                return RedirectToAction("Promote");
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Error", "Home", new { Area = "" });
+            }
         }
 
         [HttpGet]
@@ -82,10 +97,9 @@ namespace PlayPal.Areas.Administration.Controllers
                 }
                 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
-                throw;
+                return RedirectToAction("Error", "Home", new { Area = "" });
             }
         }
 
@@ -109,9 +123,9 @@ namespace PlayPal.Areas.Administration.Controllers
 
                 return View(model);
             }
-            catch (Exception ex)
-            {
-                throw;
+            catch (Exception) 
+            { 
+                return RedirectToAction("Error", "Home", new { Area = "" });
             }
         }
 
@@ -152,10 +166,9 @@ namespace PlayPal.Areas.Administration.Controllers
 
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
-                throw;
+                return RedirectToAction("Error", "Home", new { Area = "" });
             }
         }
     }

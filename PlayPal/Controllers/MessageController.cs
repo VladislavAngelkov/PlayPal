@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol.Plugins;
+using PlayPal.Common;
 using PlayPal.Common.IdentityConstants;
 using PlayPal.Core.Models.InputModels;
 using PlayPal.Core.Models.ViewModels;
@@ -27,7 +28,7 @@ namespace PlayPal.Controllers
             {
                 if (User.IsInRole(PlayPalRoleNames.FieldOwner))
                 {
-                    ViewData["Layout"] = "/Areas/FieldManagment/Views/Shared/_Layout.cshtml";
+                    ViewData["Layout"] = ApplicationConstants.FieldManagmentLayoutPath;
                    
                     var models = await _messageService.AllNewAsync(userId);
 
@@ -35,7 +36,7 @@ namespace PlayPal.Controllers
                 }
                 else if (User.IsInRole(PlayPalRoleNames.Administrator))
                 {
-                    ViewData["Layout"] = "/Areas/Administration/Views/Shared/_Layout.cshtml";
+                    ViewData["Layout"] = ApplicationConstants.AdministrationLayoutPath;
 
                     var models = await _messageService.AllNewAdministrationAsync(userId);
 
@@ -48,10 +49,9 @@ namespace PlayPal.Controllers
                     return View(models);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
-                throw;
+                return RedirectToAction("Error", "Home");
             }
         }
 
@@ -64,7 +64,7 @@ namespace PlayPal.Controllers
             {
                 if (User.IsInRole(PlayPalRoleNames.FieldOwner))
                 {
-                    ViewData["Layout"] = "/Areas/FieldManagment/Views/Shared/_Layout.cshtml";
+                    ViewData["Layout"] = ApplicationConstants.FieldManagmentLayoutPath;
 
                     var models = await _messageService.AllOldAsync(userId);
 
@@ -72,7 +72,7 @@ namespace PlayPal.Controllers
                 }
                 else if (User.IsInRole(PlayPalRoleNames.Administrator))
                 {
-                    ViewData["Layout"] = "/Areas/Administration/Views/Shared/_Layout.cshtml";
+                    ViewData["Layout"] = ApplicationConstants.AdministrationLayoutPath;
 
                     var models = await _messageService.AllOldAdministrationAsync(userId);
 
@@ -85,11 +85,7 @@ namespace PlayPal.Controllers
                     return View(models);
                 }
             }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
+            catch (Exception) { return RedirectToAction("Error", "Home"); }
         }
 
         [HttpGet]
@@ -97,11 +93,11 @@ namespace PlayPal.Controllers
         {
             if (User.IsInRole(PlayPalRoleNames.FieldOwner))
             {
-                ViewData["Layout"] = "/Areas/FieldManagment/Views/Shared/_Layout.cshtml";
+                ViewData["Layout"] = ApplicationConstants.FieldManagmentLayoutPath;
             }
             else if (User.IsInRole(PlayPalRoleNames.Administrator))
             {
-                ViewData["Layout"] = "/Areas/Administration/Views/Shared/_Layout.cshtml";
+                ViewData["Layout"] = ApplicationConstants.AdministrationLayoutPath;
             }
 
             var model = new MessageInputModel();
@@ -126,19 +122,16 @@ namespace PlayPal.Controllers
 
                 if (User.IsInRole(PlayPalRoleNames.FieldOwner))
                 {
-                    ViewData["Layout"] = "/Areas/FieldManagment/Views/Shared/_Layout.cshtml";
+                    ViewData["Layout"] = ApplicationConstants.FieldManagmentLayoutPath;
                 }
                 else if (User.IsInRole(PlayPalRoleNames.Administrator))
                 {
-                    ViewData["Layout"] = "/Areas/Administration/Views/Shared/_Layout.cshtml";
+                    ViewData["Layout"] = ApplicationConstants.AdministrationLayoutPath;
                 }
 
                 return RedirectToAction("Sent");
             }
-            catch(Exception ex)
-            {
-                throw;
-            }
+            catch(Exception) { return RedirectToAction("Error", "Home"); }
         }
 
         [HttpGet]
@@ -150,11 +143,11 @@ namespace PlayPal.Controllers
             {
                 if (User.IsInRole(PlayPalRoleNames.FieldOwner))
                 {
-                    ViewData["Layout"] = "/Areas/FieldManagment/Views/Shared/_Layout.cshtml";
+                    ViewData["Layout"] = ApplicationConstants.FieldManagmentLayoutPath;
                 }
                 else if (User.IsInRole(PlayPalRoleNames.Administrator))
                 {
-                    ViewData["Layout"] = "/Areas/Administration/Views/Shared/_Layout.cshtml";
+                    ViewData["Layout"] = ApplicationConstants.AdministrationLayoutPath;
                 }
 
                 var models = await _messageService.GetSentMessagesAsync(userId);
@@ -177,16 +170,16 @@ namespace PlayPal.Controllers
 
                 if (User.IsInRole(PlayPalRoleNames.FieldOwner))
                 {
-                    ViewData["Layout"] = "/Areas/FieldManagment/Views/Shared/_Layout.cshtml";
+                    ViewData["Layout"] = ApplicationConstants.FieldManagmentLayoutPath;
                 }
                 else if (User.IsInRole(PlayPalRoleNames.Administrator))
                 {
-                    ViewData["Layout"] = "/Areas/Administration/Views/Shared/_Layout.cshtml";
+                    ViewData["Layout"] = ApplicationConstants.AdministrationLayoutPath;
                 }
 
                 return RedirectToAction("AllNew");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return RedirectToAction("Error", "Home");
             }
@@ -194,9 +187,16 @@ namespace PlayPal.Controllers
 
         public async Task<IActionResult> Reply(Guid userId, Guid messageId)
         {
-            await _messageService.MarkAsSeenAsync(messageId);
+            try
+            {
+                await _messageService.MarkAsSeenAsync(messageId);
 
-            return RedirectToAction("Send", new { userId = userId });
+                return RedirectToAction("Send", new { userId = userId });
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Error", "Home");
+            }
         }
     }
 }

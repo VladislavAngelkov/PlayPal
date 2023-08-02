@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using PlayPal.Common.ValidationConstants;
+using PlayPal.Core.Attributes;
 using System.ComponentModel.DataAnnotations;
 
 namespace PlayPal.Core.Models.InputModels
@@ -35,6 +36,7 @@ namespace PlayPal.Core.Models.InputModels
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = null!;
 
+        [PictureValidation]
         public IFormFile? ProfilePicture { get; set; }
     }
 }

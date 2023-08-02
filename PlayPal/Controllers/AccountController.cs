@@ -20,7 +20,6 @@ namespace PlayPal.Controllers
         private readonly SignInManager<PlayPalUser> _signInManager;
         private readonly IPlayerService _playerService;
         private readonly IBanService _banService;
-        private readonly IPictureService _pictureService;
 
         public AccountController(
             IAccountService accountService,
@@ -96,40 +95,30 @@ namespace PlayPal.Controllers
                     return RedirectToAction("Error", "Home");
                 }
             }
-
-            try
+            else
             {
-                var positions = await _positionService.GetAllPositionsModels();
-
-                if (!positions.Any(p => p.Id == model.Player!.Position))
+                try
                 {
-                    ModelState.AddModelError("", ErrorMessages.PositionDoesNotExist);
-                }
+                    if (!ModelState.IsValid)
+                    {
+                        var positions = await _positionService.GetAllPositionsModels();
+                        model.Player!.Positions = positions;
 
-                if (await _accountService.UserExist(model.Email))
+                        return View(model);
+                    }
+
+                    var user = await _accountService.RegisterPlayerUserAsync(model);
+
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    return RedirectToAction("JoinGame", "Game");
+
+                }
+                catch (Exception)
                 {
-                    ModelState.AddModelError("", ErrorMessages.UsedEmail);
+
+                    return RedirectToAction("Error", "Home");
                 }
-
-                if (!ModelState.IsValid)
-                {
-                    model.Player!.Positions = positions;
-
-                    return View(model);
-                }
-
-                var user = await _accountService.RegisterPlayerUserAsync(model);
-
-
-                await _signInManager.SignInAsync(user, isPersistent: false);
-
-                return RedirectToAction("JoinGame", "Game");
-
-            }
-            catch (Exception)
-            {
-
-                return RedirectToAction("Index", "Home");
             }
         }
 
@@ -146,11 +135,6 @@ namespace PlayPal.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            if (await _accountService.UserExist(model.Email))
-            {
-                ModelState.AddModelError("", ErrorMessages.UsedEmail);
-            }
-
             if (!ModelState.IsValid)
             {
                 return RedirectToAction("Register", model);
@@ -162,30 +146,23 @@ namespace PlayPal.Controllers
 
                 return View(model);
             }
-
-            try
+            else
             {
-                var user = await _accountService.ApplyAdministratorAsync(model);
+                try
+                {
+                    var user = await _accountService.ApplyAdministratorAsync(model);
 
-                if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                {
-                    return Ok("Confirm your account");
-                }
-                else
-                {
                     await _signInManager.SignInAsync(user, isPersistent: false);
 
                     TempData[ToastrMessageTypes.Success] = SuccessMessages.AdministratorSuccess;
 
                     return RedirectToAction("Index", "Administrator", new { area = "Administration" });
                 }
+                catch (Exception)
+                {
+                    return RedirectToAction("Error", "Home");
+                }
             }
-            catch (Exception)
-            {
-
-                return RedirectToAction("Error", "Home");
-            }
-
         }
 
         [AllowAnonymous]
@@ -201,11 +178,6 @@ namespace PlayPal.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            if (await _accountService.UserExist(model.Email))
-            {
-                ModelState.AddModelError("", ErrorMessages.UsedEmail);
-            }
-
             if (!ModelState.IsValid)
             {
                 return RedirectToAction("Register", model);
@@ -217,26 +189,22 @@ namespace PlayPal.Controllers
 
                 return View(model);
             }
-
-            try
+            else
             {
-                var user = await _accountService.RegisterFieldOwnerAsync(model);
-
-                if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                try
                 {
-                    return Ok("Confirm your account");
-                }
-                else
-                {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    var user = await _accountService.RegisterFieldOwnerAsync(model);
 
-                    return RedirectToAction("Mine", "Field", "FieldManagment");
+                   
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+
+                        return RedirectToAction("Mine", "Field", "FieldManagment");
+                    
                 }
-            }
-            catch (Exception ex)
-            {
-                return Ok(ex.Message);
-                //return RedirectToAction("Error", "Home");
+                catch (Exception)
+                {
+                    return RedirectToAction("Error", "Home");
+                }
             }
         }
 
@@ -251,13 +219,9 @@ namespace PlayPal.Controllers
             {
                 return RedirectToAction("Mine", "Field", new { Area = "FieldManagment" });
             }
-            else if (User.IsInRole(PlayPalRoleNames.Player))
+            else 
             {
                 return RedirectToAction("BanCheck", "Account");
-            }
-            else
-            {
-                return RedirectToAction("Error");
             }
         }
 
@@ -278,13 +242,9 @@ namespace PlayPal.Controllers
                 {
                     return RedirectToAction("BanCheck");
                 }
-
-                if (result.IsLockedOut)
-                {
-                    return View("Lockout");
-                }
                 else
                 {
+
                     ModelState.AddModelError(string.Empty, ErrorMessages.InvalidLogin);
 
                     return View(model);
@@ -292,7 +252,6 @@ namespace PlayPal.Controllers
             }
             catch (Exception)
             {
-
                 return RedirectToAction("Error", "Home");
             }
         }
@@ -352,13 +311,9 @@ namespace PlayPal.Controllers
 
                         TempData[ToastrMessageTypes.Warning] = String.Format(WarningMessages.Banned, latestBan.BannedTo.ToString(DateTimeFormats.BannedToFormat), latestBan.Reason);
 
-                        return RedirectToAction("Index", "Home");
+                        
                     }
-
-                    return RedirectToAction("JoinGame", "Game");
                 }
-
-                return RedirectToAction("Index", "Home");
             }
 
             return RedirectToAction("Index", "Home");
@@ -402,7 +357,7 @@ namespace PlayPal.Controllers
             catch (Exception)
             {
 
-                throw;
+                return RedirectToAction("Error", "Home");
             }
         }
     }

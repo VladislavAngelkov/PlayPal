@@ -27,5 +27,7 @@
         public const string PlayerNotCreatorOfGame = "You are not the creator of this game!";
 
         public const string GameIsAlreadyProcessed = "This game is already processed";
+
+        public const string FileWorngFormat = "The selected file format is not supported";
     }
 }

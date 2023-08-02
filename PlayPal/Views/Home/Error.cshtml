@@ -1,0 +1,28 @@
+﻿@using PlayPal.Common.IdentityConstants
+@using PlayPal.Common
+@{
+    if (User.IsInRole(PlayPalRoleNames.Administrator))
+    {
+        Layout = ApplicationConstants.AdministrationLayoutPath;
+    }
+    else if (User.IsInRole(PlayPalRoleNames.FieldOwner))
+    {
+        Layout = ApplicationConstants.FieldManagmentLayoutPath;
+    }
+}
+<div style="background-color:white">
+    <div class="text-center" style="font-family:Georgia; color:cadetblue">
+        <h2 style="font-family:Georgia; color:darkcyan">
+            Sorry, something went wrong
+        </h2>
+        <h4 style="font-family:Georgia; color:darkcyan">
+            Try again later
+        </h4>
+    </div>
+    <div style="align-content:center;justify-content:center; justify-items:center; align-items:center">
+        <center>
+            <img src="/img/Confused.gif" style="width: 500px; height: 500px; object-fit: cover;" />
+        </center>
+    </div>
+</div>
+
