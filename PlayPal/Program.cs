@@ -1,8 +1,12 @@
+using Amazon.Extensions.NETCore.Setup;
+using Amazon.S3;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PlayPal.Common.IdentityConstants;
 using PlayPal.Core.Repositories;
 using PlayPal.Core.Repositories.Interfaces;
+using PlayPal.Core.Services;
+using PlayPal.Core.Services.Interfaces;
 using PlayPal.Data;
 using PlayPal.Data.Models;
 using PlayPal.Extensions;
@@ -17,6 +21,11 @@ builder.Services.AddDbContext<PlayPalDbContext>(options =>
     .UseSqlServer(connectionString);
 });
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+AWSOptions awsOptions = builder.Configuration.GetAWSOptions();
+
+builder.Services.AddDefaultAWSOptions(awsOptions)
+    .AddAWSService<IAmazonS3>();
 
 builder.Services.AddDefaultIdentity<PlayPalUser>(options =>
 {

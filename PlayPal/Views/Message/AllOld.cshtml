@@ -21,7 +21,11 @@
     @foreach (var message in Model)
     {
         <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
-            <div class="card-header">Sent from: @message.Sender</div>
+            <div class="card-header">
+                Sent from: <a asp-area="" asp-controller="Message" asp-action="Send" asp-route-userId="@message.SenderId" style="text-decoration:none; color:white">
+                    @message.Sender
+                </a>
+            </div>
             <div class="card-body">
                 <h4 class="card-title">@message.Title</h4>
                 <p class="card-text">@message.Content</p>

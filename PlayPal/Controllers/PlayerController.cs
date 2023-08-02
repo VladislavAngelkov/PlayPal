@@ -8,6 +8,7 @@ using PlayPal.Core.Models.ViewModels;
 using PlayPal.Core.Services.Interfaces;
 using PlayPal.Data.Models;
 using PlayPal.Extensions;
+using System.Text;
 
 namespace PlayPal.Controllers
 {
@@ -19,19 +20,22 @@ namespace PlayPal.Controllers
         private readonly IAccountService _accountService;
         private readonly UserManager<PlayPalUser> _userManager;
         private readonly SignInManager<PlayPalUser> _signInManager;
+        private readonly IPictureService _pictureService;
 
         public PlayerController(
             IPlayerService playerService,
             IPositionService positionService,
             IAccountService accountService,
             UserManager<PlayPalUser> userManager,
-            SignInManager<PlayPalUser> signInManager)
+            SignInManager<PlayPalUser> signInManager,
+            IPictureService pictureService)
         {
             _playerService = playerService;
             _positionService = positionService;
             _accountService = accountService;
             _userManager = userManager;
             _signInManager = signInManager;
+            _pictureService = pictureService;
         }
 
         [HttpGet]
@@ -44,27 +48,12 @@ namespace PlayPal.Controllers
 
             try
             {
-                var player = await _playerService.GetPlayerAsync((Guid)playerId);
+                var model = await _playerService.GetPlayerProfileViewModelAsync((Guid)playerId);
 
-                if (player == null)
+                if (model == null)
                 {
-                    return RedirectToAction("Error", "Home");
+                    return RedirectToAction("Error", "Home", new {Area=""});
                 }
-
-                var position = await _positionService.GetPositionByIdAsync(player.PositionId);
-
-                var userId = _userManager.Users.FirstOrDefault(u => u.PlayerId == playerId)!.Id;
-
-                var model = new PlayerProfileViewModel()
-                {
-                    Id = (Guid)playerId,
-                    UserId = userId,
-                    Name = player.Name,
-                    CurrentCity = player.CurrentCity,
-                    Position = position.Name,
-                    Games = player.Teams.Count,
-                    Goals = player.Goals.Where(g => !g.IsAutoGoal).Count() - player.Goals.Where(g => g.IsAutoGoal).Count()
-                };
 
                 return View(model);
             }
@@ -79,27 +68,15 @@ namespace PlayPal.Controllers
         public async Task<IActionResult> EditProfile()
         {
             Guid playerId = (Guid)User.PlayerId()!;
-
+            string email = User.Identity!.Name!;
             try
             {
-                var player = await _playerService.GetPlayerAsync(playerId);
+                var model = await _playerService.GetEditPlayerProfileInputModelAsync(playerId, email);
 
-                if (player == null)
+                if (model == null)
                 {
-                    return RedirectToAction("Error", "Home");
+                    return RedirectToAction("Error", "Home", new { Area = "" });
                 }
-
-                var positions = await _positionService.GetAllPositionsModels();
-
-                var model = new EditPlayerProfileInputModel()
-                {
-                    Email = User.Identity.Name,
-                    Id = playerId,
-                    Name = player.Name,
-                    CurrentCity = player.CurrentCity,
-                    Position = player.PositionId,
-                    Positions = positions
-                };
 
                 return View(model);
             }
@@ -126,7 +103,18 @@ namespace PlayPal.Controllers
             {
                 model.Positions = positions;
 
-                return View(model);
+                //return View(model);
+                var sb = new StringBuilder();
+
+                foreach (var modelState in ViewData.ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        sb.AppendLine(error.ErrorMessage);
+                    }
+                }
+
+                return Ok(sb.ToString());
             }
 
             try

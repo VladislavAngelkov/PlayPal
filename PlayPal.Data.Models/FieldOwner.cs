@@ -77,5 +77,11 @@ namespace PlayPal.Data.Models
         /// Fields owned by the field owner
         /// </summary>
         public virtual ICollection<Field> Fields { get; set; }
+
+        /// <summary>
+        /// The indentifier of the profile picture
+        /// </summary>
+        [Comment("The indentifier of the profile picture")]
+        public string? ProfilePictureId { get; set; }
     }
 }

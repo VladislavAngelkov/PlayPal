@@ -42,6 +42,7 @@
                 <input asp-for="ConfirmPassword" type="password" class="form-control" id="exampleInputPassword1" placeholder="Confirm Password">
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
+
             <br />
             <button asp-controller="Account" asp-action="RegisterAsPlayer" type="submit" class="btn btn-success mt-2" style="width:100%">Proceed registration as Player</button>
             <button asp-controller="Account" asp-action="ApplyForAdministrator" type="submit" class="btn btn-warning mt-2" style="width:100%">Proceed registration as Administrator</button>

@@ -17,5 +17,9 @@ namespace PlayPal.Core.Services.Interfaces
         public Task UpdatePlayer(EditPlayerProfileInputModel model, Guid userId);
 
         public Task<bool> CheckAvailabilityAsync(Guid playerId, DateTime startingTime, DateTime endingTime);
+
+        public Task<PlayerProfileViewModel> GetPlayerProfileViewModelAsync(Guid playerId);
+
+        public Task<EditPlayerProfileInputModel> GetEditPlayerProfileInputModelAsync(Guid playerId, string email);
     }
 }

@@ -99,6 +99,8 @@ namespace PlayPal.Core.Services
                 user.FieldOwnerId = model.FieldOwner.Id;
             }
 
+           
+
             await _userStore.SetUserNameAsync(user, model.Email, CancellationToken.None);
             await _emailStore.SetEmailAsync(user, model.Email, CancellationToken.None);
             var result = await _userManager.CreateAsync(user, model.Password);

@@ -1,4 +1,5 @@
-﻿using PlayPal.Common.ValidationConstants;
+﻿using Amazon.S3.Model;
+using PlayPal.Common.ValidationConstants;
 using PlayPal.Data.Models;
 using System.ComponentModel.DataAnnotations;
 
@@ -9,6 +10,8 @@ namespace PlayPal.Core.Models.ViewModels
         public Guid Id { get; set; }
 
         public Guid UserId { get; set; }
+
+        public string? ProfilePictureUrl { get; set; }
 
 
         public string Name { get; set; } = null!;

@@ -77,9 +77,13 @@
     @foreach (var player in Model.HomePlayers)
     {
         <div class="row">
-            <div class="col-6 mt-2" style="color:white">
-                @player.Name
+
+            <div class="col-6 mt-2" style="color:white; text-decoration:none">
+                <a asp-area="" asp-controller="Player" asp-action="ViewProfile" asp-route-playerId="@player.Id" style="text-decoration:none; color:white">
+                    @player.Name
+                </a>
             </div>
+
             <div class="col-6 mt-1 mb-1" style="color:white">
                 @if (player.Id != (Guid)User.PlayerId()!)
                 {
@@ -99,8 +103,10 @@
     @foreach (var player in Model.AwayPlayers)
     {
         <div class="row">
-            <div class="col-6 mt-2" style="color:white">
-                @player.Name
+            <div class="col-6 mt-2" style="color:white; text-decoration:none">
+                <a asp-area="" asp-controller="Player" asp-action="ViewProfile" asp-route-playerId="@player.Id" style="text-decoration:none; color:white">
+                    @player.Name
+                </a>
             </div>
             <div class="col-6 mt-1 mb-1" style="color:white">
                 @if (player.Id != (Guid)User.PlayerId()!)

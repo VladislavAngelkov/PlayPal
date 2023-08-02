@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PlayPal.Common;
 using PlayPal.Common.IdentityConstants;
 using PlayPal.Core.Models.InputModels;
 using PlayPal.Core.Models.ViewModels;
 using PlayPal.Core.Repositories.Interfaces;
 using PlayPal.Core.Services.Interfaces;
-using PlayPal.Data;
 using PlayPal.Data.Models;
-using PlayPal.Data.Models.Enums;
 using System.Security.Claims;
 
 namespace PlayPal.Core.Services
@@ -17,15 +16,18 @@ namespace PlayPal.Core.Services
         private readonly IRepository _repository;
         private readonly IPositionService _positionService;
         private readonly UserManager<PlayPalUser> _userManager;
+        private readonly IPictureService _pictureService;
 
         public PlayerService(
             IRepository repository,
             IPositionService positionService,
-            UserManager<PlayPalUser> userManager)
+            UserManager<PlayPalUser> userManager,
+            IPictureService pictureService)
         {
             _repository = repository;
             _positionService = positionService;
             _userManager = userManager;
+            _pictureService = pictureService;
         }
 
         public async Task<bool> CheckAvailabilityAsync(Guid playerId, DateTime startingTime, DateTime endingTime)
@@ -52,6 +54,13 @@ namespace PlayPal.Core.Services
                 UserId = model.Id
             };
 
+            if (model.ProfilePicture != null)
+            {
+                string pictureId = await _pictureService.UploadAsync(model.ProfilePicture);
+
+                player.ProfilePictureId = pictureId;
+            }
+
             await _repository.AddAsync(player);
             await _repository.SaveChangesAsync();
         }
@@ -72,6 +81,39 @@ namespace PlayPal.Core.Services
             }
         }
 
+        public async Task<EditPlayerProfileInputModel> GetEditPlayerProfileInputModelAsync(Guid playerId, string email)
+        {
+            var player = await GetPlayerAsync(playerId);
+
+            if (player == null)
+            {
+                return null;
+            }
+
+            var positions = await _positionService.GetAllPositionsModels();
+
+            var model = new EditPlayerProfileInputModel()
+            {
+                Email = email,
+                Id = playerId,
+                Name = player.Name,
+                CurrentCity = player.CurrentCity,
+                Position = player.PositionId,
+                Positions = positions,
+            };
+
+            if (player.ProfilePictureId != null)
+            {
+                model.ProfilePictureUrl = await _pictureService.DownloadAsync(player.ProfilePictureId);
+            }
+            else
+            {
+                model.ProfilePictureUrl = ApplicationConstants.DefaultProfilePicUrl;
+            }
+
+            return model;
+        }
+
         public async Task<Player> GetPlayerAsync(Guid id)
         {
             var player = await _repository.All<Player>()
@@ -81,6 +123,48 @@ namespace PlayPal.Core.Services
                 .FirstOrDefaultAsync();
 
             return player;
+        }
+
+        public async Task<PlayerProfileViewModel> GetPlayerProfileViewModelAsync(Guid playerId)
+        {
+            var player = await GetPlayerAsync((Guid)playerId);
+
+            if (player == null)
+            {
+                return null;
+            }
+
+            var position = await _positionService.GetPositionByIdAsync(player.PositionId);
+
+            var user = _userManager.Users.FirstOrDefault(u => u.PlayerId == playerId);
+            var userId = user.Id;
+
+            var profilePictureId = player.ProfilePictureId;
+
+            var model = new PlayerProfileViewModel()
+            {
+                Id = (Guid)playerId,
+                UserId = userId,
+                Name = player.Name,
+                CurrentCity = player.CurrentCity,
+                Position = position.Name,
+                Games = player.Teams.Count,
+                Goals = player.Goals.Where(g => !g.IsAutoGoal).Count() - player.Goals.Where(g => g.IsAutoGoal).Count()
+            };
+
+            if (profilePictureId != null)
+            {
+                var pictureUrl = await _pictureService.DownloadAsync(profilePictureId);
+
+                model.ProfilePictureUrl = pictureUrl;
+            }
+            else
+            {
+                model.ProfilePictureUrl = "~/img/profile_pic.jpg";
+            }
+
+            return model;
+
         }
 
         public async Task<ICollection<PlayerViewModel>> SearchPlayer(string name, string email, string city)
@@ -106,11 +190,25 @@ namespace PlayPal.Core.Services
         {
             var player = await _repository.GetByIdAsync<Player>(model.Id);
 
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            var oldPictureId = player.ProfilePictureId;
+
+            if (model.ProfilePicture != null)
+            {
+                string pictureId = await _pictureService.UploadAsync(model.ProfilePicture);
+
+                player.ProfilePictureId = pictureId;
+
+                if (oldPictureId != null)
+                {
+                    await _pictureService.DeleteAsync(oldPictureId);
+                }
+            }
+
             player.Name = model.Name;
             player.CurrentCity = model.CurrentCity;
             player.PositionId = model.Position;
-
-            var user = await _userManager.FindByIdAsync(userId.ToString());
 
             var claims = await _userManager.GetClaimsAsync(user);
 

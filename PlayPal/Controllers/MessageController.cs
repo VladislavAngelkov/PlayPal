@@ -93,7 +93,7 @@ namespace PlayPal.Controllers
         }
 
         [HttpGet]
-        public IActionResult Send(Guid userId)
+        public IActionResult Send(Guid? userId)
         {
             if (User.IsInRole(PlayPalRoleNames.FieldOwner))
             {
@@ -190,6 +190,13 @@ namespace PlayPal.Controllers
             {
                 return RedirectToAction("Error", "Home");
             }
+        }
+
+        public async Task<IActionResult> Reply(Guid userId, Guid messageId)
+        {
+            await _messageService.MarkAsSeenAsync(messageId);
+
+            return RedirectToAction("Send", new { userId = userId });
         }
     }
 }

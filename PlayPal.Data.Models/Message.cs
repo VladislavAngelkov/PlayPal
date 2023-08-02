@@ -57,5 +57,12 @@ namespace PlayPal.Data.Models
         [Comment("Marks if the message is seen by receiver")]
         [Required]
         public bool Seen { get; set; }
+
+        /// <summary>
+        /// Shows at what time the message is sent
+        /// </summary>
+        [Comment("Shows at what time the message is sent")]
+        [Required]
+        public DateTime SentAt { get; set; }
     }
 }

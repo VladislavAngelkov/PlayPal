@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Amazon.Runtime.Internal;
+using Microsoft.AspNetCore.Identity;
+using PlayPal.Common;
 using PlayPal.Common.IdentityConstants;
 using PlayPal.Core.Models.InputModels;
+using PlayPal.Core.Models.ViewModels;
 using PlayPal.Core.Repositories.Interfaces;
 using PlayPal.Core.Services.Interfaces;
 using PlayPal.Data.Models;
 using PlayPal.Data.Models.Enums;
+using System.Numerics;
 using System.Security.Claims;
 
 namespace PlayPal.Core.Services
@@ -13,13 +17,16 @@ namespace PlayPal.Core.Services
     {
         private readonly IRepository _repository;
         private readonly UserManager<PlayPalUser> _userManager;
+        private readonly IPictureService _pictureService;
 
         public FieldOwnerService(
             IRepository repository,
-            UserManager<PlayPalUser> userManager)
+            UserManager<PlayPalUser> userManager,
+            IPictureService pictureService)
         {
             _repository = repository;
             _userManager = userManager;
+            _pictureService = pictureService;
         }
 
         public async Task CreateFieldOwner(RegisterUserInputModel model)
@@ -34,6 +41,13 @@ namespace PlayPal.Core.Services
                 ContactAddress = model.FieldOwner.ContactAddres,
                 UserId = model.Id
             };
+
+            if (model.ProfilePicture != null)
+            {
+                string pictureId = await _pictureService.UploadAsync(model.ProfilePicture);
+
+                fieldOwner.ProfilePictureId = pictureId;
+            }
 
             await _repository.AddAsync<FieldOwner>(fieldOwner);
         }
@@ -54,6 +68,35 @@ namespace PlayPal.Core.Services
             }
         }
 
+        public async Task<EditFieldOwnerProfileInputModel> GetEditFieldOwnerProfileInputModelAsync(Guid fieldOwnerId, string email)
+        {
+            var fieldOwner = await GetFieldOwnerAsync(fieldOwnerId);
+
+            var model = new EditFieldOwnerProfileInputModel()
+            {
+                Email = email,
+                Id = fieldOwnerId,
+                FirstName = fieldOwner.FirstName,
+                LastName = fieldOwner.LastName,
+                CompanyName = fieldOwner.CompanyName,
+                ContactAddress = fieldOwner.ContactAddress,
+                Title = fieldOwner.Title.ToString()
+            };
+
+            if (fieldOwner.ProfilePictureId != null)
+            {
+                string pictureUrl = await _pictureService.DownloadAsync(fieldOwner.ProfilePictureId);
+
+                model.ProfilePictureUrl = pictureUrl;
+            }
+            else
+            {
+                model.ProfilePictureUrl = ApplicationConstants.DefaultProfilePicUrl;
+            }
+
+            return model;
+        }
+
         public async Task<FieldOwner> GetFieldOwnerAsync(Guid fieldOwnerId)
         {
             var fieldOwner = await _repository.GetByIdAsync<FieldOwner>(fieldOwnerId);
@@ -61,9 +104,46 @@ namespace PlayPal.Core.Services
             return fieldOwner;
         }
 
+        public async Task<FieldOwnerProfileViewModel> GetFieldOwnerProfileViewModelAsync(Guid fieldOwnerId)
+        {
+            var fieldOwner = await GetFieldOwnerAsync(fieldOwnerId);
+
+            if (fieldOwner == null)
+            {
+                return null;
+            }
+
+            var model = new FieldOwnerProfileViewModel()
+            {
+                Id = fieldOwnerId,
+                FirstName = fieldOwner.FirstName,
+                LastName = fieldOwner.LastName,
+                Title = fieldOwner.Title.ToString(),
+                CompanyName = fieldOwner.CompanyName,
+                ContactAddress = fieldOwner.ContactAddress,
+            };
+
+            if (fieldOwner.ProfilePictureId != null)
+            {
+                var pictureUrl = await _pictureService.DownloadAsync(fieldOwner.ProfilePictureId);
+
+                model.ProfilePictureUrl = pictureUrl;
+            }
+            else
+            {
+                model.ProfilePictureUrl = ApplicationConstants.DefaultProfilePicUrl;
+            }
+
+            return model;
+        }
+
         public async Task UpdateFieldOwnerAsync(EditFieldOwnerProfileInputModel model, Guid userId)
         {
             var fieldOwner = await _repository.GetByIdAsync<FieldOwner>(model.Id);
+
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            var oldPictureId = fieldOwner.ProfilePictureId;
 
             fieldOwner.FirstName = model.FirstName;
             fieldOwner.LastName = model.LastName;
@@ -71,7 +151,17 @@ namespace PlayPal.Core.Services
             fieldOwner.CompanyName = model.CompanyName;
             fieldOwner.ContactAddress = model.ContactAddress;
 
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (model.ProfilePicture != null)
+            {
+                string pictureId = await _pictureService.UploadAsync(model.ProfilePicture);
+
+                fieldOwner.ProfilePictureId = pictureId;
+
+                if (oldPictureId != null)
+                {
+                    await _pictureService.DeleteAsync(oldPictureId);
+                }
+            }
 
             var claims = await _userManager.GetClaimsAsync(user);
 

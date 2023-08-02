@@ -5,8 +5,6 @@ using PlayPal.Common.IdentityConstants;
 using PlayPal.Common.Notifications;
 using PlayPal.Controllers;
 using PlayPal.Core.Models.InputModels;
-using PlayPal.Core.Models.ViewModels;
-using PlayPal.Core.Services;
 using PlayPal.Core.Services.Interfaces;
 using PlayPal.Data.Models;
 using PlayPal.Extensions;
@@ -68,23 +66,21 @@ namespace PlayPal.Areas.Administration.Controllers
         {
             Guid administratorId = (Guid)User.AdministratorId()!;
 
+            Guid userId = User.UserId()!;
+
             try
             {
-                var administrator = await _administratorService.GetAdministratorAsync(administratorId);
+                var model = await _administratorService.GetAdministratorProfileViewModelAsync(administratorId, userId);
 
-                if (administrator == null)
+                if (model != null)
                 {
-                    return RedirectToAction("Error", "Home");
+                    return View(model);
                 }
-
-                var model = new AdministratorProfileViewModel()
+                else
                 {
-                    Id = administratorId,
-                    FirstName = administrator.FirstName,
-                    LastName = administrator.LastName,
-                };
-
-                return View(model);
+                    return RedirectToAction("Error", "Homme", new {Area = ""});
+                }
+                
             }
             catch (Exception ex)
             {
@@ -100,17 +96,16 @@ namespace PlayPal.Areas.Administration.Controllers
         {
             Guid administratorId = (Guid)User.AdministratorId()!;
 
+            string email = User.Identity!.Name!;
+
             try
             {
-                var administrator = await _administratorService.GetAdministratorAsync(administratorId);
+                var model = await _administratorService.GetEditAdministratorProfileInputModelAsync(administratorId, email);
 
-                var model = new EditAdministratorProfileInputModel()
+                if (model == null)
                 {
-                    Email = User.Identity!.Name!,
-                    Id = administratorId,
-                    FirstName = administrator.FirstName,
-                    LastName = administrator.LastName
-                };
+                    return RedirectToAction("Error", "Home", new { Area = "" });
+                }
 
                 return View(model);
             }

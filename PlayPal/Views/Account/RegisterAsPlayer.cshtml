@@ -8,7 +8,7 @@
     <div class="col-md-6">
     </div>
     <div class="col-md-6">
-        <form method="post" asp-controller="Account" asp-action="RegisterAsPlayer">
+        <form method="post" enctype="multipart/form-data" asp-controller="Account" asp-action="RegisterAsPlayer">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input asp-for="@Model.Id" type="hidden" value=@Model.Id />
             <input asp-for="@Model.Email" type="hidden" value=@Model.Email />
@@ -36,6 +36,12 @@
                     }
                 </select>
             </div>
+
+            <div class="form-group">
+                <label asp-for="@Model.ProfilePicture" class="form-label mt-4">Choose Profile Picture</label>
+                <input asp-for="@Model.ProfilePicture" class="form-control" type="file" id="formFile" />
+            </div>
+
             <br />
             <button asp-controller="Account" asp-action="RegisterAsPlayer" type="submit" class="btn btn-success" style="width:100%">Register</button>
         </form>

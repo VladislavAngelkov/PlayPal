@@ -17,5 +17,9 @@ namespace PlayPal.Core.Services.Interfaces
         public Task<Administrator> GetAdministratorAsync(Guid administratorId);
 
         public Task UpdateAdministratorAsync(EditAdministratorProfileInputModel model, Guid userId);
+
+        public Task<AdministratorProfileViewModel> GetAdministratorProfileViewModelAsync(Guid administratorId, Guid userId);
+
+        public Task<EditAdministratorProfileInputModel> GetEditAdministratorProfileInputModelAsync(Guid administratorId, string email);
     }
 }

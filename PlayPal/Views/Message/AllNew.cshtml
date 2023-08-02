@@ -34,7 +34,7 @@
                     </div>
                     <br />
                     <div class="align-items-center justify-content-center">
-                        <a style="width:100%"  class="btn btn-success" asp-area="" asp-controller="Message" asp-action="Send" asp-route-userId="@message.SenderId">
+                        <a style="width:100%"  class="btn btn-success" asp-area="" asp-controller="Message" asp-action="Reply" asp-route-userId="@message.SenderId" asp-route-messageId="@message.Id">
                             Reply
                         </a>
                     </div>

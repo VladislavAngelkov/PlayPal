@@ -15,7 +15,7 @@
     <div class="col-md-4">
         <br />
         <div>
-            <img src="~/img/profile_pic.jpg" class="avatar" title="Change profile picture" style="width: 300px; height: 300px; object-fit: cover; border-radius: 50%;" />
+            <img src="@Model.ProfilePictureUrl" class="avatar" title="Change profile picture" style="width: 300px; height: 300px; object-fit: cover; border-radius: 50%;" />
         </div>
         <br />
         <a asp-controller="Account" asp-action="ChangePassword" class="btn btn-success mt-2" style="width:300px;">Change Profile Picture</a>
@@ -23,10 +23,11 @@
     <div class="col-md-2">
     </div>
     <div class="col-md-6">
-        <form method="post" asp-area="" asp-controller="Player" asp-action="EditProfile">
+        <form method="post" enctype="multipart/form-data" asp-area="" asp-controller="Player" asp-action="EditProfile">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input asp-for="@Model.Id" type="hidden" value=@Model.Id />
             <input asp-for="@Model.Email" type="hidden" value=@Model.Email />
+            <input asp-for="@Model.ProfilePictureUrl" type="hidden" value=@Model.ProfilePictureUrl />
             <div class="form-group">
                 <label asp-for=@Model.Name class="form-label mt-4">Name</label>
                 <input asp-for="@Model.Name" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="@Model.Name" value="@Model.Name">
@@ -48,12 +49,18 @@
                     }
                 </select>
             </div>
+            <div class="form-group">
+                <label asp-for="@Model.ProfilePicture" class="form-label mt-4">Choose Profile Picture</label>
+                <input asp-for="@Model.ProfilePicture" class="form-control" type="file" id="formFile" />
+            </div>
+
             <br />
             <div class="form-group">
                 <label asp-for="@Model.Password" class="form-label mt-4">Password</label>
                 <input asp-for="@Model.Password" type="password" class="form-control" id="exampleInputPassword1" placeholder="@Model.Password">
                 <span asp-validation-for="@Model.Password" class="text-danger"></span>
             </div>
+            
             <button type="submit" class="btn btn-success mt-2" style="width:100%">Save Changes</button>
         </form>
         <br />

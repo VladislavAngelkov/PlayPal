@@ -3,11 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using PlayPal.Common.IdentityConstants;
 using PlayPal.Common.Notifications;
 using PlayPal.Core.Models.InputModels;
-using PlayPal.Core.Models.ViewModels;
 using PlayPal.Core.Services.Interfaces;
 using PlayPal.Extensions;
 using System.Security.Claims;
-using System.Security.Cryptography.X509Certificates;
 
 namespace PlayPal.Controllers
 {

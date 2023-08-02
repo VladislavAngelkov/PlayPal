@@ -25,8 +25,10 @@
             <hr />
             @foreach (var player in Model.PendingPlayers)
             {
-                <div class="col-3 mt-2 mb-2" style="color:white">
-                    @player.Name
+                <div class="col-3 mt-2 mb-2" style="color:white; text-decoration:none">
+                    <a asp-area="" asp-controller="Player" asp-action="ViewProfile" asp-route-playerId="@player.Id" style="text-decoration:none; color:white">
+                        @player.Name
+                    </a>
                 </div>
                 <div class="col-3 mt-2 mb-2">
                     <form asp-area="" asp-controller="Game" asp-action="AddToHomeTeam">
@@ -73,8 +75,10 @@
             <hr />
             @foreach (var player in Model.HomeTeam)
             {
-                <div class="col-4 mt-2 mb-2" style="color:white">
-                    @player.Name
+                <div class="col-3 mt-2 mb-2" style="color:white; text-decoration:none">
+                    <a asp-area="" asp-controller="Player" asp-action="ViewProfile" asp-route-playerId="@player.Id" style="text-decoration:none; color:white">
+                        @player.Name
+                    </a>
                 </div>
                 <div class="col-4 mt-2 mb-2">
                     <form asp-area="" asp-controller="Game" asp-action="ChangeTeam">
@@ -117,8 +121,10 @@
             <hr />
             @foreach (var player in Model.AwayTeam)
             {
-                <div class="col-4 mt-2 mb-2" style="color:white">
-                    @player.Name
+                <div class="col-3 mt-2 mb-2" style="color:white;">
+                    <a asp-area="" asp-controller="Player" asp-action="ViewProfile" asp-route-playerId="@player.Id" style="text-decoration:none; color:white">
+                        @player.Name
+                    </a>
                 </div>
                 <div class="col-4 mt-2 mb-2">
                     <form asp-area="" asp-controller="Game" asp-action="ChangeTeam">

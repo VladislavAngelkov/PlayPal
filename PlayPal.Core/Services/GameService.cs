@@ -153,6 +153,7 @@ namespace PlayPal.Core.Services
                 (g.PendingPlayers.Any(p => p.PlayerId == playerId) || g.HomeTeam.Players.Any(p => p.PlayerId == playerId) || g.AwayTeam.Players.Any(p => p.PlayerId == playerId)))
                 .Include(g => g.Field)
                 .Include(g => g.Creator)
+                .OrderByDescending(g => g.StartingTime)
                 .Select(g => new GameViewModel()
                 {
                     Id = g.Id,
@@ -177,6 +178,7 @@ namespace PlayPal.Core.Services
                 !g.AwayTeam.Players.Any(p => p.PlayerId == playerId))
                 .Include(g => g.Field)
                 .Include(g => g.Creator)
+                .OrderByDescending(g => g.StartingTime)
                 .Select(g => new GameViewModel()
                 {
                     Id = g.Id,
@@ -314,6 +316,7 @@ namespace PlayPal.Core.Services
                .ThenInclude(ht => ht.Players)
                .Include(g => g.AwayTeam)
                .ThenInclude(at => at.Players)
+               .OrderByDescending(g => g.StartingTime)
                .Select(g => new OldGameViewModel()
                {
                    Id = g.Id,

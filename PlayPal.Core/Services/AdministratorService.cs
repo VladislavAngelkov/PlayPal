@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PlayPal.Common;
 using PlayPal.Common.IdentityConstants;
 using PlayPal.Core.Models.InputModels;
 using PlayPal.Core.Models.ViewModels;
@@ -14,13 +15,16 @@ namespace PlayPal.Core.Services
     {
         private readonly IRepository _repository;
         private readonly UserManager<PlayPalUser> _userManager;
+        private readonly IPictureService _pictureService;
 
         public AdministratorService(
             IRepository repository,
-            UserManager<PlayPalUser> userManager)
+            UserManager<PlayPalUser> userManager,
+            IPictureService pictureService)
         {
             _repository = repository;
             _userManager = userManager;
+            _pictureService = pictureService;
         }
 
         public async Task CreateAdministrator(RegisterUserInputModel model)
@@ -32,6 +36,13 @@ namespace PlayPal.Core.Services
                 LastName = model.Administrator.LastName,
                 UserId = model.Id
             };
+
+            if (model.ProfilePicture != null)
+            {
+                string pictureId = await _pictureService.UploadAsync(model.ProfilePicture);
+
+                administrator.ProfilePictureId = pictureId;
+            }
 
             await _repository.AddAsync<Administrator>(administrator);
         }
@@ -99,10 +110,24 @@ namespace PlayPal.Core.Services
         {
             var administrator = await _repository.GetByIdAsync<Administrator>(model.Id);
 
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            var oldPictureId = administrator.ProfilePictureId;
+
             administrator.FirstName = model.FirstName;
             administrator.LastName = model.LastName;
 
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (model.ProfilePicture != null)
+            {
+                string pictureId = await _pictureService.UploadAsync(model.ProfilePicture);
+
+                administrator.ProfilePictureId = pictureId;
+
+                if (oldPictureId != null)
+                {
+                    await _pictureService.DeleteAsync(oldPictureId);
+                }
+            }
 
             var claims = await _userManager.GetClaimsAsync(user);
 
@@ -116,7 +141,65 @@ namespace PlayPal.Core.Services
 
             await _userManager.AddClaimAsync(user, newNameClaim);
 
+            await _userManager.UpdateAsync(user);
+
             await _repository.Update(administrator);
+        }
+
+        public async Task<AdministratorProfileViewModel> GetAdministratorProfileViewModelAsync(Guid administratorId, Guid userId)
+        {
+            var administrator = await GetAdministratorAsync(administratorId);
+
+            if (administrator == null)
+            {
+                return null;
+            }
+
+            var model = new AdministratorProfileViewModel()
+            {
+                Id = administratorId,
+                FirstName = administrator.FirstName,
+                LastName = administrator.LastName,
+            };
+
+            if (administrator.ProfilePictureId != null)
+            {
+                var profilePictureUrl = await _pictureService.DownloadAsync(administrator.ProfilePictureId);
+
+                model.ProfilePictureUrl = profilePictureUrl;
+            }
+            else
+            {
+                model.ProfilePictureUrl = ApplicationConstants.DefaultProfilePicUrl;
+            }
+
+            return model;
+        }
+
+        public async Task<EditAdministratorProfileInputModel> GetEditAdministratorProfileInputModelAsync(Guid administratorId, string email)
+        {
+            var administrator = await GetAdministratorAsync(administratorId);
+
+            var model = new EditAdministratorProfileInputModel()
+            {
+                Email = email,
+                Id = administratorId,
+                FirstName = administrator.FirstName,
+                LastName = administrator.LastName
+            };
+
+            if (administrator.ProfilePictureId != null)
+            {
+                var pictureUrl = await _pictureService.DownloadAsync(administrator.ProfilePictureId);
+
+                model.ProfilePictureUrl = pictureUrl;
+            }
+            else
+            {
+                model.ProfilePictureUrl = ApplicationConstants.DefaultProfilePicUrl;
+            }
+
+            return model;
         }
     }
 }

@@ -9,7 +9,7 @@
     <div class="col-md-6">
     </div>
     <div class="col-md-6">
-        <form method="post" asp-controller="Account" asp-action="ApplyForAdministrator">
+        <form method="post" enctype="multipart/form-data" asp-controller="Account" asp-action="ApplyForAdministrator">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input asp-for="Id" type="hidden" value=@Model.Id />
             <div class="form-group">
@@ -63,6 +63,11 @@
                 <label asp-for="@Model.FieldOwner!.ContactAddres" class="form-label mt-4">Contact address</label>
                 <input asp-for="@Model.FieldOwner!.ContactAddres" class="form-control" placeholder="Contact address">
                 <span asp-validation-for="@Model.FieldOwner!.ContactAddres" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="@Model.ProfilePicture" class="form-label mt-4">Choose Profile Picture</label>
+                <input asp-for="@Model.ProfilePicture" class="form-control" type="file" id="formFile" />
             </div>
 
             <br />

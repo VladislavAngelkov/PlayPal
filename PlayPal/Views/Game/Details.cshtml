@@ -41,62 +41,45 @@
     <br />
 
     <div class="row" style="background-color:orange">
-        <div class="col-4 text-center">
-            <h3>
+        <div class="col-4 text-center" style="color:white">
                 Pending Players
-            </h3>
         </div>
-        <div class="col-4 text-center">
-            <h3>
+        <div class="col-4 text-center" style="color:white">
                 Home Team
-            </h3>
         </div>
-        <div class="col-4 text-center">
-            <h3>
+        <div class="col-4 text-center" style="color:white">
                 Away Team
-            </h3>
         </div>
     </div>
     <div class="row">
         <div class="row col-4 text-center">
             @foreach (var pendingPlayer in Model.PendingPlayers)
             {
-                <div class="text-center">
-                    <a asp-area="" asp-controller="Player" asp-action="ViewProfile" asp-route-playerId="@pendingPlayer.Id">
-                        <h5>
+                    <a asp-area="" asp-controller="Player" asp-action="ViewProfile" asp-route-playerId="@pendingPlayer.Id" style="color:white; text-decoration:none">
                             @pendingPlayer.Name
-                        </h5>
                     </a>
-                </div>
+                    <br />
             }
         </div>
         <div class="row col-4 text-center">
             @foreach (var homeTeamPlayer in Model.HomeTeam)
             {
-                <div class="text-center">
-                    <a asp-area="" asp-controller="Player" asp-action="ViewProfile" asp-route-playerId="@homeTeamPlayer.Id">
-                        <h5>
+                    <a asp-area="" asp-controller="Player" asp-action="ViewProfile" asp-route-playerId="@homeTeamPlayer.Id" style="color:white; text-decoration:none">
                             @homeTeamPlayer.Name
-                        </h5>
                     </a>
-                </div>
+                    <br />
             }
         </div>
         <div class="row col-4 text-center">
             @foreach (var awayTeamPlayer in Model.AwayTeam)
             {
-                <div class="text-center">
-                    <a asp-area="" asp-controller="Player" asp-action="ViewProfile" asp-route-playerId="@awayTeamPlayer.Id">
-                        <h5>
+                    <a asp-area="" asp-controller="Player" asp-action="ViewProfile" asp-route-playerId="@awayTeamPlayer.Id" style="color:white; text-decoration:none">
                             @awayTeamPlayer.Name
-                        </h5>
                     </a>
-                </div>
+                    <br />
             }
         </div>
     </div>
-
-    
 </div>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

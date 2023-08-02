@@ -1,5 +1,4 @@
 ﻿using PlayPal.Core.Attributes;
-using PlayPal.Data.Models.Enums;
 
 namespace PlayPal.Core.Models.InputModels
 {

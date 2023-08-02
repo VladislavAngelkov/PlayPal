@@ -35,22 +35,12 @@ namespace PlayPal.Areas.FieldManagment.Controllers
 
             try
             {
-                var fieldOwner = await _fieldOwnerService.GetFieldOwnerAsync(fieldOwnerId);
+                var model = await _fieldOwnerService.GetFieldOwnerProfileViewModelAsync(fieldOwnerId);
 
-                if (fieldOwner == null)
+                if (model == null)
                 {
-                    return RedirectToAction("Error", "Home");
+                    return RedirectToAction("Error", "Home", new { Area = "" });
                 }
-
-                var model = new FieldOwnerProfileViewModel()
-                {
-                    Id = fieldOwnerId,
-                    FirstName = fieldOwner.FirstName,
-                    LastName = fieldOwner.LastName,
-                    Title = fieldOwner.Title.ToString(),
-                    CompanyName = fieldOwner.CompanyName,
-                    ContactAddress = fieldOwner.ContactAddress,
-                };
 
                 return View(model);
             }
@@ -65,21 +55,11 @@ namespace PlayPal.Areas.FieldManagment.Controllers
         public async Task<IActionResult> EditProfile()
         {
             Guid fieldOwnerId = (Guid)User.OwnerId()!;
+            string email = User.Identity!.Name!;
 
             try
             {
-                var fieldOwner = await _fieldOwnerService.GetFieldOwnerAsync(fieldOwnerId);
-
-                var model = new EditFieldOwnerProfileInputModel()
-                {
-                    Email = User.Identity!.Name!,
-                    Id = fieldOwnerId,
-                    FirstName = fieldOwner.FirstName,
-                    LastName = fieldOwner.LastName,
-                    CompanyName = fieldOwner.CompanyName,
-                    ContactAddress = fieldOwner.ContactAddress,
-                    Title = fieldOwner.Title.ToString()
-                };
+               var model = await _fieldOwnerService.GetEditFieldOwnerProfileInputModelAsync(fieldOwnerId, email);
 
                 return View(model);
             }

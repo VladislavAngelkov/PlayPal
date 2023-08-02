@@ -23,6 +23,7 @@ namespace PlayPal.Core.Services
                 !m.Seen &&
                 m.SenderId != userId)
                 .Include(m => m.Sender)
+                .OrderByDescending(m => m.SentAt)
                 .Select(m => new MessageViewModel()
                 {
                     Id = m.Id,
@@ -43,6 +44,7 @@ namespace PlayPal.Core.Services
                 m.Seen &&
                 m.SenderId != userId)
                 .Include(m => m.Sender)
+                .OrderByDescending(m => m.SentAt)
                 .Select(m => new MessageViewModel()
                 {
                     Id = m.Id,
@@ -63,6 +65,7 @@ namespace PlayPal.Core.Services
                 m.SenderId != userId &&
                 m.ReceiverId == userId)
                 .Include(m => m.Sender)
+                .OrderByDescending(m => m.SentAt)
                 .Select(m => new MessageViewModel()
                 {
                     Id = m.Id,
@@ -83,6 +86,7 @@ namespace PlayPal.Core.Services
                 m.SenderId != userId &&
                 m.ReceiverId == userId)
                 .Include(m => m.Sender)
+                .OrderByDescending(m => m.SentAt)
                 .Select(m => new MessageViewModel()
                 {
                     Id = m.Id,
@@ -122,6 +126,7 @@ namespace PlayPal.Core.Services
             var models = await _repository.All<Message>()
                 .Where(m => m.SenderId == userId)
                 .Include(m => m.Receiver)
+                .OrderByDescending(m => m.SentAt)
                 .Select(m => new MessageViewModel()
                 {
                     Id = m.Id,

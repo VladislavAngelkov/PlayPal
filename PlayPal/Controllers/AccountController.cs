@@ -6,12 +6,9 @@ using PlayPal.Common.Notifications;
 using PlayPal.Common.StringFormats;
 using PlayPal.Core.Models.InputModels;
 using PlayPal.Core.Models.ViewModels;
-using PlayPal.Core.Services;
 using PlayPal.Core.Services.Interfaces;
 using PlayPal.Data.Models;
 using PlayPal.Extensions;
-using System.Runtime.Serialization;
-using System.Security.Cryptography.X509Certificates;
 
 namespace PlayPal.Controllers
 {
@@ -23,6 +20,7 @@ namespace PlayPal.Controllers
         private readonly SignInManager<PlayPalUser> _signInManager;
         private readonly IPlayerService _playerService;
         private readonly IBanService _banService;
+        private readonly IPictureService _pictureService;
 
         public AccountController(
             IAccountService accountService,
@@ -117,27 +115,16 @@ namespace PlayPal.Controllers
                 {
                     model.Player!.Positions = positions;
 
-                    //var message = string.Join(" | ", ModelState.Values
-                    //    .SelectMany(v => v.Errors)
-                    //    .Select(e => e.ErrorMessage));
-
-                    //return Ok(message);
-
                     return View(model);
                 }
 
                 var user = await _accountService.RegisterPlayerUserAsync(model);
 
-                if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                {
-                    return Ok("Confirm your account");
-                }
-                else
-                {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
 
-                    return RedirectToAction("JoinGame", "Game");
-                }
+                await _signInManager.SignInAsync(user, isPersistent: false);
+
+                return RedirectToAction("JoinGame", "Game");
+
             }
             catch (Exception)
             {

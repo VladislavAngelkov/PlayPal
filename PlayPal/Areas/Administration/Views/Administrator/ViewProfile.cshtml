@@ -17,7 +17,7 @@
 <div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
     <div class="card p-4">
         <div class=" image d-flex flex-column justify-content-center align-items-center">
-                <img src="~/img/profile_pic.jpg" class="avatar" title="Change profile picture" style="width: 150px; height: 150px; object-fit: cover;" />
+                <img src="@Model.ProfilePictureUrl" class="avatar" title="Change profile picture" style="width: 150px; height: 150px; object-fit: cover;" />
             <span class="name mt-3" style="color:black">@Model.FirstName @Model.LastName</span> 
              <div class=" d-flex mt-2">
                 <button type="" class="btn1 btn-dark" asp-area="Administration" asp-controller="Administrator" asp-action="EditProfile" onclick="location.href='@Url.Action("EditProfile", "Administrator", "Administration")'">Edit Profile</button>

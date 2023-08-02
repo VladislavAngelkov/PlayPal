@@ -7,6 +7,7 @@
 
 @{
     TempData["Title"] = "Profile";
+
 }
 
 <div class="text-center mt-5">
@@ -20,9 +21,9 @@
     <div class="card p-4">
         <div class=" image d-flex flex-column justify-content-center align-items-center">
             <div class="justify-content-center align-items-center">
-                <img src="~/img/profile_pic.jpg" class="avatar" title="Change profile picture" style="width: 150px; height: 150px; object-fit: cover;" />
+                <img src="@Model.ProfilePictureUrl" class="avatar" title="Change profile picture" style="width: 150px; height: 150px; object-fit: cover;" />
             </div>
-            <span class="name mt-3" style="color:black">@Model.Name</span> 
+            <span class="name mt-3" style="color:black">@Model.Name</span>
             <div class="d-flex flex-row justify-content-center align-items-center mt-3">
                 <span class="number">Current city: <span class="number" style="color:coral">@Model.CurrentCity</span></span>
             </div>
@@ -35,8 +36,8 @@
             <div class="d-flex flex-row justify-content-center align-items-center mt-3">
                 <span class="number">Goals: <span class="number" style="color:coral">@Model.Goals</span></span>
             </div>
-             @if (User.IsInRole(PlayPalRoleNames.Player) &&
-             (Guid)User.PlayerId()! == Model.Id)
+            @if (User.IsInRole(PlayPalRoleNames.Player) &&
+            (Guid)User.PlayerId()! == Model.Id)
             {
                 <div class=" d-flex mt-2">
                     <button type="" class="btn1 btn-dark" asp-controller="Player" asp-action="EditProfile" onclick="location.href='@Url.Action("EditProfile", "Player")'">Edit Profile</button>
@@ -48,8 +49,8 @@
                     <a class="btn1 btn-dark text-decoration-none text-center text-bg-primary" asp-controller="Message" asp-action="Send" asp-route-userId="@Model.UserId">Message</a>
                 </div>
             }
-            
-            
+
+
         </div>
     </div>
 </div>

@@ -109,5 +109,11 @@ namespace PlayPal.Data.Models
 
         [InverseProperty("ReportedPlayer")]
         public virtual ICollection<Report> ReceivedReports { get; set; }
+
+        /// <summary>
+        /// The indentifier of the profile picture
+        /// </summary>
+        [Comment("The indentifier of the profile picture")]
+        public string? ProfilePictureId { get; set; }
     }
 }

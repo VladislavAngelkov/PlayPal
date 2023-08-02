@@ -14,7 +14,7 @@
     <div class="col-md-4">
         <br />
         <div>
-            <img src="~/img/profile_pic.jpg" class="avatar" title="Change profile picture" style="width: 300px; height: 300px; object-fit: cover; border-radius: 50%; background-color:coral; padding:5px;" />
+            <img src="@Model.ProfilePictureUrl" class="avatar" title="Change profile picture" style="width: 300px; height: 300px; object-fit: cover; border-radius: 50%; background-color:coral; padding:5px;" />
         </div>
         <br />
         <a asp-controller="Account" asp-action="ChangePassword" class="btn btn-success mt-2" style="width:300px;">Change Profile Picture</a>
@@ -22,10 +22,11 @@
     <div class="col-md-2">
     </div>
     <div class="col-md-6">
-        <form method="post" asp-area="Administration" asp-controller="Administrator" asp-action="EditProfile">
+        <form method="post" enctype="multipart/form-data" asp-area="Administration" asp-controller="Administrator" asp-action="EditProfile">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input asp-for="@Model.Id" type="hidden" value=@Model.Id />
             <input asp-for="@Model.Email" type="hidden" value=@Model.Email />
+            <input asp-for="@Model.ProfilePictureUrl" type="hidden" value=@Model.ProfilePictureUrl />
             <div class="form-group">
                 <label asp-for=@Model.FirstName class="form-label mt-4">First Name</label>
                 <input asp-for="@Model.FirstName" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="@Model.FirstName" value="@Model.FirstName">
@@ -36,6 +37,10 @@
                 <label asp-for="@Model.LastName" class="form-label mt-4">Last Name</label>
                 <input asp-for="@Model.LastName" type="text" class="form-control" id="exampleInputPassword1" placeholder="@Model.LastName" value="@Model.LastName">
                 <span asp-validation-for="@Model.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.ProfilePicture" class="form-label mt-4">Choose Profile Picture</label>
+                <input asp-for="@Model.ProfilePicture" class="form-control" type="file" id="formFile" />
             </div>
             <br />
             <div class="form-group">
